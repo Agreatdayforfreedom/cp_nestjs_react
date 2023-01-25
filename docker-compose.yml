@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - '.:/usr/src/home'
+      - /usr/src/home/node_modules
+      - /usr/src/home/client
+
+    command: npm run start:dev
+    ports:
+      - 3000:3000
+      - 9229:9229
+    environment:
+      - DB_HOST=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=somepassword
+      - DB_NAME=postgres
+    depends_on:
+      - postgres
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    volumes:
+      - './client:/usr/src/home/client'
+    command: npm run dev
+    ports:
+      - 5173:5173
+    depends_on:
+      - backend
+
+  postgres:
+    image: postgres
+    restart: 'no'
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_PASSWORD=somepassword

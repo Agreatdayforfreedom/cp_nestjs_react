@@ -1,0 +1,149 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --cyan: #072327;
+  --green: #025a24;
+  --t-red: #38000091;
+  --blood: #4b0023;
+  --blue: #001675;
+
+  --medium-purple: #140147;
+  --medium-blue: #001731;
+
+  --dark-blue: #06003f;
+  --dark-purple: #0a0027;
+
+  /* transparents */
+  --t-blue: #06003f40;
+  --t-purple: #18003f40;
+  --t-gray: #aaaaaa4f;
+
+  --bg-form: #38002c5e;
+}
+
+* {
+  color: #c2c2c2;
+  font-family: 'Ubuntu', sans-serif;
+}
+
+html,
+body,
+#root {
+  min-height: 100vh;
+}
+
+html {
+  background: var(--dark-blue);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(-55deg, var(--medium-purple), var(--medium-blue));
+}
+
+input:focus-within {
+  outline: none;
+  border-bottom: var(--green) solid 1px;
+}
+
+.btn-grad {
+  background-image: linear-gradient(
+    to top right,
+    var(--cyan) 0%,
+    var(--green) 41%,
+    var(--dark-purple) 100%
+  );
+  margin: 10px;
+  padding: 6px 16px;
+  text-align: center;
+  border-radius: 8px;
+  background-repeat: no-repeat;
+  background-size: 400% auto;
+  color: white;
+  display: block;
+
+  transition: 0.5s;
+}
+
+.btn-grad:hover {
+  background-position: top center; /* change the direction of the change here */
+  color: rgb(212, 212, 212);
+  text-decoration: none;
+}
+
+.bar {
+  border-top-width: 8px;
+  border-top-style: solid;
+  border-image: linear-gradient(
+      120deg,
+      var(--blood),
+      var(--cyan),
+      var(--medium-blue),
+      var(--medium-purple)
+    )
+    3;
+}
+
+.render-grad {
+  /* background: linear-gradient(
+    120deg,
+    var(--t-blue) 0%,
+    #ffffff28 10%,
+    var(--t-blue) 11%
+  ); */
+  /* background-size: 200% auto;
+  animation: animate 3s infinite; */
+  overflow: hidden;
+  position: relative;
+}
+
+.render-grad:after {
+  content: '';
+  position: absolute;
+  width: 400px;
+  height: 100%;
+  background-image: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 45%,
+    rgba(255, 255, 255, 0.144),
+    rgba(255, 255, 255, 0) 70%
+  );
+  top: 0;
+  left: -400px;
+
+  animation: shine 2s infinite;
+}
+
+@media all and (max-width: 700px) {
+  .animate-menu {
+    height: auto;
+    overflow: hidden;
+    animation: animate-menu 1s forwards;
+  }
+}
+
+@keyframes animate-menu {
+  0% {
+    height: 0;
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+    height: 160px;
+  }
+}
+
+@keyframes shine {
+  0% {
+    left: -400px;
+  }
+
+  100% {
+    left: 100%;
+  }
+}
+
+/* Hover state - trigger effect */

@@ -1,0 +1,43 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: Int!
+  username: String!
+  email: String!
+  password: String
+}
+
+type Auth {
+  token: String!
+  user: User!
+}
+
+type Project {
+  id: Int!
+  title: String!
+  description: String!
+  owner: User!
+  status: Boolean
+}
+
+type Pagination {
+  projects: [Project!]!
+  endIndex: Float!
+}
+
+type Query {
+  profile: User!
+  findAllProjects: [Project!]!
+  findOneProject(id: Int!): Project!
+  findProjectByPage(offset: Int!, limit: Int): Pagination!
+}
+
+type Mutation {
+  signup(username: String!, email: String!, password: String!): Auth!
+  login(username: String!, password: String!): Auth!
+  createProject(title: String!, description: String!): Project!
+  updateProject(title: String, description: String, id: Int!): Project
+  deleteProject(id: Float!): Project
+}
