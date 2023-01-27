@@ -4,9 +4,11 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { UserInputError } from 'apollo-server-core';
 import { Repository } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { ProjectCreateArgs, ProjectUpdateArgs } from '../dtos/project.dto';
+import { Member } from '../entities/member.entity';
 import { Project } from '../entities/project.entity';
 
 export interface Page {
@@ -18,6 +20,8 @@ export interface Page {
 export class ProjectService {
   constructor(
     @InjectRepository(Project) private projectRepository: Repository<Project>,
+    @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(Member) private memberRepository: Repository<Member>,
   ) {}
 
   async findByPage({ offset, limit = 5 }): Promise<Page> {
@@ -45,6 +49,7 @@ export class ProjectService {
       },
       relations: {
         owner: true,
+        members: true,
       },
     });
   }
@@ -80,10 +85,7 @@ export class ProjectService {
     return await this.projectRepository.save(merged);
   }
 
-  async delete(
-    id: number,
-    cUser: User,
-  ): Promise<{ deleted: 'Deleted successfully' }> {
+  async delete(id: number, cUser: User): Promise<string> {
     const project = await this.projectRepository.findOne({
       where: { id },
       relations: { owner: true },
@@ -91,12 +93,12 @@ export class ProjectService {
 
     if (!project) throw new HttpException('Project not found', 404);
     if (project.owner.id !== cUser.id) throw new UnauthorizedException();
-
+    console.log({ project, cUser });
     const deleted = await this.projectRepository.delete(id);
 
     if (deleted.affected !== 1)
       throw new HttpException('Something was wrong', 500);
 
-    return { deleted: 'Deleted successfully' };
+    return 'Deleted successfully';
   }
 }

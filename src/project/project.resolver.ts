@@ -4,10 +4,12 @@ import { CurrentUser } from '../auth/decorators/user.decorator';
 import { GqlAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { User } from '../users/entities/user.entity';
 import {
+  AddMemberArgs,
   FindByPageArgs,
   ProjectCreateArgs,
   ProjectUpdateArgs,
 } from './dtos/project.dto';
+import { Member as MemberModel } from './models/member.model';
 import { Pagination, Project as ProjectModel } from './models/project.model';
 import { ProjectService } from './services/project.service';
 
@@ -45,7 +47,7 @@ export class ProjectResolver {
     return this.projectService.update(args, cUser);
   }
 
-  @Mutation((returns) => ProjectModel, { nullable: true })
+  @Mutation(() => String, { nullable: true })
   deleteProject(@Args('id') id: number, @CurrentUser() cUser: User) {
     return this.projectService.delete(id, cUser);
   }

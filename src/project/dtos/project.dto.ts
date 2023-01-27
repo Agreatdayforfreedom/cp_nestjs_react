@@ -1,4 +1,4 @@
-import { ArgsType, Field, Int, PartialType } from '@nestjs/graphql';
+import { Args, ArgsType, Field, Int, PartialType } from '@nestjs/graphql';
 import {
   IsBoolean,
   IsDefined,
@@ -40,4 +40,17 @@ export class FindByPageArgs {
   @IsNumber()
   @IsOptional()
   limit: number;
+}
+
+@ArgsType()
+export class AddMemberArgs {
+  @Field((type) => Int)
+  @IsNumber()
+  @IsDefined()
+  nextMemberId: number;
+
+  @Field((type) => Int)
+  @IsNumber()
+  @IsDefined()
+  projectId: number;
 }

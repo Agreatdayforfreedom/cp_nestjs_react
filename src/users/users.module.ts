@@ -8,6 +8,6 @@ import { ProjectModule } from '../project/project.module';
 @Module({
   imports: [TypeOrmModule.forFeature([User])],
   providers: [UsersService, JwtStrategy],
-  exports: [UsersService],
+  exports: [UsersService, TypeOrmModule],
 })
 export class UsersModule {}

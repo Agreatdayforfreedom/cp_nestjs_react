@@ -10,6 +10,7 @@ import Dashboard from './pages/project/Dashboard';
 import Members from './pages/project/Members';
 import Issues from './pages/project/Issues';
 import Config from './pages/project/Config';
+import Search from './pages/Search';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         </Route>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
+          <Route path="search" element={<Search />} />
           <Route path="project">
             <Route path="new" element={<NewProject />} />
             <Route path=":id" element={<Project />}>

@@ -3,30 +3,42 @@ import { Link } from 'react-router-dom';
 
 interface Props {
   type?: 'submit' | 'reset' | 'button';
+  color?: 'red' | 'blue' | 'green';
   name: string;
   className?: string;
   disabled?: boolean;
   to?: string;
   tag?: 'button' | 'link';
+  onClick?: () => void | undefined;
 }
 
 const Button = ({
   type = 'button',
   name,
+  color = 'green',
   className = '',
   disabled = false,
   tag = 'button',
   to = '#',
+  onClick = undefined,
 }: Props) => {
-  const payload = { type, className: 'btn-grad p-2', disabled };
+  const classColor = `btn-grad-${color}`;
+  const payload = {
+    className: ` ${className}`,
+  };
   return (
-    <div className={`${className} w-full flex justify-end`}>
+    <div className={` w-full flex items-center justify-end`}>
       {tag === 'link' ? (
-        <Link to={to} {...payload}>
+        <Link className={`${classColor} btn-grad ${className}`} to={to}>
           {name}
         </Link>
       ) : (
-        <button {...payload} disabled={disabled} type={type}>
+        <button
+          onClick={onClick}
+          className={`${classColor} btn-grad ${className}`}
+          disabled={disabled}
+          type={type}
+        >
           {name}
         </button>
       )}

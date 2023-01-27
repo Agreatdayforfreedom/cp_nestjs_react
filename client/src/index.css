@@ -5,9 +5,9 @@
 :root {
   --cyan: #072327;
   --green: #025a24;
-  --t-red: #38000091;
   --blood: #4b0023;
   --blue: #001675;
+  --purple: #30155c;
 
   --medium-purple: #140147;
   --medium-blue: #001731;
@@ -16,6 +16,7 @@
   --dark-purple: #0a0027;
 
   /* transparents */
+  --t-red: #38000091;
   --t-blue: #06003f40;
   --t-purple: #18003f40;
   --t-gray: #aaaaaa4f;
@@ -50,12 +51,6 @@ input:focus-within {
 }
 
 .btn-grad {
-  background-image: linear-gradient(
-    to top right,
-    var(--cyan) 0%,
-    var(--green) 41%,
-    var(--dark-purple) 100%
-  );
   margin: 10px;
   padding: 6px 16px;
   text-align: center;
@@ -66,6 +61,33 @@ input:focus-within {
   display: block;
 
   transition: 0.5s;
+}
+
+.btn-grad-green {
+  background-image: linear-gradient(
+    to top right,
+    var(--cyan) 0%,
+    var(--green) 41%,
+    var(--dark-purple) 100%
+  );
+}
+
+.btn-grad-red {
+  background-image: linear-gradient(
+    to top right,
+    var(--blood) 0%,
+    var(--t-red) 41%,
+    var(--blood) 100%
+  );
+}
+
+.btn-grad-blue {
+  background-image: linear-gradient(
+    to top right,
+    var(--blue) 0%,
+    var(--medium-blue) 41%,
+    var(--blue) 100%
+  );
 }
 
 .btn-grad:hover {
@@ -88,14 +110,6 @@ input:focus-within {
 }
 
 .render-grad {
-  /* background: linear-gradient(
-    120deg,
-    var(--t-blue) 0%,
-    #ffffff28 10%,
-    var(--t-blue) 11%
-  ); */
-  /* background-size: 200% auto;
-  animation: animate 3s infinite; */
   overflow: hidden;
   position: relative;
 }

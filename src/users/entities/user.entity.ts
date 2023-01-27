@@ -1,10 +1,5 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  OneToOne,
-  OneToMany,
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Member } from '../../project/entities/member.entity';
 import { Project } from '../../project/entities/project.entity';
 
 @Entity()
@@ -21,6 +16,9 @@ export class User {
   @Column()
   password: string;
 
-  @OneToMany((type) => Project, (project) => project.owner)
+  @OneToMany(() => Project, (project) => project.owner)
   project: Project[];
+
+  @OneToMany(() => Member, (member) => member.user)
+  memberOf: Member[];
 }
