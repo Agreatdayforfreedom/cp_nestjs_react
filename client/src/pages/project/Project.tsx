@@ -6,18 +6,30 @@ import { BsFillPeopleFill, BsGearFill } from 'react-icons/bs';
 import { RiMenuLine } from 'react-icons/ri';
 import { Link, Outlet, useParams } from 'react-router-dom';
 import { FIND_PROJECT } from '../../typedefs';
+import { AiOutlineUsergroupAdd } from 'react-icons/ai';
 
 const Project = () => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
 
   return (
     <main>
-      <nav>
-        <RiMenuLine
-          size={30}
-          className="mx-4 my-2 cursor-pointer md:hidden"
-          onClick={() => setShowMenu((prev) => !prev)}
-        />
+      <nav className="border-b border-slate-700">
+        <div className="flex items-center justify-between">
+          <RiMenuLine
+            size={30}
+            className="mx-4 my-2 cursor-pointer md:hidden"
+            onClick={() => setShowMenu((prev) => !prev)}
+          />
+          <Link
+            to="search"
+            className={`${
+              location.pathname === '/search' &&
+              'border-2 border-[var(--purple)]'
+            } p-1.5 rounded-full inline-block `}
+          >
+            <AiOutlineUsergroupAdd size={25} />
+          </Link>
+        </div>
         <Menu show={showMenu} />
       </nav>
       <Outlet />
@@ -30,7 +42,7 @@ const Menu = ({ show }: { show: boolean }) => {
     <ul
       className={`${show ? 'block' : 'hidden'} md:flex
        border-t md:border-t-0
-        animate-menu justify-center border-b
+        animate-menu justify-center 
          border-slate-700`}
     >
       <li>

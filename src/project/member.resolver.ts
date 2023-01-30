@@ -17,7 +17,7 @@ export class MemberResolver {
     return this.memberService.findMembers(projectId);
   }
 
-  @Mutation((returns) => MemberModel, { nullable: true })
+  @Mutation((returns) => MemberModel)
   addMember(@Args() args: AddMemberArgs, @CurrentUser() cUser: User) {
     return this.memberService.addMember(args, cUser);
   }

@@ -22,7 +22,8 @@ export const ProjectList = () => {
   useEffect(() => {
     if (
       currentPage === 0 ||
-      currentPage === Math.ceil(data && data.findProjectByPage.endIndex / limit)
+      currentPage ===
+        Math.ceil(data && data.findProjectByPage.endIndex / limit - 1)
     ) {
       return;
     }

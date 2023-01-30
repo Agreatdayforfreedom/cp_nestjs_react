@@ -10,7 +10,7 @@ import Dashboard from './pages/project/Dashboard';
 import Members from './pages/project/Members';
 import Issues from './pages/project/Issues';
 import Config from './pages/project/Config';
-import Search from './pages/Search';
+import Search from './pages/project/Search';
 
 function App() {
   return (
@@ -22,12 +22,12 @@ function App() {
         </Route>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
-          <Route path="search" element={<Search />} />
           <Route path="project">
             <Route path="new" element={<NewProject />} />
             <Route path=":id" element={<Project />}>
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="issues" element={<Issues />} />
+              <Route path="search" element={<Search />} />
               <Route path="members" element={<Members />} />
               <Route path="config" element={<Config />} />
             </Route>

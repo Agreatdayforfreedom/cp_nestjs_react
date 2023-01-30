@@ -5,11 +5,12 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserInputError } from 'apollo-server-core';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { ProjectCreateArgs, ProjectUpdateArgs } from '../dtos/project.dto';
-import { Member } from '../entities/member.entity';
+import { Member, Role } from '../entities/member.entity';
 import { Project } from '../entities/project.entity';
+import { MemberService } from './member.service';
 
 export interface Page {
   projects: Project[];
@@ -19,6 +20,7 @@ export interface Page {
 @Injectable()
 export class ProjectService {
   constructor(
+    private dataSource: DataSource,
     @InjectRepository(Project) private projectRepository: Repository<Project>,
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Member) private memberRepository: Repository<Member>,
@@ -68,9 +70,32 @@ export class ProjectService {
   }
 
   async create(args: ProjectCreateArgs, cUser: User): Promise<Project> {
-    const project = this.projectRepository.create(args);
-    project.owner = cUser;
-    return await this.projectRepository.save(project);
+    const queryRunner = this.dataSource.createQueryRunner();
+
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      const project = this.projectRepository.create(args);
+      project.owner = cUser;
+      const projectCreated = await this.projectRepository.save(project);
+
+      const member = this.memberRepository.create({
+        user: cUser,
+        project: projectCreated,
+        role: Role.ADMIN,
+      });
+
+      await this.memberRepository.save(member);
+
+      await queryRunner.commitTransaction();
+      return project;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
+
+    //todo: validate that the project was created successfully and then to do it as admin
   }
 
   async update(args: ProjectUpdateArgs, cUser: User): Promise<Project> {

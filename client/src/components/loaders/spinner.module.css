@@ -1,58 +1,78 @@
-.wrapper {
+.spinner {
+  color: official;
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.spinner div {
+  transform-origin: 40px 40px;
+  animation: spinner 1.2s linear infinite;
+}
+.spinner div:after {
+  content: ' ';
+  display: block;
   position: absolute;
-  width: 30px;
+  top: 3px;
+  left: 37px;
+  width: 6px;
+  height: 18px;
+  border-radius: 20%;
+  background: #fff;
 }
-.loader {
-  animation: loader-turn 1s linear infinite;
-  padding: 1rem;
-  max-width: inherit;
-  width: 100%;
+.spinner div:nth-child(1) {
+  transform: rotate(0deg);
+  animation-delay: -1.1s;
 }
-@keyframes loader-turn {
-  50% {
-    transform: rotate(180deg);
+.spinner div:nth-child(2) {
+  transform: rotate(30deg);
+  animation-delay: -1s;
+}
+.spinner div:nth-child(3) {
+  transform: rotate(60deg);
+  animation-delay: -0.9s;
+}
+.spinner div:nth-child(4) {
+  transform: rotate(90deg);
+  animation-delay: -0.8s;
+}
+.spinner div:nth-child(5) {
+  transform: rotate(120deg);
+  animation-delay: -0.7s;
+}
+.spinner div:nth-child(6) {
+  transform: rotate(150deg);
+  animation-delay: -0.6s;
+}
+.spinner div:nth-child(7) {
+  transform: rotate(180deg);
+  animation-delay: -0.5s;
+}
+.spinner div:nth-child(8) {
+  transform: rotate(210deg);
+  animation-delay: -0.4s;
+}
+.spinner div:nth-child(9) {
+  transform: rotate(240deg);
+  animation-delay: -0.3s;
+}
+.spinner div:nth-child(10) {
+  transform: rotate(270deg);
+  animation-delay: -0.2s;
+}
+.spinner div:nth-child(11) {
+  transform: rotate(300deg);
+  animation-delay: -0.1s;
+}
+.spinner div:nth-child(12) {
+  transform: rotate(330deg);
+  animation-delay: 0s;
+}
+@keyframes spinner {
+  0% {
+    opacity: 1;
   }
   100% {
-    transform: rotate(720deg);
-  }
-}
-.loader__value {
-  animation: loader-stroke 6s linear infinite;
-  fill: none;
-  stroke-dasharray: 63;
-  stroke-dashoffset: 63;
-  stroke-linecap: round;
-  stroke-width: 4;
-}
-.loader__value:nth-child(1) {
-  stroke: dodgerblue;
-}
-.loader__value:nth-child(2) {
-  stroke: #efefef;
-  animation-delay: 1s;
-}
-.loader__value:nth-child(3) {
-  stroke: crimson;
-  animation-delay: 2s;
-}
-.loader__value:nth-child(4) {
-  stroke: peachpuff;
-  animation-delay: 3s;
-}
-.loader__value:nth-child(5) {
-  stroke: chocolate;
-  animation-delay: 4s;
-}
-.loader__value:nth-child(6) {
-  stroke: pink;
-  animation-delay: 5s;
-}
-@keyframes loader-stroke {
-  8.3333333333% {
-    stroke-dashoffset: 0;
-  }
-  16.6666666667%,
-  100% {
-    stroke-dashoffset: 63;
+    opacity: 0;
   }
 }

@@ -27,7 +27,8 @@ export class Project {
   @OneToMany((type) => Member, (member) => member.project)
   members: Member[];
 
-  @Column({ nullable: true })
+  //? default: 1 is the member create
+  @Column({ nullable: true, default: 1 })
   membersTotal: number;
 
   @Column({ default: false })

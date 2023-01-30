@@ -53,7 +53,6 @@ export class MemberService {
         project: true,
       },
     });
-    console.log({ nextMemberExists, project, member });
     if (!nextMemberExists) throw new HttpException('User not found', 404);
     if (!project) throw new HttpException('Project not found', 404);
     if (member)

@@ -11,7 +11,6 @@ import { join } from 'path';
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 import { JwtModule } from '@nestjs/jwt';
 import { ProjectModule } from './project/project.module';
-
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({

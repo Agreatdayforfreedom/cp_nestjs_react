@@ -5,9 +5,6 @@ import { AiOutlineHome, AiOutlineUsergroupAdd } from 'react-icons/ai';
 const SideBar = () => {
   const location = useLocation();
 
-  useEffect(() => {
-    console.log(location);
-  }, [location]);
   return (
     <aside className="hidden sm:block mt-12 w-20 border-r border-slate-700">
       <ul className="flex flex-col items-center mt-10">
@@ -19,17 +16,6 @@ const SideBar = () => {
             } p-1.5 rounded-full inline-block`}
           >
             <AiOutlineHome size={30} />
-          </Link>
-        </li>
-        <li className="my-3">
-          <Link
-            to="/search"
-            className={`${
-              location.pathname === '/search' &&
-              'border-2 border-[var(--purple)]'
-            } p-1.5 rounded-full inline-block `}
-          >
-            <AiOutlineUsergroupAdd size={25} />
           </Link>
         </li>
       </ul>

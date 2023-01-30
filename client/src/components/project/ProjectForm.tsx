@@ -20,7 +20,7 @@ const ProjectForm = () => {
 
   useEffect(() => {
     if (data && data.createProject) {
-      navigate('/');
+      navigate(`/project/${data.createProject.id}/dashboard`);
     }
     console.log(data);
   }, [data]);

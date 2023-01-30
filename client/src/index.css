@@ -96,6 +96,12 @@ input:focus-within {
   text-decoration: none;
 }
 
+.btn-success {
+  background: var(--green) !important;
+  border-radius: 100%;
+  padding: 4px;
+}
+
 .bar {
   border-top-width: 8px;
   border-top-style: solid;

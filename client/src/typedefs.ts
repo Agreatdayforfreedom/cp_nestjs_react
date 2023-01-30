@@ -22,6 +22,31 @@ export const LOGIN = gql`
   }
 `;
 
+export const FIND_USERS = gql`
+  query Query {
+    findUsers {
+      username
+      email
+      id
+    }
+  }
+`;
+
+export const ADD_MEMBER = gql`
+  mutation Mutation($nextMemberId: Int!, $projectId: Int!) {
+    addMember(nextMemberId: $nextMemberId, projectId: $projectId) {
+      id
+      role
+      ban
+      user {
+        id
+        username
+        email
+      }
+    }
+  }
+`;
+
 export const FIND_PROJECT_BY_PAGE = gql`
   query Query($limit: Int, $offset: Int!) {
     findProjectByPage(limit: $limit, offset: $offset) {
@@ -43,10 +68,8 @@ export const FIND_PROJECT = gql`
       title
       description
       status
-      members {
+      owner {
         id
-        username
-        email
       }
     }
   }
