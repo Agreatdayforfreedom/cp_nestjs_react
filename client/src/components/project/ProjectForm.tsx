@@ -35,7 +35,12 @@ const ProjectForm = () => {
     });
   };
 
-  if (error) return <span>error</span>;
+  if (error)
+    return (
+      <span>
+        <Navigate to="/" />
+      </span>
+    );
   return (
     <div className="h-full flex items-center">
       <form

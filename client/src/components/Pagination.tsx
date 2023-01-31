@@ -2,6 +2,7 @@ import React from 'react';
 import { usePagination, DOTS } from '../hooks/usePagination';
 import { nanoid } from '@reduxjs/toolkit';
 import { RiArrowLeftSFill, RiArrowRightSFill } from 'react-icons/ri';
+import { Navigate } from 'react-router-dom';
 
 interface Props {
   onPageChange: (page: number) => void;
@@ -25,7 +26,7 @@ const Pagination = ({
     limit,
   });
 
-  if (!paginationRange) return <span>error</span>;
+  if (!paginationRange) return <Navigate to="/" />;
   const onNext = () => {
     onPageChange(currentPage + 1);
   };

@@ -1,16 +1,39 @@
 import { useQuery } from '@apollo/client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MdDashboard } from 'react-icons/md';
 import { VscIssues } from 'react-icons/vsc';
 import { BsFillPeopleFill, BsGearFill } from 'react-icons/bs';
 import { RiMenuLine } from 'react-icons/ri';
-import { Link, Outlet, useParams } from 'react-router-dom';
-import { FIND_PROJECT } from '../../typedefs';
+import {
+  Link,
+  Navigate,
+  Outlet,
+  useLocation,
+  useParams,
+} from 'react-router-dom';
+import { FIND_AUTH_MEMBER, FIND_MEMBERS, FIND_PROJECT } from '../../typedefs';
 import { AiOutlineUsergroupAdd } from 'react-icons/ai';
+import Spinner from '../../components/loaders/Spinner';
+import { Role } from '../../interfaces/enums';
 
 const Project = () => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
 
+  const location = useLocation();
+  const params = useParams();
+
+  const { data, loading, error } = useQuery(FIND_AUTH_MEMBER, {
+    variables: {
+      projectId: params.id && parseInt(params.id, 10),
+    },
+  });
+
+  useEffect(() => {
+    setShowMenu(false);
+  }, [location]);
+
+  if (loading) return <Spinner />;
+  if (error) return <Navigate to="/" />;
   return (
     <main>
       <nav className="border-b border-slate-700">
@@ -20,15 +43,17 @@ const Project = () => {
             className="mx-4 my-2 cursor-pointer md:hidden"
             onClick={() => setShowMenu((prev) => !prev)}
           />
-          <Link
-            to="search"
-            className={`${
-              location.pathname === '/search' &&
-              'border-2 border-[var(--purple)]'
-            } p-1.5 rounded-full inline-block `}
-          >
-            <AiOutlineUsergroupAdd size={25} />
-          </Link>
+          {data && data.findAuthMember.role !== Role.MEMBER && (
+            <Link
+              to="search"
+              className={`${
+                location.pathname === '/search' &&
+                'border-2 border-[var(--purple)]'
+              } p-1.5 rounded-full inline-block `}
+            >
+              <AiOutlineUsergroupAdd size={25} />
+            </Link>
+          )}
         </div>
         <Menu show={showMenu} />
       </nav>

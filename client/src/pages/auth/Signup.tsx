@@ -40,7 +40,7 @@ const Signup = () => {
     });
   };
 
-  if (error) return <span>error</span>;
+  if (error) return <span>there was an error</span>;
   if (loading) return <InitSpinner />;
   return (
     <main className="h-full flex items-center justify-center">

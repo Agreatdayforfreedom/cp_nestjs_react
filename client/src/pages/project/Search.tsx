@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { nanoid } from '@reduxjs/toolkit';
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import Button from '../../components/Button';
 import { ADD_MEMBER, FIND_USERS } from '../../typedefs';
 
@@ -37,7 +37,7 @@ const Search = () => {
   };
 
   if (loading) return <span>loading</span>;
-  if (error) return <span>error</span>;
+  if (error) return <Navigate to="/" />;
   return (
     <div>
       {data &&

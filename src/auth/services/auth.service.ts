@@ -2,7 +2,11 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserInputError } from 'apollo-server-core';
 import { GraphQLError } from 'graphql';
-import { UserCreateArgs, UserLoginArgs } from '../../users/dtos/user.dto';
+import {
+  RefreshTokenArgs,
+  UserCreateArgs,
+  UserLoginArgs,
+} from '../../users/dtos/user.dto';
 import { UsersService } from '../../users/services/users.service';
 
 @Injectable()
@@ -29,7 +33,7 @@ export class AuthService {
           username: rest.username,
           email: rest.email,
         },
-        { secret: 'secret' },
+        { secret: process.env.JWT_SECRET },
       ),
     };
   }
@@ -49,7 +53,27 @@ export class AuthService {
           username: rest.username,
           email: rest.email,
         },
-        { secret: 'secret' },
+        { secret: process.env.JWT_SECRET },
+      ),
+    };
+  }
+
+  async refreshToken(args: RefreshTokenArgs) {
+    const user = await this.userService.find(args);
+    if (!user) throw new UserInputError('User not found');
+
+    const { password: _, ...rest } = user;
+    console.log(args);
+    return {
+      user: rest,
+      token: this.jwtService.sign(
+        {
+          id: rest.id,
+          username: rest.username,
+          email: rest.email,
+          projectId: args.projectId,
+        },
+        { secret: process.env.JWT_SECRET },
       ),
     };
   }

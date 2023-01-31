@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client';
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
+import InitSpinner from '../../components/loaders/InitSpinner';
 import { FIND_PROJECT } from '../../typedefs';
 
 const Dashboard = () => {
@@ -12,10 +13,8 @@ const Dashboard = () => {
     },
   });
 
-  if (loading) return <span>loading</span>;
-  if (error) return <span>errrr</span>;
-  // if (!data) return <span>nodata</span>;
-  console.log(data);
+  if (loading) return <InitSpinner />;
+  if (error) return <Navigate to="/" />;
   return (
     <section>
       <h1 className="text-3xl px-2 m-5">{data.findOneProject.title}</h1>

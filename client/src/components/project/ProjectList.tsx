@@ -1,14 +1,11 @@
 import { useLazyQuery, useQuery } from '@apollo/client';
 import { nanoid } from '@reduxjs/toolkit';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, Navigate, useSearchParams } from 'react-router-dom';
 import { FIND_PROJECT_BY_PAGE } from '../../typedefs';
 import ShineCard from '../loaders/ShineCard';
 import Pagination from '../Pagination';
-
-interface ProjectProps {
-  project: any;
-}
+import ProjectCard from './ProjectCard';
 
 export const ProjectList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -38,7 +35,7 @@ export const ProjectList = () => {
   }, [currentPage]);
 
   if (loading) return <ShineCard />;
-  if (error) return <span>error</span>;
+  if (error) return <Navigate to="/" />;
   return (
     <div>
       <div className="w-[95%] mx-auto border border-slate-700 bg-[var(--t-blue)] ">
@@ -53,38 +50,6 @@ export const ProjectList = () => {
         limit={limit}
         onPageChange={(page: number) => setCurrentPage(page)}
       />
-    </div>
-  );
-};
-
-//todo: maybe experiment with subscriptios
-const ProjectCard = ({ project }: ProjectProps) => {
-  console.log(project.id);
-  return (
-    <div className="flex items-center justify-between border-b border-slate-700 last:border-none hover:cursor-pointer hover:bg-[var(--medium-blue)] transition-colors">
-      <div className="flex flex-col justify-center">
-        <Link
-          to={`/project/${project.id}/dashboard`}
-          className="
-          text-slate-400
-          font-semibold 
-          p-3 hover:text-slate-500
-          hover:underline
-          "
-        >
-          {project.title}
-        </Link>
-        <p
-          className={`font-semibold px-3 ${
-            project.status ? 'text-green-600' : 'text-red-800'
-          }`}
-        >
-          {project.status.toString()}
-        </p>
-      </div>
-      <p className="px-2 text-slate-500 w-1/3 overflow-clip overflow-ellipsis">
-        {project.description}
-      </p>
     </div>
   );
 };

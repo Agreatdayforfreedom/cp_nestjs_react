@@ -41,22 +41,47 @@ export class ProjectService {
     };
   }
 
-  async findOne(id: number, cUser: User): Promise<Project> {
-    return await this.projectRepository.findOne({
+  async findOne(id: number, cUser: User) {
+    const project = await this.projectRepository.findOne({
       where: {
         id,
-        owner: {
-          id: cUser.id,
-        },
       },
       relations: {
         owner: true,
         members: true,
       },
     });
+
+    const isMember = await this.memberRepository.findOne({
+      where: {
+        user: {
+          id: cUser.id,
+        },
+        project: {
+          id: project.id,
+        },
+      },
+      relations: {
+        user: true,
+        project: true,
+      },
+    });
+
+    if (!isMember)
+      throw new UnauthorizedException('You are not a member of this project');
+
+    return project;
   }
 
-  async findAll(cUser: User): Promise<Project[]> {
+  async findAll(): Promise<Project[]> {
+    return await this.projectRepository.find({
+      relations: {
+        owner: true,
+      },
+    });
+  }
+
+  async findMyProjects(cUser: User): Promise<Project[]> {
     return await this.projectRepository.find({
       where: {
         owner: {
@@ -67,6 +92,29 @@ export class ProjectService {
         owner: true,
       },
     });
+  }
+
+  async findProjectsMemberOf(cUser: User): Promise<Project[]> {
+    const memberof = await this.memberRepository
+      .createQueryBuilder('member')
+      .leftJoinAndSelect('member.user', 'user')
+      .leftJoinAndSelect('member.project', 'project')
+      .leftJoinAndSelect('project.owner', 'owner')
+      .where('user.id = :id', { id: cUser.id })
+      .andWhere('member.role != :role', { role: Role.ADMIN })
+      .getMany();
+
+    if (memberof.length < 1)
+      throw new HttpException('You are not a member of any project', 400);
+    const projectIds = memberof.map((m) => {
+      return m.project.id;
+    });
+
+    return await this.projectRepository
+      .createQueryBuilder('project')
+      .leftJoinAndSelect('project.owner', 'owner')
+      .where('project.id IN (:...projectIds)', { projectIds: [...projectIds] })
+      .getMany();
   }
 
   async create(args: ProjectCreateArgs, cUser: User): Promise<Project> {

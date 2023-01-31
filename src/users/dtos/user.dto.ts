@@ -1,6 +1,6 @@
 // import {} from '@nestjs/mapped-types';
-import { ArgsType, Field } from '@nestjs/graphql';
-import { IsDefined, IsString } from 'class-validator';
+import { ArgsType, Field, Int } from '@nestjs/graphql';
+import { IsDefined, IsNumber, IsOptional, IsString } from 'class-validator';
 
 @ArgsType()
 export class UserCreateArgs {
@@ -31,4 +31,17 @@ export class UserLoginArgs {
   @IsString()
   @IsDefined()
   password: string;
+}
+
+@ArgsType()
+export class RefreshTokenArgs {
+  @Field((type) => Int)
+  @IsNumber()
+  @IsOptional()
+  projectId: number;
+
+  // @Field((type) => Int)
+  // @IsNumber()
+  // @IsOptional()
+  // memberId: number;
 }

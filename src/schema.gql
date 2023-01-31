@@ -9,9 +9,12 @@ type User {
   password: String
 }
 
-type Auth {
-  token: String!
-  user: User!
+type Profile {
+  id: Int!
+  username: String!
+  email: String!
+  password: String
+  projectId: Int
 }
 
 type Member {
@@ -37,13 +40,22 @@ type Pagination {
   endIndex: Float!
 }
 
+type Auth {
+  token: String!
+  user: User!
+}
+
 type Query {
   findUsers: [User!]!
-  profile: User!
+  profile: Profile!
+  refreshToken(projectId: Int!): Auth!
   findAllProjects: [Project!]!
+  findMyProjects: [Project!]!
+  findProjectsMemberOf: [Project!]!
   findOneProject(id: Int!): Project!
   findProjectByPage(offset: Int!, limit: Int): Pagination!
   findMembers(projectId: Int!): [Member!]!
+  findAuthMember(projectId: Int!): Member!
 }
 
 type Mutation {
@@ -53,5 +65,6 @@ type Mutation {
   updateProject(title: String, description: String, id: Int!): Project
   deleteProject(id: Float!): String
   addMember(nextMemberId: Int!, projectId: Int!): Member!
+  banMember(memberId: Int!, banType: String!): Member!
   removeMember(memberId: Int!, projectId: Int!): String!
 }

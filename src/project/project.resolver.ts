@@ -19,8 +19,18 @@ export class ProjectResolver {
   constructor(private projectService: ProjectService) {}
 
   @Query((returns) => [ProjectModel])
-  findAllProjects(@CurrentUser() cUser: User) {
-    return this.projectService.findAll(cUser);
+  findAllProjects() {
+    return this.projectService.findAll();
+  }
+
+  @Query((returns) => [ProjectModel])
+  findMyProjects(@CurrentUser() cUser: User) {
+    return this.projectService.findMyProjects(cUser);
+  }
+
+  @Query((returns) => [ProjectModel])
+  findProjectsMemberOf(@CurrentUser() cUser: User) {
+    return this.projectService.findProjectsMemberOf(cUser);
   }
 
   @Query((returns) => ProjectModel)
@@ -28,7 +38,6 @@ export class ProjectResolver {
     @Args('id', { type: () => Int }) id: number,
     @CurrentUser() cUser: User,
   ) {
-    console.log(id);
     return this.projectService.findOne(id, cUser);
   }
 

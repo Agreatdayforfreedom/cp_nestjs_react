@@ -1,4 +1,10 @@
-import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useNavigate,
+} from 'react-router-dom';
 import AuthLayout from './layouts/AuthLayout';
 import MainLayout from './layouts/MainLayout';
 import Home from './pages/Home';
@@ -30,6 +36,7 @@ function App() {
               <Route path="search" element={<Search />} />
               <Route path="members" element={<Members />} />
               <Route path="config" element={<Config />} />
+              <Route path="*" element={<Navigate to="dashboard" />} />
             </Route>
           </Route>
         </Route>

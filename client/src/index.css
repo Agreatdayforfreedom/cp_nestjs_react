@@ -7,6 +7,7 @@
   --green: #025a24;
   --blood: #4b0023;
   --blue: #001675;
+  --orange: #753900;
   --purple: #30155c;
 
   --medium-purple: #140147;
@@ -16,6 +17,7 @@
   --dark-purple: #0a0027;
 
   /* transparents */
+  --t-orange: #38150091;
   --t-red: #38000091;
   --t-blue: #06003f40;
   --t-purple: #18003f40;
@@ -137,7 +139,7 @@ input:focus-within {
   animation: shine 2s infinite;
 }
 
-@media all and (max-width: 700px) {
+@media all and (max-width: 770px) {
   .animate-menu {
     height: auto;
     overflow: hidden;

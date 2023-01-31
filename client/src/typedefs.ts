@@ -75,6 +75,62 @@ export const FIND_PROJECT = gql`
   }
 `;
 
+export const FIND_PROJECTS_MEMBEROF = gql`
+  query Query {
+    findProjectsMemberOf {
+      id
+      title
+      description
+      status
+      owner {
+        id
+      }
+    }
+  }
+`;
+
+export const FIND_MY_PROJECTS = gql`
+  query Query {
+    findMyProjects {
+      id
+      title
+      description
+      status
+      owner {
+        id
+      }
+    }
+  }
+`;
+
+export const BAN_MEMBER = gql`
+  mutation Mutation($memberId: Int!, $banType: String!) {
+    banMember(memberId: $memberId, banType: $banType) {
+      id
+      ban
+    }
+  }
+`;
+
+export const FIND_AUTH_MEMBER = gql`
+  query Query($projectId: Int!) {
+    findAuthMember(projectId: $projectId) {
+      id
+      role
+      ban
+      project {
+        id
+        membersTotal
+      }
+      user {
+        id
+        username
+        email
+      }
+    }
+  }
+`;
+
 export const FIND_MEMBERS = gql`
   query Query($projectId: Int!) {
     findMembers(projectId: $projectId) {
@@ -119,6 +175,18 @@ export const PROFILE = gql`
       username
       email
       id
+      projectId
+    }
+  }
+`;
+
+export const REFRESH_TOKEN = gql`
+  query Query($projectId: Int!) {
+    refreshToken(projectId: $projectId) {
+      user {
+        id
+      }
+      token
     }
   }
 `;

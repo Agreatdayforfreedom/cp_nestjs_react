@@ -24,7 +24,7 @@ import { ProjectModule } from './project/project.module';
       isGlobal: true,
     }),
     JwtModule.register({
-      secret: 'secret',
+      secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '20d' },
     }),
     DatabaseModule,

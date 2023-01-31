@@ -1,9 +1,13 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserInputError } from 'apollo-server-core';
 import { Repository } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
-import { Member } from '../entities/member.entity';
+import { Ban, Member, Role } from '../entities/member.entity';
 import { Project } from '../entities/project.entity';
 //todo: move all types, interfaces and enums to respective files;
 export interface AddMember {
@@ -18,6 +22,23 @@ export class MemberService {
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Member) private memberRepository: Repository<Member>,
   ) {}
+
+  async findAuthMember(projectId: number, cUser: User) {
+    return await this.memberRepository.findOne({
+      where: {
+        project: {
+          id: projectId,
+        },
+        user: {
+          id: cUser.id,
+        },
+      },
+      relations: {
+        user: true,
+        project: true,
+      },
+    });
+  }
 
   async findMembers(projectId: number) {
     return await this.memberRepository.find({
@@ -74,12 +95,43 @@ export class MemberService {
     return memberSaved;
   }
 
-  async removeMember(
-    memberId: number,
-    projectId: number,
-    cUser: User,
-  ): Promise<string> {
-    console.log(memberId, cUser);
+  async banMember(memberId: number, banType: Ban, cUser: User) {
+    const memberWhoBan = await this.memberRepository.findOne({
+      where: {
+        user: {
+          id: cUser.id,
+        },
+      },
+      relations: {
+        user: true,
+      },
+    });
+
+    const memberToBan = await this.memberRepository.findOne({
+      where: {
+        id: memberId,
+      },
+    });
+
+    if (!memberToBan || !memberWhoBan)
+      throw new UserInputError('There was an error');
+
+    if (memberToBan.role === Role.ADMIN)
+      throw new UnauthorizedException('An admin cannot be banned');
+
+    if (memberWhoBan.role === Role.MEMBER)
+      throw new UnauthorizedException('An member cannot ban other members');
+
+    if (memberToBan.ban === banType) {
+      memberToBan.ban = Ban.NO_BAN;
+      return await this.memberRepository.save(memberToBan);
+    }
+    memberToBan.ban = banType;
+
+    return await this.memberRepository.save(memberToBan);
+  }
+
+  async removeMember(memberId: number, projectId: number): Promise<string> {
     const memberExists = await this.memberRepository.findOne({
       where: {
         id: memberId,
