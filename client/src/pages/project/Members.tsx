@@ -11,9 +11,7 @@ import { Member as IMember } from '../../interfaces/interfaces';
 // import {Member as MemberModel} from ''
 import {
   BAN_MEMBER,
-  FIND_AUTH_MEMBER,
   FIND_MEMBERS,
-  FIND_PROJECT,
   PROFILE,
   REMOVE_MEMBER,
 } from '../../typedefs';
@@ -27,19 +25,8 @@ const Members = () => {
     },
   });
 
-  // const {
-  //   data: pData,
-  //   loading: pLoading,
-  //   error: pError,
-  // } = useQuery(FIND_PROJECT, {
-  //   variables: {
-  //     id: params.id && parseInt(params.id, 10),
-  //   },
-  // });
-
   if (loading) return <Spinner />;
   if (error) return <Navigate to="/" />;
-
   return (
     <section>
       {data.findMembers.map((member: IMember) => (
@@ -58,13 +45,19 @@ interface Props {
 const Member = ({ member }: Props) => {
   const params = useParams();
 
-  const {
-    data: mData,
-    loading: mLoading,
-    error: mError,
-  } = useQuery(FIND_AUTH_MEMBER, {
+  // const {
+  //   data: mData,
+  //   loading: mLoading,
+  //   error: mError,
+  // } = useQuery(FIND_AUTH_MEMBER, {
+  //   variables: {
+  //     projectId: params.id && parseInt(params.id, 10),
+  //   },
+  // });
+
+  const { data, loading, error } = useQuery(PROFILE, {
     variables: {
-      projectId: params.id && parseInt(params.id, 10),
+      id: params.id && parseInt(params.id, 10),
     },
   });
 
@@ -98,6 +91,10 @@ const Member = ({ member }: Props) => {
     });
   };
 
+  // console.log(pData);
+  if (!data) return <span>nodata</span>;
+  if (loading) return <span>nodata</span>;
+  if (error) return <span>nodata</span>;
   return (
     <div
       className={`
@@ -114,7 +111,7 @@ const Member = ({ member }: Props) => {
           } font-semibold`}
         >
           {member.role} {member.ban}
-          {member.user.id === mData.findAuthMember.user.id && (
+          {member.user.id === data?.profile.id && (
             <span className="text-sm px-1 text-slate-400">(you)</span>
           )}
         </span>
@@ -123,8 +120,7 @@ const Member = ({ member }: Props) => {
       </div>
       <div>
         {member.role !== Role.ADMIN &&
-          mData &&
-          mData.findAuthMember.role === Role.ADMIN && (
+          data.profile.currentProjectMember.role === Role.ADMIN && (
             <>
               <div className="  flex items-center py-2">
                 <button onClick={() => handleBan(member.id, Ban.BANNED)}>

@@ -22,18 +22,18 @@ const Project = () => {
   const location = useLocation();
   const params = useParams();
 
-  const { data, loading, error } = useQuery(FIND_AUTH_MEMBER, {
-    variables: {
-      projectId: params.id && parseInt(params.id, 10),
-    },
-  });
+  // const { data, loading, error } = useQuery(FIND_AUTH_MEMBER, {
+  //   variables: {
+  //     projectId: params.id && parseInt(params.id, 10),
+  //   },
+  // });
 
   useEffect(() => {
     setShowMenu(false);
   }, [location]);
 
-  if (loading) return <Spinner />;
-  if (error) return <Navigate to="/" />;
+  // if (loading) return <Spinner />;
+  // if (error) return <Navigate to="/" />;
   return (
     <main>
       <nav className="border-b border-slate-700">
@@ -43,7 +43,7 @@ const Project = () => {
             className="mx-4 my-2 cursor-pointer md:hidden"
             onClick={() => setShowMenu((prev) => !prev)}
           />
-          {data && data.findAuthMember.role !== Role.MEMBER && (
+          {/* {data && data.findAuthMember.role !== Role.MEMBER && (
             <Link
               to="search"
               className={`${
@@ -53,7 +53,7 @@ const Project = () => {
             >
               <AiOutlineUsergroupAdd size={25} />
             </Link>
-          )}
+          )} */}
         </div>
         <Menu show={showMenu} />
       </nav>

@@ -18,6 +18,9 @@ import { ProjectModule } from './project/project.module';
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
+      context: ({ req }) => ({
+        ...req,
+      }),
     }),
     ConfigModule.forRoot({
       envFilePath: `.env`,

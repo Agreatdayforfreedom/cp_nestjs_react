@@ -2,29 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type User {
-  id: Int!
-  username: String!
-  email: String!
-  password: String
-}
-
-type Profile {
-  id: Int!
-  username: String!
-  email: String!
-  password: String
-  projectId: Int
-}
-
-type Member {
-  id: Int!
-  role: String
-  ban: String
-  project: Project!
-  user: User!
-}
-
 type Project {
   id: Int!
   title: String!
@@ -38,6 +15,30 @@ type Project {
 type Pagination {
   projects: [Project!]!
   endIndex: Float!
+}
+
+type Member {
+  id: Int!
+  role: String
+  ban: String
+  project: Project!
+  user: User!
+}
+
+type User {
+  id: Int!
+  username: String!
+  email: String!
+  password: String
+}
+
+type Profile {
+  id: Int!
+  username: String!
+  email: String!
+  password: String
+  projectId: Int
+  currentProjectMember: Member
 }
 
 type Auth {
@@ -55,7 +56,6 @@ type Query {
   findOneProject(id: Int!): Project!
   findProjectByPage(offset: Int!, limit: Int): Pagination!
   findMembers(projectId: Int!): [Member!]!
-  findAuthMember(projectId: Int!): Member!
 }
 
 type Mutation {

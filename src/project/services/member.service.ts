@@ -15,6 +15,10 @@ export interface AddMember {
   projectId: number;
 }
 
+export interface findAuthMemberPayload extends User {
+  projectId: number;
+}
+
 @Injectable()
 export class MemberService {
   constructor(
@@ -23,14 +27,14 @@ export class MemberService {
     @InjectRepository(Member) private memberRepository: Repository<Member>,
   ) {}
 
-  async findAuthMember(projectId: number, cUser: User) {
+  async findAuthMember(payload: findAuthMemberPayload) {
     return await this.memberRepository.findOne({
       where: {
         project: {
-          id: projectId,
+          id: payload.projectId,
         },
         user: {
-          id: cUser.id,
+          id: payload.id,
         },
       },
       relations: {

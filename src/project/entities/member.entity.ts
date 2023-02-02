@@ -8,8 +8,10 @@ import {
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Project } from './project.entity';
-
 export enum Role {
+  /**
+   * @member PROFILE member is to determine if the guard is accessing from the profile role */
+  PROFILE = 'PROFILE',
   ADMIN = 'ADMIN',
   MODERATOR = 'MODERATOR',
   MEMBER = 'MEMBER',

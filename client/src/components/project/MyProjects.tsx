@@ -11,7 +11,7 @@ import ProjectCard from './ProjectCard';
 const MyProjects = () => {
   const { data, loading, error } = useQuery(FIND_MY_PROJECTS);
 
-  if (loading) return <ShineCard />;
+  if (loading) return <ShineCard len={2} />;
   if (error) return <Navigate to="/" />;
   return (
     <div className="w-[95%] mx-auto border border-slate-700 bg-[var(--t-blue)] ">

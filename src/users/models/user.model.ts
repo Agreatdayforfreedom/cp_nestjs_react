@@ -1,4 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Member } from '../../project/models/member.model';
 
 @ObjectType()
 export class User {
@@ -14,12 +15,12 @@ export class User {
   @Field({ nullable: true }) //? Securiry?
   password: string;
 }
-type Project = {
-  id: number;
-};
 
 @ObjectType()
 export class Profile extends User {
   @Field((type) => Int, { nullable: true })
   projectId: number;
+
+  @Field({ nullable: true })
+  currentProjectMember: Member;
 }

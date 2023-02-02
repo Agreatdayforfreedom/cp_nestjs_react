@@ -6,7 +6,6 @@ interface ProjectProps {
 }
 
 const ProjectCard = ({ project }: ProjectProps) => {
-  console.log(project.id);
   return (
     <div className="flex items-center justify-between border-b border-slate-700 last:border-none hover:cursor-pointer hover:bg-[var(--medium-blue)] transition-colors">
       <div className="flex flex-col justify-center">

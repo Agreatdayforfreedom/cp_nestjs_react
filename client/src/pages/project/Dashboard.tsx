@@ -2,6 +2,7 @@ import { useQuery } from '@apollo/client';
 import React from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import InitSpinner from '../../components/loaders/InitSpinner';
+import Spinner from '../../components/loaders/Spinner';
 import { FIND_PROJECT } from '../../typedefs';
 
 const Dashboard = () => {
@@ -13,7 +14,7 @@ const Dashboard = () => {
     },
   });
 
-  if (loading) return <InitSpinner />;
+  if (loading) return <Spinner />;
   if (error) return <Navigate to="/" />;
   return (
     <section>

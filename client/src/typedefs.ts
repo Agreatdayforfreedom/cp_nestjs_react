@@ -176,6 +176,11 @@ export const PROFILE = gql`
       email
       id
       projectId
+      currentProjectMember {
+        id
+        ban
+        role
+      }
     }
   }
 `;

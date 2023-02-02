@@ -1,7 +1,18 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Context,
+  Int,
+  Mutation,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+import { CurrentMember } from '../auth/decorators/member.decorator';
+import { Roles } from '../auth/decorators/role.decorator';
 import { CurrentUser } from '../auth/decorators/user.decorator';
 import { GqlAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/role.guard';
 import { User } from '../users/entities/user.entity';
 import { AddMemberArgs } from './dtos/project.dto';
 import { Ban, Role } from './entities/member.entity';
@@ -9,21 +20,18 @@ import { Member as MemberModel } from './models/member.model';
 import { MemberService } from './services/member.service';
 
 @Resolver()
-@UseGuards(GqlAuthGuard)
+@UseGuards(GqlAuthGuard, RolesGuard)
+@Roles(Role.MEMBER)
 export class MemberResolver {
   constructor(private memberService: MemberService) {}
 
   @Query((returns) => [MemberModel])
-  findMembers(@Args('projectId', { type: () => Int }) projectId: number) {
-    return this.memberService.findMembers(projectId);
-  }
-
-  @Query((returns) => MemberModel)
-  findAuthMember(
+  @Roles(Role.ADMIN, Role.MODERATOR)
+  findMembers(
     @Args('projectId', { type: () => Int }) projectId: number,
-    @CurrentUser() cUser: User,
+    @CurrentMember() cMember: MemberModel,
   ) {
-    return this.memberService.findAuthMember(projectId, cUser);
+    return this.memberService.findMembers(projectId);
   }
 
   @Mutation((returns) => MemberModel)

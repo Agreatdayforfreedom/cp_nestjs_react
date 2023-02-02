@@ -1,10 +1,14 @@
 import { nanoid } from '@reduxjs/toolkit';
 import React from 'react';
 
-const ShineCard = () => {
+interface Props {
+  len?: number;
+}
+
+const ShineCard = ({ len = 2 }: Props) => {
   return (
     <div className="render-grad w-[95%] mx-auto border border-slate-700 ">
-      {Array.from(Array(5).keys()).map((x) => (
+      {Array.from(Array(len).keys()).map((x) => (
         <CardRender key={nanoid()} />
       ))}
     </div>

@@ -17,31 +17,23 @@ const MainLayout = () => {
   const { data, loading, error } = useQuery(REFRESH_TOKEN, {
     fetchPolicy: 'network-only',
     variables: {
-      projectId: params.id && parseInt(params.id, 10),
+      projectId: (params.id && parseInt(params.id, 10)) || 0,
     },
   });
 
   useEffect(() => {
-    console.log(params);
-    console.log(profileData);
-  }, [profileData]);
-
-  useEffect(() => {
     if (data) {
       localStorage.setItem('token', data.refreshToken.token);
-      console.log(data);
       fetch();
     }
   }, [data]);
-  // if (error?.message === 'Unauthorized') return <Navigate to="/login" />;
-  if (loading || loadingData) return <InitSpinner />;
+
+  if (loading) return <InitSpinner />;
   if (error || errorData) return <span>error</span>;
-  // if (data) console.log(data);
   return (
     <div className="flex min-h-screen min-w-screen">
       <Header />
       <SideBar />
-
       <div className="mt-12 w-full relative">
         <Outlet />
       </div>
