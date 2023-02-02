@@ -104,10 +104,27 @@ export const FIND_MY_PROJECTS = gql`
 `;
 
 export const BAN_MEMBER = gql`
-  mutation Mutation($memberId: Int!, $banType: String!) {
-    banMember(memberId: $memberId, banType: $banType) {
+  mutation Mutation(
+    $memberWhoBanId: Int!
+    $memberToBanId: Int!
+    $banType: String!
+  ) {
+    banMember(
+      memberWhoBanId: $memberWhoBanId
+      memberToBanId: $memberToBanId
+      banType: $banType
+    ) {
       id
       ban
+    }
+  }
+`;
+
+export const CHANGE_ROLE_MEMBER = gql`
+  mutation Mutation($memberId: Int!, $roleType: String!) {
+    changeMemberRole(memberId: $memberId, roleType: $roleType) {
+      id
+      role
     }
   }
 `;
@@ -186,8 +203,8 @@ export const PROFILE = gql`
 `;
 
 export const REFRESH_TOKEN = gql`
-  query Query($projectId: Int!) {
-    refreshToken(projectId: $projectId) {
+  query Query($projectId: Int!, $id: Int!) {
+    refreshToken(projectId: $projectId, id: $id) {
       user {
         id
       }

@@ -14,6 +14,10 @@ export class UsersService {
     return await this.userRepository.find();
   }
 
+  async findOneById(id: number) {
+    return await this.userRepository.findOneBy({ id });
+  }
+
   async create(args: UserCreateArgs) {
     const user = this.userRepository.create(args);
     return await this.userRepository.save(user);

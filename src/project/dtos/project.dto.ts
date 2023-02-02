@@ -41,16 +41,3 @@ export class FindByPageArgs {
   @IsOptional()
   limit: number;
 }
-
-@ArgsType()
-export class AddMemberArgs {
-  @Field((type) => Int)
-  @IsNumber()
-  @IsDefined()
-  nextMemberId: number;
-
-  @Field((type) => Int)
-  @IsNumber()
-  @IsDefined()
-  projectId: number;
-}

@@ -37,6 +37,11 @@ export class UserLoginArgs {
 export class RefreshTokenArgs {
   @Field((type) => Int)
   @IsNumber()
+  @IsDefined()
+  id: number;
+
+  @Field((type) => Int)
+  @IsNumber()
   @IsOptional()
   projectId: number;
 

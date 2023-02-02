@@ -4,7 +4,6 @@ import { CurrentUser } from '../auth/decorators/user.decorator';
 import { GqlAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { User } from '../users/entities/user.entity';
 import {
-  AddMemberArgs,
   FindByPageArgs,
   ProjectCreateArgs,
   ProjectUpdateArgs,

@@ -18,6 +18,7 @@ export enum Role {
 }
 
 export enum Ban {
+  PROFILE = 'PROFILE',
   NO_BAN = 'NO_BAN',
   PARTIAL_BAN = 'PARTIAL_BAN',
   BANNED = 'BANNED',

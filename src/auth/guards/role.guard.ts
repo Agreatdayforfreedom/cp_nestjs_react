@@ -1,4 +1,9 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Role } from '../../project/entities/member.entity';
@@ -18,13 +23,18 @@ export class RolesGuard implements CanActivate {
     const roles = this.reflector.get<Role[]>('roles', ctx.getHandler());
     const req = ctx.getContext().req;
     const member = await this.memberService.findAuthMember(req.user);
-    console.log(roles);
     if (ctx.getHandler().name === 'profile' && roles[0] === Role.PROFILE) {
-      req['member'] = member;
-      return req && req.member;
+      req['member'] = member ?? undefined;
+      return req;
     }
 
-    return this.verifyRoles(member.role, roles as ExcludeProfile);
+    const doMatch = this.verifyRoles(member.role, roles as ExcludeProfile);
+
+    if (doMatch) {
+      return doMatch;
+    } else {
+      throw new UnauthorizedException("You don't have enough permissions");
+    }
   }
 
   private verifyRoles(userRole: Role, roles: ExcludeProfile): boolean {

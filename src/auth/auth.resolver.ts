@@ -29,13 +29,13 @@ export class AuthResolver {
 
   @Query((returns) => Profile)
   @UseGuards(GqlAuthGuard, RolesGuard)
-  @Roles('PROFILE')
+  @Roles(Role.PROFILE)
   profile(
-    @CurrentUser() user: UserModel,
+    @CurrentUser() cUser: UserModel,
     @CurrentMember() cMember: MemberModel,
   ) {
     return {
-      ...user,
+      ...cUser,
       currentProjectMember: cMember,
     };
   }

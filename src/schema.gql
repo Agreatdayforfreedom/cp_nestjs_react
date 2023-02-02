@@ -49,7 +49,7 @@ type Auth {
 type Query {
   findUsers: [User!]!
   profile: Profile!
-  refreshToken(projectId: Int!): Auth!
+  refreshToken(id: Int!, projectId: Int!): Auth!
   findAllProjects: [Project!]!
   findMyProjects: [Project!]!
   findProjectsMemberOf: [Project!]!
@@ -65,6 +65,7 @@ type Mutation {
   updateProject(title: String, description: String, id: Int!): Project
   deleteProject(id: Float!): String
   addMember(nextMemberId: Int!, projectId: Int!): Member!
-  banMember(memberId: Int!, banType: String!): Member!
+  banMember(memberWhoBanId: Int!, memberToBanId: Int!, banType: String!): Member!
+  changeMemberRole(memberId: Int!, roleType: String!): Member!
   removeMember(memberId: Int!, projectId: Int!): String!
 }

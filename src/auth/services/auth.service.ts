@@ -59,11 +59,9 @@ export class AuthService {
   }
 
   async refreshToken(args: RefreshTokenArgs) {
-    const user = await this.userService.find(args);
+    const user = await this.userService.findOneById(args.id);
     if (!user) throw new UserInputError('User not found');
-
     const { password: _, ...rest } = user;
-    console.log(args);
     return {
       user: rest,
       token: this.jwtService.sign(

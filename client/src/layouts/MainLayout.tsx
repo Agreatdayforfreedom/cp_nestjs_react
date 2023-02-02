@@ -9,27 +9,52 @@ import { PROFILE, REFRESH_TOKEN } from '../typedefs';
 const MainLayout = () => {
   const params = useParams();
 
-  const [fetch, { data: profileData, loading: loadingData, error: errorData }] =
-    useLazyQuery(PROFILE, {
+  //! first **
+  /*
+   *query the profile data,
+   *if there's no data,
+   *redirect to login.
+   */
+  const { data, loading, error, refetch } = useQuery(PROFILE, {
+    fetchPolicy: 'network-only',
+  });
+
+  const [refreshToken, { data: rtData, loading: rtLoading, error: rtError }] =
+    useLazyQuery(REFRESH_TOKEN, {
       fetchPolicy: 'network-only',
     });
 
-  const { data, loading, error } = useQuery(REFRESH_TOKEN, {
-    fetchPolicy: 'network-only',
-    variables: {
-      projectId: (params.id && parseInt(params.id, 10)) || 0,
-    },
-  });
-
   useEffect(() => {
     if (data) {
-      localStorage.setItem('token', data.refreshToken.token);
-      fetch();
+      //!second **
+      /*
+       *id data is true,
+       *then refresh the token
+       *sending the projectId and userId
+       *every time params changes */
+      refreshToken({
+        variables: {
+          id: data && data.profile.id,
+          projectId: (params.id && parseInt(params.id, 10)) || 0,
+        },
+      });
     }
-  }, [data]);
+  }, [data, params]);
+  useEffect(() => {
+    //!third **
+    /*
+     *refech for the profile data
+     * but now with projectId and
+     * currentProjectMember if there is any.
+     */
+    if (rtData) {
+      localStorage.setItem('token', rtData.refreshToken.token);
+      refetch();
+    }
+  }, [rtData]);
 
   if (loading) return <InitSpinner />;
-  if (error || errorData) return <span>error</span>;
+  if (error) return <Navigate to="/login" />;
   return (
     <div className="flex min-h-screen min-w-screen">
       <Header />
