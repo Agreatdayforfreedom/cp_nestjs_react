@@ -104,6 +104,15 @@ input:focus-within {
   padding: 4px;
 }
 
+.c-select {
+  -webkit-appearance: button;
+  appearance: button;
+  outline: none;
+  border: 2px solid black;
+  background-color: var(--dark-purple);
+  height: fit-content;
+}
+
 .bar {
   border-top-width: 8px;
   border-top-style: solid;

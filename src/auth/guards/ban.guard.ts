@@ -12,6 +12,12 @@ import { MemberService } from '../../project/services/member.service';
 
 type ExcludeProfileBan = Exclude<Ban, Ban.PROFILE>;
 
+/**
+ * Apply restrictions of type:
+ * @member `NO_BAN` full access
+ * @member `PARTIAL_BAN` restriction to modified(if it is moderator)
+ * @member `BANNED` full restriction to write and modified
+ */
 @Injectable()
 export class BanGuard implements CanActivate {
   constructor(

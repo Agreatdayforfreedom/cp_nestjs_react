@@ -68,7 +68,8 @@ export class MemberResolver {
   removeMember(
     @Args('memberId', { type: () => Int }) memberId: number,
     @Args('projectId', { type: () => Int }) projectId: number,
+    @CurrentUser() cUser: User,
   ) {
-    return this.memberService.removeMember(memberId, projectId);
+    return this.memberService.removeMember(memberId, projectId, cUser);
   }
 }

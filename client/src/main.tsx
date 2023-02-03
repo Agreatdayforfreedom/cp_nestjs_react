@@ -26,21 +26,7 @@ const authMiddleware = new ApolloLink((operation, forward) => {
   return forward(operation);
 });
 const client = new ApolloClient({
-  cache: new InMemoryCache({
-    typePolicies: {
-      Query: {
-        fields: {
-          findMembers: {
-            keyArgs: [],
-            read(existing = []) {},
-            merge(existing = [], incoming) {
-              return incoming.sort();
-            },
-          },
-        },
-      },
-    },
-  }),
+  cache: new InMemoryCache({}),
   link: concat(authMiddleware, httpLink),
 });
 

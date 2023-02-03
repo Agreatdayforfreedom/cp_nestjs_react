@@ -115,10 +115,16 @@ export class MemberService {
       where: {
         id: memberToBanId,
       },
+      relations: {
+        user: true,
+      },
     });
 
     if (!memberToBan || !memberWhoBan)
       throw new UserInputError('There was an error');
+
+    if (memberToBan.user.id === cUser.id)
+      throw new UnauthorizedException('You cannot ban yourself');
 
     if (memberToBan.role === Role.ADMIN)
       throw new UnauthorizedException('An admin cannot be banned');
@@ -149,10 +155,7 @@ export class MemberService {
     });
     //todo: validate that project owner cannot be modified or deleted
     if (!member) throw new HttpException('Member not found', 404);
-    // if (member.ban === Ban.BANNED)
-    //   throw new UnauthorizedException(
-    //     'You cannot change the role of a banned member',
-    //   );
+
     if (member.user.id === member.project.owner.id)
       throw new UnauthorizedException(
         'The role of the project owner cannot be changed.',
@@ -163,7 +166,11 @@ export class MemberService {
     return await this.memberRepository.save(member);
   }
 
-  async removeMember(memberId: number, projectId: number): Promise<string> {
+  async removeMember(
+    memberId: number,
+    projectId: number,
+    cUser: User,
+  ): Promise<string> {
     const memberExists = await this.memberRepository.findOne({
       where: {
         id: memberId,
@@ -177,6 +184,9 @@ export class MemberService {
 
     if (!memberExists) throw new HttpException('Member not found', 404);
     if (!project) throw new HttpException('Project not found', 404);
+    console.log({ cUser });
+    if (memberExists.user.id === cUser.id)
+      throw new UnauthorizedException('You cannot remove yourself');
 
     if (project.membersTotal && project.membersTotal !== 0)
       project.membersTotal -= 1;
