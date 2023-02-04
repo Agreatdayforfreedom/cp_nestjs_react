@@ -7,6 +7,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Observable } from 'rxjs';
+import { CLIENT_RENEG_LIMIT } from 'tls';
 import { Ban } from '../../project/entities/member.entity';
 import { MemberService } from '../../project/services/member.service';
 
@@ -27,8 +28,16 @@ export class BanGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = GqlExecutionContext.create(context);
     const req = ctx.getContext().req;
-    const member = await this.memberService.findAuthMember(req.user);
 
+    const skipAuth = this.reflector.getAllAndOverride<boolean>('SkipAuth', [
+      ctx.getHandler(),
+      ctx.getClass(),
+    ]);
+    if (skipAuth) {
+      return true;
+    }
+    // if (ctx.getInfo().operation.operation === 'subscription') return true;
+    const member = await this.memberService.findAuthMember(req.user);
     const bans = this.reflector.getAllAndOverride<Ban[]>('bans', [
       ctx.getHandler(),
       ctx.getClass(),
@@ -44,7 +53,6 @@ export class BanGuard implements CanActivate {
   }
 
   private matchBan = (memberBan: ExcludeProfileBan, bans: Ban[]): boolean => {
-    console.log(memberBan, bans, 'ee');
     const hasPermission = bans.map((b) => b === memberBan);
     return !hasPermission.some((h) => h === true);
   };

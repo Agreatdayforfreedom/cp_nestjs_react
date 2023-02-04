@@ -47,6 +47,15 @@ export const ADD_MEMBER = gql`
   }
 `;
 
+export const MEMBER_BANNED = gql`
+  subscription Subscription {
+    banned {
+      id
+      ban
+    }
+  }
+`;
+
 export const FIND_PROJECT_BY_PAGE = gql`
   query Query($limit: Int, $offset: Int!) {
     findProjectByPage(limit: $limit, offset: $offset) {

@@ -1,4 +1,4 @@
-import { UseGuards } from '@nestjs/common';
+import { SetMetadata, UseGuards } from '@nestjs/common';
 import {
   Args,
   Context,
@@ -7,7 +7,10 @@ import {
   Query,
   ResolveField,
   Resolver,
+  Subscription,
 } from '@nestjs/graphql';
+import { PubSub } from 'graphql-subscriptions';
+import { clearConfigCache } from 'prettier';
 import { Bans } from '../auth/decorators/ban.decorator';
 import { CurrentMember } from '../auth/decorators/member.decorator';
 import { Roles } from '../auth/decorators/role.decorator';
@@ -25,12 +28,32 @@ import { Ban, Role } from './entities/member.entity';
 import { Member as MemberModel } from './models/member.model';
 import { MemberService } from './services/member.service';
 
+export const pubSub = new PubSub();
+
+const SkipAuth = () => SetMetadata('SkipAuth', true);
+
 @Resolver()
 @UseGuards(GqlAuthGuard, RolesGuard, BanGuard)
 @Roles(Role.MEMBER)
 @Bans(Ban.NO_BAN)
 export class MemberResolver {
   constructor(private memberService: MemberService) {}
+
+  @Subscription((returns) => MemberModel, {
+    filter: (payload, variables) => {
+      console.log({ payload });
+      return true;
+    },
+    resolve: (value) => {
+      console.log(value);
+      return value.banned;
+    },
+  })
+  @SkipAuth()
+  banned() {
+    // console.log(pubSub.asyncIterator('banned'));
+    return pubSub.asyncIterator('banned');
+  }
 
   @Query((returns) => [MemberModel])
   @Roles(Role.ADMIN, Role.MODERATOR, Role.MEMBER)
@@ -51,8 +74,10 @@ export class MemberResolver {
   @Mutation((returns) => MemberModel)
   @Roles(Role.ADMIN, Role.MODERATOR, Role.MEMBER)
   @Bans(Ban.PARTIAL_BAN, Ban.BANNED)
-  banMember(@Args() args: BanMemberArgs, @CurrentUser() cUser: User) {
-    return this.memberService.banMember(args, cUser);
+  async banMember(@Args() args: BanMemberArgs, @CurrentUser() cUser: User) {
+    const banned = await this.memberService.banMember(args, cUser);
+    pubSub.publish('banned', { banned });
+    return banned;
   }
 
   @Mutation((returns) => MemberModel)

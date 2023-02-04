@@ -30,6 +30,7 @@ export class MemberService {
   ) {}
 
   async findAuthMember(payload: findAuthMemberPayload) {
+    console.log({ payload });
     return await this.memberRepository.findOne({
       where: {
         project: {

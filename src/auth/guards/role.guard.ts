@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
+import { clearConfigCache } from 'prettier';
 import { Role } from '../../project/entities/member.entity';
 import { MemberService } from '../../project/services/member.service';
 
@@ -22,6 +23,15 @@ export class RolesGuard implements CanActivate {
     const ctx = GqlExecutionContext.create(context);
     const roles = this.reflector.get<Role[]>('roles', ctx.getHandler());
     const req = ctx.getContext().req;
+
+    // if (ctx.getInfo().operation.operation === 'subscription') return true;
+    const skipAuth = this.reflector.getAllAndOverride<boolean>('SkipAuth', [
+      ctx.getHandler(),
+      ctx.getClass(),
+    ]);
+    if (skipAuth) {
+      return true;
+    }
     const member = await this.memberService.findAuthMember(req.user);
     if (ctx.getHandler().name === 'profile' && roles[0] === Role.PROFILE) {
       req['member'] = member ?? undefined;

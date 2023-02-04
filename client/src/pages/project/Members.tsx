@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { nanoid } from '@reduxjs/toolkit';
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useEffect } from 'react';
 import { AiFillDelete } from 'react-icons/ai';
 import { FaBan } from 'react-icons/fa';
 import { MdOutlineEditOff } from 'react-icons/md';
@@ -13,6 +13,7 @@ import {
   CHANGE_ROLE_MEMBER,
   FIND_MEMBERS,
   FIND_PROJECT,
+  MEMBER_BANNED,
   PROFILE,
   REMOVE_MEMBER,
 } from '../../typedefs';
@@ -20,7 +21,7 @@ import {
 const Members = () => {
   const params = useParams();
 
-  const { data, loading, error } = useQuery(FIND_MEMBERS, {
+  const { data, loading, error, subscribeToMore } = useQuery(FIND_MEMBERS, {
     variables: {
       projectId: params.id && parseInt(params.id, 10),
     },
@@ -55,6 +56,14 @@ const Members = () => {
           member={member}
           data={pData}
           project={cpData?.findOneProject}
+          subs={() =>
+            subscribeToMore({
+              document: MEMBER_BANNED,
+              updateQuery: (prev, { subscriptionData }) => {
+                console.log({ prev, subscriptionData });
+              },
+            })
+          }
         />
       ))}
     </section>
@@ -66,9 +75,11 @@ interface Props {
   member: IMember;
   data: any;
   project: any;
+  subs?: any;
 }
 
-const Member = ({ member, data, project }: Props) => {
+const Member = ({ member, data, project, subs }: Props) => {
+  useEffect(() => subs(), []);
   return (
     <div
       className={`
@@ -120,7 +131,7 @@ const MemberInfo = ({ member, data, project }: Props) => {
   );
 };
 
-const SelectRole = ({ member, data, project }: Props) => {
+const SelectRole = ({ member, data, project, subs }: Props) => {
   const [fetchChangeRole] = useMutation(CHANGE_ROLE_MEMBER);
 
   const handleGiveRole = (

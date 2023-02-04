@@ -69,3 +69,7 @@ type Mutation {
   changeMemberRole(memberId: Int!, roleType: String!): Member!
   removeMember(memberId: Int!, projectId: Int!): String!
 }
+
+type Subscription {
+  banned: Member!
+}
