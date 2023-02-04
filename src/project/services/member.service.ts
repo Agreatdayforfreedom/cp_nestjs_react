@@ -30,7 +30,6 @@ export class MemberService {
   ) {}
 
   async findAuthMember(payload: findAuthMemberPayload) {
-    console.log({ payload });
     return await this.memberRepository.findOne({
       where: {
         project: {
@@ -161,7 +160,6 @@ export class MemberService {
       throw new UnauthorizedException(
         'The role of the project owner cannot be changed.',
       );
-    console.log(member.user, member.project);
 
     member.role = roleType;
     return await this.memberRepository.save(member);

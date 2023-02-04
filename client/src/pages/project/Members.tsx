@@ -1,11 +1,13 @@
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation, useQuery, useSubscription } from '@apollo/client';
 import { nanoid } from '@reduxjs/toolkit';
+import { clearConfigCache } from 'prettier';
 import { ChangeEvent, useEffect } from 'react';
 import { AiFillDelete } from 'react-icons/ai';
 import { FaBan } from 'react-icons/fa';
 import { MdOutlineEditOff } from 'react-icons/md';
 import { Navigate, useParams } from 'react-router-dom';
 import Spinner from '../../components/loaders/Spinner';
+import Notification from '../../components/Notification';
 import { Ban, Role } from '../../interfaces/enums';
 import { Member as IMember } from '../../interfaces/interfaces';
 import {
@@ -13,7 +15,7 @@ import {
   CHANGE_ROLE_MEMBER,
   FIND_MEMBERS,
   FIND_PROJECT,
-  MEMBER_BANNED,
+  MEMBER_SUB,
   PROFILE,
   REMOVE_MEMBER,
 } from '../../typedefs';
@@ -26,6 +28,33 @@ const Members = () => {
       projectId: params.id && parseInt(params.id, 10),
     },
   });
+
+  const {
+    data: sData,
+    loading: sLoading,
+    error: sError,
+  } = useSubscription(MEMBER_SUB, {
+    variables: {
+      projectId: params.id && parseInt(params.id, 10),
+    },
+  });
+  useEffect(() => {
+    console.log(sData);
+  }, [sData]);
+
+  // const {
+  //   data: cData,
+  //   loading: cLoading,
+  //   error: cError,
+  // } = useSubscription(ROLE_CHANGED);
+
+  // useEffect(() => {
+  //   if (sData) {
+  //     console.log({ sData });
+  //   }
+
+  //   // console.log({ data });
+  // }, [data]);
 
   const {
     data: cpData,
@@ -41,6 +70,7 @@ const Members = () => {
     data: pData,
     loading: pLoading,
     error: pError,
+    // subscribeToMore: subscribeToMoreProfile,
   } = useQuery(PROFILE, {
     variables: {
       id: params.id && parseInt(params.id, 10),
@@ -48,22 +78,33 @@ const Members = () => {
   });
   if (loading || pLoading || cpLoading) return <Spinner />;
   if (error || pError) return <Navigate to="dashboard" />;
+  //todo: generic notification
+  //todo: when a member is banned it changes of position, fix it
   return (
     <section>
+      {!sLoading && sData ? (
+        <Notification>
+          <span>{sData ? sData.memberSubs.user.username : ''}</span>
+          <span> was </span>
+          <span>{sData ? sData.memberSubs.ban : ''}</span>
+        </Notification>
+      ) : undefined}
+
+      {pData?.profile.currentProjectMember.ban}
       {data.findMembers.map((member: IMember) => (
         <Member
           key={nanoid()}
           member={member}
           data={pData}
           project={cpData?.findOneProject}
-          subs={() =>
-            subscribeToMore({
-              document: MEMBER_BANNED,
-              updateQuery: (prev, { subscriptionData }) => {
-                console.log({ prev, subscriptionData });
-              },
-            })
-          }
+          // subs={() => {
+          //   subscribeToMore({
+          //     document: MEMBER_BANNED,
+          //     updateQuery: (prev, { subscriptionData }) => {
+          //       console.log({ prev, subscriptionData });
+          //     },
+          //   });
+          // }}
         />
       ))}
     </section>
@@ -79,7 +120,7 @@ interface Props {
 }
 
 const Member = ({ member, data, project, subs }: Props) => {
-  useEffect(() => subs(), []);
+  // useEffect(() => subs(), []);
   return (
     <div
       className={`

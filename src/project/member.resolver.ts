@@ -39,20 +39,39 @@ const SkipAuth = () => SetMetadata('SkipAuth', true);
 export class MemberResolver {
   constructor(private memberService: MemberService) {}
 
+  // @Subscription((returns) => MemberModel, {
+  //   filter: (payload, variables) => {
+  //     return true;
+  //   },
+  //   resolve: (value) => {
+  //     return value.banned;
+  //   },
+  // })
+  // @SkipAuth()
+  // banned() {
+  //   return pubSub.asyncIterator('banned');
+  // }
+
+  // @Subscription((returns) => MemberModel, {
+  //   resolve: (value) => {
+  //     console.log({ value }, 'eeee');
+  //     return value.roleChanged;
+  //   },
+  // })
+  // @SkipAuth()
+  // roleChanged() {
+  //   return pubSub.asyncIterator('roleChanged');
+  // }
+
   @Subscription((returns) => MemberModel, {
-    filter: (payload, variables) => {
-      console.log({ payload });
-      return true;
-    },
     resolve: (value) => {
       console.log(value);
-      return value.banned;
+      return value.memberSubs;
     },
   })
   @SkipAuth()
-  banned() {
-    // console.log(pubSub.asyncIterator('banned'));
-    return pubSub.asyncIterator('banned');
+  memberSubs() {
+    return pubSub.asyncIterator('memberSubs');
   }
 
   @Query((returns) => [MemberModel])
@@ -76,15 +95,17 @@ export class MemberResolver {
   @Bans(Ban.PARTIAL_BAN, Ban.BANNED)
   async banMember(@Args() args: BanMemberArgs, @CurrentUser() cUser: User) {
     const banned = await this.memberService.banMember(args, cUser);
-    pubSub.publish('banned', { banned });
+    pubSub.publish('memberSubs', { memberSubs: banned });
     return banned;
   }
 
   @Mutation((returns) => MemberModel)
   @Roles(Role.ADMIN, Role.MODERATOR)
   @Bans(Ban.PARTIAL_BAN, Ban.BANNED)
-  changeMemberRole(@Args() args: ChangeRoleArgs) {
-    return this.memberService.changeMemberRole(args);
+  async changeMemberRole(@Args() args: ChangeRoleArgs) {
+    const roleChanged = await this.memberService.changeMemberRole(args);
+    pubSub.publish('memberSubs', { memberSubs: roleChanged });
+    return roleChanged;
   }
 
   @Mutation((returns) => String)

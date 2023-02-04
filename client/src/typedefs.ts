@@ -47,11 +47,33 @@ export const ADD_MEMBER = gql`
   }
 `;
 
-export const MEMBER_BANNED = gql`
+// export const MEMBER_BANNED = gql`
+//   subscription Subscription {
+//     banned {
+//       id
+//       ban
+//     }
+//   }
+// `;
+
+// export const ROLE_CHANGED = gql`
+//   subscription Subscription {
+//     roleChanged {
+//       id
+//       role
+//     }
+//   }
+// `;
+
+export const MEMBER_SUB = gql`
   subscription Subscription {
-    banned {
+    memberSubs {
       id
       ban
+      role
+      user {
+        username
+      }
     }
   }
 `;
