@@ -15,7 +15,7 @@ type ExcludeProfileBan = Exclude<Ban, Ban.PROFILE>;
 
 /**
  * Apply restrictions of type:
- * @member `NO_BAN` full access
+ * @member `UNBANNED` full access
  * @member `PARTIAL_BAN` restriction to modified(if it is moderator)
  * @member `BANNED` full restriction to write and modified
  */
@@ -42,7 +42,7 @@ export class BanGuard implements CanActivate {
       ctx.getHandler(),
       ctx.getClass(),
     ]);
-    if (member.ban === Ban.NO_BAN) return true;
+    if (member.ban === Ban.UNBANNED) return true;
     if (bans[0] === Ban.PROFILE) return true;
     const doMatch = this.matchBan(member.ban as ExcludeProfileBan, bans);
     if (!doMatch) {

@@ -5,7 +5,7 @@ export enum Role {
 }
 
 export enum Ban {
-  NO_BAN = 'NO_BAN',
+  UNBANNED = 'UNBANNED',
   PARTIAL_BAN = 'PARTIAL_BAN',
   BANNED = 'BANNED',
 }

@@ -11,7 +11,7 @@ export class Member {
   @Field({ defaultValue: Role.MEMBER, nullable: true })
   role: Role;
 
-  @Field({ defaultValue: Ban.NO_BAN, nullable: true })
+  @Field({ defaultValue: Ban.UNBANNED, nullable: true })
   ban: Ban;
 
   @Field((type) => ProjectModel)
@@ -19,4 +19,7 @@ export class Member {
 
   @Field((type) => UserModel)
   user: UserModel;
+
+  @Field({ nullable: true })
+  notificationType: string;
 }

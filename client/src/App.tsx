@@ -17,6 +17,7 @@ import Members from './pages/project/Members';
 import Issues from './pages/project/Issues';
 import Config from './pages/project/Config';
 import Search from './pages/project/Search';
+import Logic from './pages/project/Logic';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path="project">
             <Route path="new" element={<NewProject />} />
             <Route path=":id" element={<Project />}>
+              <Route path="logic" element={<Logic />} />
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="issues" element={<Issues />} />
               <Route path="search" element={<Search />} />

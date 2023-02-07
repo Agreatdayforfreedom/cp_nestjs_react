@@ -117,6 +117,7 @@ export class MemberService {
       },
       relations: {
         user: true,
+        project: true,
       },
     });
 
@@ -133,7 +134,7 @@ export class MemberService {
       throw new UnauthorizedException('A member cannot ban other members');
 
     if (memberToBan.ban === banType) {
-      memberToBan.ban = Ban.NO_BAN;
+      memberToBan.ban = Ban.UNBANNED;
       return await this.memberRepository.save(memberToBan);
     }
     memberToBan.ban = banType;

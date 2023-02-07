@@ -24,6 +24,8 @@
   --t-gray: #aaaaaa4f;
 
   --bg-form: #38002c5e;
+
+  --nt-yellow: #ffd000b2;
 }
 
 * {
@@ -102,6 +104,10 @@ input:focus-within {
   background: var(--green) !important;
   border-radius: 100%;
   padding: 4px;
+}
+
+.notification {
+  box-shadow: 0 0 6px var(--nt-yellow);
 }
 
 .c-select {

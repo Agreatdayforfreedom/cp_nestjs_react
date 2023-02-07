@@ -18,7 +18,11 @@ import { getMainDefinition } from '@apollo/client/utilities';
 
 const httpLink = new HttpLink({ uri: 'http://localhost:3000/graphql' });
 
-const token = localStorage.getItem('token');
+let token = localStorage.getItem('token');
+window.addEventListener('storage', () => {
+  token = localStorage.getItem('token') || '';
+});
+
 const wsLink = new GraphQLWsLink(
   createClient({
     url: 'ws://localhost:3000/subscriptions',
@@ -28,6 +32,7 @@ const wsLink = new GraphQLWsLink(
   }),
 );
 const authMiddleware = new ApolloLink((operation, forward) => {
+  // console.log(token);
   operation.setContext({
     headers: {
       authorization: token ? `Bearer ${token}` : '',

@@ -29,18 +29,18 @@ const Members = () => {
     },
   });
 
-  const {
-    data: sData,
-    loading: sLoading,
-    error: sError,
-  } = useSubscription(MEMBER_SUB, {
-    variables: {
-      projectId: params.id && parseInt(params.id, 10),
-    },
-  });
-  useEffect(() => {
-    console.log(sData);
-  }, [sData]);
+  // const {
+  //   data: sData,
+  //   loading: sLoading,
+  //   error: sError,
+  // } = useSubscription(MEMBER_SUB, {
+  //   variables: {
+  //     projectId: params.id && parseInt(params.id, 10),
+  //   },
+  // });
+  // useEffect(() => {
+  //   console.log(sData);
+  // }, [sData]);
 
   // const {
   //   data: cData,
@@ -77,19 +77,12 @@ const Members = () => {
     },
   });
   if (loading || pLoading || cpLoading) return <Spinner />;
-  if (error || pError) return <Navigate to="dashboard" />;
+  if (error || pError) return <Navigate to="/" />;
+  console.log(pError);
   //todo: generic notification
   //todo: when a member is banned it changes of position, fix it
   return (
     <section>
-      {!sLoading && sData ? (
-        <Notification>
-          <span>{sData ? sData.memberSubs.user.username : ''}</span>
-          <span> was </span>
-          <span>{sData ? sData.memberSubs.ban : ''}</span>
-        </Notification>
-      ) : undefined}
-
       {pData?.profile.currentProjectMember.ban}
       {data.findMembers.map((member: IMember) => (
         <Member
@@ -131,7 +124,7 @@ const Member = ({ member, data, project, subs }: Props) => {
       <MemberInfo member={member} data={data} project={project} />
       <div className="flex flex-col justify-between">
         {member.user.id !== data.profile.id &&
-          data.profile.currentProjectMember.ban === Ban.NO_BAN && (
+          data.profile.currentProjectMember.ban === Ban.UNBANNED && (
             <>
               <Buttons member={member} data={data} project={project} />
               {project.owner.id !== member.user.id &&
@@ -154,14 +147,14 @@ const MemberInfo = ({ member, data, project }: Props) => {
         } font-semibold`}
       >
         {member.role}
-        {member.ban !== Ban.NO_BAN && (
+        {member.ban !== Ban.UNBANNED && (
           <span className="px-1  text-red-800">{member.ban}</span>
         )}
         {member.user.id === data?.profile.id && (
           <span className="text-sm px-1 text-slate-400">(you)</span>
         )}
       </div>
-      <div className={`${member.ban !== Ban.NO_BAN && 'line-through'}`}>
+      <div className={`${member.ban !== Ban.UNBANNED && 'line-through'}`}>
         {member.user.username}
         {project.owner.id === member.user.id && (
           <span className="text-sm px-1 text-slate-500">(owner)</span>
@@ -277,7 +270,7 @@ const Buttons = ({ member, data, project }: Props) => {
             </button>
 
             {data.profile.currentProjectMember.role === Role.ADMIN &&
-              data.profile.currentProjectMember.ban === Ban.NO_BAN && (
+              data.profile.currentProjectMember.ban === Ban.UNBANNED && (
                 <button onClick={() => handleDelete(member.id)}>
                   <AiFillDelete className="fill-red-700 hover:fill-red-900" />
                 </button>

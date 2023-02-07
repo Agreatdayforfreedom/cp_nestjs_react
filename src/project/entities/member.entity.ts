@@ -19,7 +19,7 @@ export enum Role {
 
 export enum Ban {
   PROFILE = 'PROFILE',
-  NO_BAN = 'NO_BAN',
+  UNBANNED = 'UNBANNED',
   PARTIAL_BAN = 'PARTIAL_BAN',
   BANNED = 'BANNED',
 }
@@ -40,6 +40,6 @@ export class Member {
   @Column({ nullable: true, default: Role.MEMBER })
   role: Role;
 
-  @Column({ nullable: true, default: Ban.NO_BAN })
+  @Column({ nullable: true, default: Ban.UNBANNED })
   ban: Ban;
 }

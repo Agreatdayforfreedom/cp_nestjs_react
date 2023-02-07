@@ -23,6 +23,7 @@ type Member {
   ban: String
   project: Project!
   user: User!
+  notificationType: String
 }
 
 type User {
@@ -71,5 +72,5 @@ type Mutation {
 }
 
 type Subscription {
-  memberSubs: Member!
+  memberSub(userId: Int!, projectId: Int!): Member!
 }

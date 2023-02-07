@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client';
+import { useLazyQuery, useQuery, useSubscription } from '@apollo/client';
 import React, { useEffect, useState } from 'react';
 import { MdDashboard } from 'react-icons/md';
 import { VscIssues } from 'react-icons/vsc';
@@ -9,12 +9,22 @@ import {
   Navigate,
   Outlet,
   useLocation,
+  useNavigate,
   useParams,
 } from 'react-router-dom';
-import { FIND_AUTH_MEMBER, FIND_MEMBERS, FIND_PROJECT } from '../../typedefs';
+import {
+  FIND_AUTH_MEMBER,
+  FIND_MEMBERS,
+  FIND_PROJECT,
+  MEMBER_SUB,
+  PROFILE,
+  REFRESH_TOKEN,
+} from '../../typedefs';
 import { AiOutlineUsergroupAdd } from 'react-icons/ai';
 import Spinner from '../../components/loaders/Spinner';
 import { Role } from '../../interfaces/enums';
+import InitSpinner from '../../components/loaders/InitSpinner';
+import Notification from '../../components/Notification';
 
 const Project = () => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
@@ -22,28 +32,53 @@ const Project = () => {
   const location = useLocation();
   const params = useParams();
 
-  // const { data, loading, error } = useQuery(FIND_AUTH_MEMBER, {
-  //   variables: {
-  //     projectId: params.id && parseInt(params.id, 10),
-  //   },
-  // });
+  const { data, loading, error } = useQuery(PROFILE, {
+    fetchPolicy: 'network-only',
+  });
+
+  // const [refreshToken, { data: rtData, loading: rtLoading, error: rtError }] =
+  //   useLazyQuery(REFRESH_TOKEN, {
+  //     fetchPolicy: 'network-only',
+  //   });
+  // useEffect(() => {
+  //   if (data) {
+  //     console.log('hello');
+  //     refreshToken({
+  //       variables: {
+  //         id: data.profile.id,
+  //         projectId: (params.id && parseInt(params.id, 10)) || 0,
+  //       },
+  //     });
+  //   }
+  // }, [data]);
+  // const navigate = useNavigate();
+  // useEffect(() => {
+  //   if (rtData) {
+  //     localStorage.setItem('token', rtData.refreshToken.token);
+  //     window.dispatchEvent(new Event('storage'));
+  //     console.log('redirect');
+  //     navigate('dashboard');
+  //   }
+  // }, [rtData]);
+
+  // useEffect(() => {}, [data, rtData]);
 
   useEffect(() => {
     setShowMenu(false);
   }, [location]);
 
-  // if (loading) return <Spinner />;
-  // if (error) return <Navigate to="/" />;
   return (
     <main>
       <nav className="border-b border-slate-700">
+        {/* {data.profile.id} */}
+        {/* {rtData && rtData.refreshToken.token} */}
         <div className="flex items-center justify-between">
           <RiMenuLine
             size={30}
             className="mx-4 my-2 cursor-pointer md:hidden"
             onClick={() => setShowMenu((prev) => !prev)}
           />
-          {/* {data && data.findAuthMember.role !== Role.MEMBER && (
+          {data && data.profile.role !== Role.MEMBER && (
             <Link
               to="search"
               className={`${
@@ -53,7 +88,7 @@ const Project = () => {
             >
               <AiOutlineUsergroupAdd size={25} />
             </Link>
-          )} */}
+          )}
         </div>
         <Menu show={showMenu} />
       </nav>

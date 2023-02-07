@@ -2,8 +2,10 @@ import { SetMetadata, UseGuards } from '@nestjs/common';
 import {
   Args,
   Context,
+  Field,
   Int,
   Mutation,
+  ObjectType,
   Query,
   ResolveField,
   Resolver,
@@ -32,46 +34,36 @@ export const pubSub = new PubSub();
 
 const SkipAuth = () => SetMetadata('SkipAuth', true);
 
+@ObjectType()
+class MemberSubscription extends MemberModel {
+  @Field()
+  notificationType: string;
+}
+
 @Resolver()
 @UseGuards(GqlAuthGuard, RolesGuard, BanGuard)
 @Roles(Role.MEMBER)
-@Bans(Ban.NO_BAN)
+@Bans(Ban.UNBANNED)
 export class MemberResolver {
+  static readonly MEMBER_SUB = 'memberSub';
+
   constructor(private memberService: MemberService) {}
 
-  // @Subscription((returns) => MemberModel, {
-  //   filter: (payload, variables) => {
-  //     return true;
-  //   },
-  //   resolve: (value) => {
-  //     return value.banned;
-  //   },
-  // })
-  // @SkipAuth()
-  // banned() {
-  //   return pubSub.asyncIterator('banned');
-  // }
-
-  // @Subscription((returns) => MemberModel, {
-  //   resolve: (value) => {
-  //     console.log({ value }, 'eeee');
-  //     return value.roleChanged;
-  //   },
-  // })
-  // @SkipAuth()
-  // roleChanged() {
-  //   return pubSub.asyncIterator('roleChanged');
-  // }
-
   @Subscription((returns) => MemberModel, {
+    filter: (payload, variables) => {
+      console.log({ payload, variables });
+      return variables.projectId === payload.memberSub.project.id;
+    },
     resolve: (value) => {
-      console.log(value);
-      return value.memberSubs;
+      return value.memberSub;
     },
   })
   @SkipAuth()
-  memberSubs() {
-    return pubSub.asyncIterator('memberSubs');
+  memberSub(
+    @Args('userId', { type: () => Int }) userId: number,
+    @Args('projectId', { type: () => Int }) projectId: number,
+  ) {
+    return pubSub.asyncIterator(MemberResolver.MEMBER_SUB);
   }
 
   @Query((returns) => [MemberModel])
@@ -95,7 +87,12 @@ export class MemberResolver {
   @Bans(Ban.PARTIAL_BAN, Ban.BANNED)
   async banMember(@Args() args: BanMemberArgs, @CurrentUser() cUser: User) {
     const banned = await this.memberService.banMember(args, cUser);
-    pubSub.publish('memberSubs', { memberSubs: banned });
+    pubSub.publish(MemberResolver.MEMBER_SUB, {
+      memberSub: {
+        ...banned,
+        notificationType: 'banned',
+      },
+    });
     return banned;
   }
 
@@ -104,7 +101,12 @@ export class MemberResolver {
   @Bans(Ban.PARTIAL_BAN, Ban.BANNED)
   async changeMemberRole(@Args() args: ChangeRoleArgs) {
     const roleChanged = await this.memberService.changeMemberRole(args);
-    pubSub.publish('memberSubs', { memberSubs: roleChanged });
+    pubSub.publish(MemberResolver.MEMBER_SUB, {
+      memberSub: {
+        ...roleChanged,
+        notificationType: 'roleChanged',
+      },
+    });
     return roleChanged;
   }
 
