@@ -1,6 +1,7 @@
 import { useQuery, useSubscription } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { Link, Navigate, Outlet, useParams } from 'react-router-dom';
+import { URLSearchParams } from 'url';
 import Header from '../components/Header';
 import InitSpinner from '../components/loaders/InitSpinner';
 import Notification from '../components/Notification';
@@ -15,30 +16,31 @@ const MainLayout = () => {
     fetchPolicy: 'network-only',
   });
 
-  const {
-    data: sData,
-    loading: sLoading,
-    error: sError,
-  } = useSubscription(MEMBER_SUB, {
-    variables: {
-      userId: data && data.profile.id,
-      projectId: params.id && parseInt(params.id, 10),
-    },
-  });
-  useEffect(() => {
-    if (sData) {
-      setShowNotification(Boolean(sData.memberSub.id));
-    }
-    setTimeout(() => {
-      setShowNotification(false);
-    }, 3000);
-  }, [sData]);
+  // const {
+  //   data: sData,
+  //   loading: sLoading,
+  //   error: sError,
+  // } = useSubscription(MEMBER_SUB, {
+  //   variables: {
+  //     userId: data && data.profile.id,
+  //     projectId: params.id && parseInt(params.id, 10),
+  //   },
+  // });
+  // useEffect(() => {
+  //   if (sData) {
+  //     console.log({ sData });
+  //     setShowNotification(Boolean(sData.memberSub.id));
+  //   }
+  //   setTimeout(() => {
+  //     setShowNotification(false);
+  //   }, 3000);
+  // }, [sData]);
   //todo: improve notification and do something else.
   if (loading) return <InitSpinner />;
   if (error) return <Navigate to="/login" />;
   return (
     <div className="flex min-h-screen min-w-screen">
-      {!sLoading && showNotification ? (
+      {/* {!sLoading && showNotification ? (
         <Notification
           to={`/project/${params.id}/members#${sData.memberSub.id.toString()}`}
         >
@@ -59,7 +61,7 @@ const MainLayout = () => {
             </>
           )}
         </Notification>
-      ) : undefined}
+      ) : undefined} */}
       <Header />
       <SideBar />
       <div className="mt-12 w-full relative">

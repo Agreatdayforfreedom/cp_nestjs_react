@@ -56,27 +56,17 @@ const splitLink = split(
 
 const client = new ApolloClient({
   cache: new InMemoryCache({
-    typePolicies: {
-      Query: {
-        fields: {
-          // findMembers: {
-          //   keyArgs: false,
-          //   read(a, ) {
-          //     console.log(a, b, 'read');
-          //   },
-          //   merge(existing = [], incoming) {
-          //     console.log(existing, incoming);
-          //     // if (!existing) return incoming;
-          //     // const eId = existing.map((e: any) => e.id);
-          //     // const iId = incoming.map((i: any) => i.__ref);
-          //     // console.log(eId, iId);
-          //     // return eId.filter(e => e)
-          //     return [...existing, ...incoming];
-          //   },
-          // },
-        },
-      },
-    },
+    // typePolicies: {
+    //   Query: {
+    //     fields: {
+    //       findMembers: {
+    //         merge(existing = [], incoming) {
+    //           console.log({ existing, incoming });
+    //         },
+    //       },
+    //     },
+    //   },
+    // },
   }),
   link: splitLink,
 });

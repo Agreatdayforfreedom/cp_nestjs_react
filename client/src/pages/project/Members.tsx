@@ -9,6 +9,7 @@ import React, {
   useEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react';
 import { AiFillDelete } from 'react-icons/ai';
 import { FaBan } from 'react-icons/fa';
@@ -32,17 +33,15 @@ import {
 const Members = () => {
   const params = useParams();
 
-  const { data, loading, error, subscribeToMore } = useQuery(FIND_MEMBERS, {
+  const {
+    data: pData,
+    loading: pLoading,
+    error: pError,
+  } = useQuery(PROFILE, {
     variables: {
-      projectId: params.id && parseInt(params.id, 10),
+      id: params.id && parseInt(params.id, 10),
     },
   });
-
-  const memoData = useMemo(() => {
-    if (loading || error) return null;
-
-    return data;
-  }, [data, loading, error]);
 
   const {
     data: cpData,
@@ -54,31 +53,61 @@ const Members = () => {
     },
   });
 
-  const {
-    data: pData,
-    loading: pLoading,
-    error: pError,
-  } = useQuery(PROFILE, {
+  // const {
+  //   data: sData,
+  //   loading: sLoading,
+  //   error: sError,
+  // } = useSubscription(MEMBER_SUB, {
+  //   variables: {
+  //     userId: pData && pData.profile.id,
+  //     projectId: params.id && parseInt(params.id, 10),
+  //   },
+  // });
+
+  const { data, loading, error, subscribeToMore } = useQuery(FIND_MEMBERS, {
     variables: {
-      id: params.id && parseInt(params.id, 10),
+      projectId: params.id && parseInt(params.id, 10),
     },
   });
-
-  if (loading || pLoading || cpLoading) return <Spinner />;
-  if (error || pError) return <Navigate to="/" />;
-  console.log(pError);
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+  if (loading) return <Spinner />;
+  if (error) return <Navigate to="/" />;
   //todo: generic notification
   //todo: when a member is banned it changes of position, fix it
   return (
     <section>
-      {pData?.profile.currentProjectMember.ban}
-      {memoData?.findMembers.map((member: IMember, i: number) => (
+      {data.findMembers?.map((member: IMember, i: number) => (
         <Member
-          i={i}
           key={nanoid()}
           member={member}
           data={pData}
           project={cpData?.findOneProject}
+          subs={() =>
+            subscribeToMore({
+              document: MEMBER_SUB,
+              variables: {
+                userId: pData && pData.profile.id,
+                projectId: params.id && parseInt(params.id, 10),
+              },
+              updateQuery(prev, { subscriptionData }: any) {
+                // console.log({ prev, subscriptionData });
+                if (!subscriptionData.data) return prev;
+                console.log({ prev, subscriptionData });
+                if (
+                  subscriptionData.data.memberSub.notificationType ===
+                  'memberAdded'
+                ) {
+                  return Object.assign({}, prev, {
+                    findMembers: prev.findMembers.concat(
+                      subscriptionData.data.memberSub,
+                    ),
+                  });
+                }
+              },
+            })
+          }
         />
       ))}
     </section>
@@ -88,28 +117,24 @@ export default Members;
 
 interface Props {
   member: IMember;
-  data: any;
-  project: any;
+  data?: any;
+  project?: any;
   subs?: any;
-  i?: number;
+  memberSub?: number;
 }
 
-const Member = ({ i, member, data, project, subs }: Props) => {
+const Member = ({ member, data, project, subs }: Props) => {
+  useEffect(() => subs(), []);
   const params = useParams();
+  const location = useLocation();
 
-  useEffect(() => {
-    if (i) console.log('render', i + 1);
-  }, []);
-
-  const [ref] = useCallRef<HTMLDivElement>();
-
-  // if (!member) return <span>hello</span>;
   return (
-    <div ref={ref} id={member.id.toString()}>
+    <div id={member.id.toString()}>
       <div
+        id={member.id.toString()}
         className={`
-    ${member.ban === Ban.BANNED && 'bg-[var(--t-red)]'}
-    ${member.ban === Ban.PARTIAL_BAN && 'bg-[var(--t-orange)]'}
+    ${member.ban === Ban.BANNED && 'banned'}
+    ${member.ban === Ban.PARTIAL_BAN && 'p-banned'}
      flex justify-between border-t last:border-b border-slate-600 p-3`}
       >
         <MemberInfo member={member} data={data} project={project} />

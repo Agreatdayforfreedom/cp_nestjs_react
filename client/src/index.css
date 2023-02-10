@@ -10,6 +10,8 @@
   --orange: #753900;
   --purple: #30155c;
 
+  --light-blue: #162fa0;
+
   --medium-purple: #140147;
   --medium-blue: #001731;
 
@@ -54,6 +56,10 @@ input:focus-within {
   border-bottom: var(--green) solid 1px;
 }
 
+button:disabled {
+  opacity: 0.5;
+}
+
 .btn-grad {
   margin: 10px;
   padding: 6px 16px;
@@ -88,9 +94,9 @@ input:focus-within {
 .btn-grad-blue {
   background-image: linear-gradient(
     to top right,
-    var(--blue) 0%,
-    var(--medium-blue) 41%,
-    var(--blue) 100%
+    var(--light-blue) 0%,
+    var(--blue) 41%,
+    var(--light-blue) 100%
   );
 }
 
@@ -160,12 +166,32 @@ input:focus-within {
   animation: gradient 3s forwards;
 }
 
-@keyframes gradient {
+.banned {
+  background-color: var(--t-red);
+  /* background-color: transparent; */
+  animation: gradient-b 3s forwards;
+}
+
+.p-banned {
+  background-color: var(--t-orange);
+  animation: gradient-p 3s forwards;
+}
+
+@keyframes gradient-b {
   0% {
-    background-color: rgb(50, 9, 80);
+    background-color: transparent;
   }
   100% {
-    background-color: initial;
+    background-color: var(--t-red);
+  }
+}
+
+@keyframes gradient-p {
+  0% {
+    background-color: transparent;
+  }
+  100% {
+    background-color: var(--t-orange);
   }
 }
 

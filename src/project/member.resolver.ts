@@ -55,13 +55,14 @@ export class MemberResolver {
       return variables.projectId === payload.memberSub.project.id;
     },
     resolve: (value) => {
+      console.log({ value });
       return value.memberSub;
     },
   })
   @SkipAuth()
   memberSub(
-    @Args('userId', { type: () => Int }) userId: number,
-    @Args('projectId', { type: () => Int }) projectId: number,
+    @Args('userId', { type: () => Int }) _userId: number,
+    @Args('projectId', { type: () => Int }) _projectId: number,
   ) {
     return pubSub.asyncIterator(MemberResolver.MEMBER_SUB);
   }
@@ -78,8 +79,16 @@ export class MemberResolver {
   @Mutation((returns) => MemberModel)
   @Roles(Role.ADMIN)
   @Bans(Ban.PARTIAL_BAN, Ban.BANNED)
-  addMember(@Args() args: AddMemberArgs, @CurrentUser() cUser: User) {
-    return this.memberService.addMember(args, cUser);
+  async addMember(@Args() args: AddMemberArgs, @CurrentUser() cUser: User) {
+    const memberAdded = await this.memberService.addMember(args, cUser);
+    pubSub.publish(MemberResolver.MEMBER_SUB, {
+      memberSub: {
+        ...memberAdded,
+        notificationType: 'memberAdded',
+      },
+    });
+    console.log({ memberAdded });
+    return memberAdded;
   }
 
   @Mutation((returns) => MemberModel)

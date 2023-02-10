@@ -31,7 +31,6 @@ export class RolesGuard implements CanActivate {
     if (skipAuth) {
       return true;
     }
-    console.log(req.user, 'here');
     const member = await this.memberService.findAuthMember(req.user);
     if (ctx.getHandler().name === 'profile' && roles[0] === Role.PROFILE) {
       req['member'] = member ?? undefined;

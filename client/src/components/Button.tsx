@@ -43,7 +43,7 @@ const Button = ({
           disabled={disabled}
           type={type}
         >
-          {success ? <BiCheck size={25} /> : name}
+          {name}
         </button>
       )}
     </div>

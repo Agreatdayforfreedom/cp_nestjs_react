@@ -69,12 +69,18 @@ export const MEMBER_SUB = gql`
   subscription Subscription($userId: Int!, $projectId: Int!) {
     memberSub(userId: $userId, projectId: $projectId) {
       id
-      ban
       role
-      notificationType
-      user {
-        username
+      ban
+      project {
+        id
+        membersTotal
       }
+      user {
+        id
+        username
+        email
+      }
+      notificationType
     }
   }
 `;
