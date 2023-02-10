@@ -1,13 +1,22 @@
 import { useMutation, useQuery, useSubscription } from '@apollo/client';
 import { nanoid } from '@reduxjs/toolkit';
 import { clearConfigCache } from 'prettier';
-import { ChangeEvent, useEffect } from 'react';
+import React, {
+  ChangeEvent,
+  Component,
+  ComponentType,
+  MouseEventHandler,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import { AiFillDelete } from 'react-icons/ai';
 import { FaBan } from 'react-icons/fa';
 import { MdOutlineEditOff } from 'react-icons/md';
-import { Navigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useLocation, useParams } from 'react-router-dom';
 import Spinner from '../../components/loaders/Spinner';
 import Notification from '../../components/Notification';
+import useCallRef from '../../hooks/useCallRef';
 import { Ban, Role } from '../../interfaces/enums';
 import { Member as IMember } from '../../interfaces/interfaces';
 import {
@@ -29,32 +38,11 @@ const Members = () => {
     },
   });
 
-  // const {
-  //   data: sData,
-  //   loading: sLoading,
-  //   error: sError,
-  // } = useSubscription(MEMBER_SUB, {
-  //   variables: {
-  //     projectId: params.id && parseInt(params.id, 10),
-  //   },
-  // });
-  // useEffect(() => {
-  //   console.log(sData);
-  // }, [sData]);
+  const memoData = useMemo(() => {
+    if (loading || error) return null;
 
-  // const {
-  //   data: cData,
-  //   loading: cLoading,
-  //   error: cError,
-  // } = useSubscription(ROLE_CHANGED);
-
-  // useEffect(() => {
-  //   if (sData) {
-  //     console.log({ sData });
-  //   }
-
-  //   // console.log({ data });
-  // }, [data]);
+    return data;
+  }, [data, loading, error]);
 
   const {
     data: cpData,
@@ -70,12 +58,12 @@ const Members = () => {
     data: pData,
     loading: pLoading,
     error: pError,
-    // subscribeToMore: subscribeToMoreProfile,
   } = useQuery(PROFILE, {
     variables: {
       id: params.id && parseInt(params.id, 10),
     },
   });
+
   if (loading || pLoading || cpLoading) return <Spinner />;
   if (error || pError) return <Navigate to="/" />;
   console.log(pError);
@@ -84,20 +72,13 @@ const Members = () => {
   return (
     <section>
       {pData?.profile.currentProjectMember.ban}
-      {data.findMembers.map((member: IMember) => (
+      {memoData?.findMembers.map((member: IMember, i: number) => (
         <Member
+          i={i}
           key={nanoid()}
           member={member}
           data={pData}
           project={cpData?.findOneProject}
-          // subs={() => {
-          //   subscribeToMore({
-          //     document: MEMBER_BANNED,
-          //     updateQuery: (prev, { subscriptionData }) => {
-          //       console.log({ prev, subscriptionData });
-          //     },
-          //   });
-          // }}
         />
       ))}
     </section>
@@ -110,29 +91,40 @@ interface Props {
   data: any;
   project: any;
   subs?: any;
+  i?: number;
 }
 
-const Member = ({ member, data, project, subs }: Props) => {
-  // useEffect(() => subs(), []);
+const Member = ({ i, member, data, project, subs }: Props) => {
+  const params = useParams();
+
+  useEffect(() => {
+    if (i) console.log('render', i + 1);
+  }, []);
+
+  const [ref] = useCallRef<HTMLDivElement>();
+
+  // if (!member) return <span>hello</span>;
   return (
-    <div
-      className={`
+    <div ref={ref} id={member.id.toString()}>
+      <div
+        className={`
     ${member.ban === Ban.BANNED && 'bg-[var(--t-red)]'}
     ${member.ban === Ban.PARTIAL_BAN && 'bg-[var(--t-orange)]'}
      flex justify-between border-t last:border-b border-slate-600 p-3`}
-    >
-      <MemberInfo member={member} data={data} project={project} />
-      <div className="flex flex-col justify-between">
-        {member.user.id !== data.profile.id &&
-          data.profile.currentProjectMember.ban === Ban.UNBANNED && (
-            <>
-              <Buttons member={member} data={data} project={project} />
-              {project.owner.id !== member.user.id &&
-                data.profile.currentProjectMember.role !== Role.MEMBER && (
-                  <SelectRole member={member} data={data} project={project} />
-                )}
-            </>
-          )}
+      >
+        <MemberInfo member={member} data={data} project={project} />
+        <div className="flex flex-col justify-between">
+          {member.user.id !== data.profile.id &&
+            data.profile.currentProjectMember.ban === Ban.UNBANNED && (
+              <>
+                <Buttons member={member} data={data} project={project} />
+                {project.owner.id !== member.user.id &&
+                  data.profile.currentProjectMember.role !== Role.MEMBER && (
+                    <SelectRole member={member} data={data} project={project} />
+                  )}
+              </>
+            )}
+        </div>
       </div>
     </div>
   );

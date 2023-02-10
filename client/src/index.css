@@ -154,6 +154,21 @@ input:focus-within {
   animation: shine 2s infinite;
 }
 
+.focused {
+  background-color: indigo;
+  /* display: inline-block !important; */
+  animation: gradient 3s forwards;
+}
+
+@keyframes gradient {
+  0% {
+    background-color: rgb(50, 9, 80);
+  }
+  100% {
+    background-color: initial;
+  }
+}
+
 @media all and (max-width: 770px) {
   .animate-menu {
     height: auto;

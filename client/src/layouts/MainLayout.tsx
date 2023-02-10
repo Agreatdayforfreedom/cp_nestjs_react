@@ -1,11 +1,10 @@
-import { gql, useLazyQuery, useQuery, useSubscription } from '@apollo/client';
-import React, { useEffect, useState } from 'react';
-import { Navigate, Outlet, useNavigate, useParams } from 'react-router-dom';
+import { useQuery, useSubscription } from '@apollo/client';
+import { useEffect, useState } from 'react';
+import { Link, Navigate, Outlet, useParams } from 'react-router-dom';
 import Header from '../components/Header';
 import InitSpinner from '../components/loaders/InitSpinner';
 import Notification from '../components/Notification';
 import SideBar from '../components/SideBar';
-import { Ban } from '../interfaces/enums';
 import { MEMBER_SUB, PROFILE, REFRESH_TOKEN } from '../typedefs';
 
 const MainLayout = () => {
@@ -40,7 +39,9 @@ const MainLayout = () => {
   return (
     <div className="flex min-h-screen min-w-screen">
       {!sLoading && showNotification ? (
-        <Notification>
+        <Notification
+          to={`/project/${params.id}/members#${sData.memberSub.id.toString()}`}
+        >
           <span className="text-black">
             {sData ? sData.memberSub.user.username : ''}
           </span>
