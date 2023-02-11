@@ -166,6 +166,12 @@ button:disabled {
   animation: gradient 3s forwards;
 }
 
+.added {
+  background-color: var(--green);
+  /* display: inline-block !important; */
+  animation: gradient-a 3s forwards;
+}
+
 .banned {
   background-color: var(--t-red);
   /* background-color: transparent; */
@@ -175,6 +181,15 @@ button:disabled {
 .p-banned {
   background-color: var(--t-orange);
   animation: gradient-p 3s forwards;
+}
+
+@keyframes gradient-a {
+  0% {
+    background-color: var(--green);
+  }
+  100% {
+    background-color: transparent;
+  }
 }
 
 @keyframes gradient-b {

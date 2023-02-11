@@ -32,6 +32,7 @@ import {
 
 const Members = () => {
   const params = useParams();
+  const [evt, setEvt] = useState('');
 
   const {
     data: pData,
@@ -53,27 +54,18 @@ const Members = () => {
     },
   });
 
-  // const {
-  //   data: sData,
-  //   loading: sLoading,
-  //   error: sError,
-  // } = useSubscription(MEMBER_SUB, {
-  //   variables: {
-  //     userId: pData && pData.profile.id,
-  //     projectId: params.id && parseInt(params.id, 10),
-  //   },
-  // });
+  const handleEvent = (data: string) => {
+    setEvt(data);
+  };
 
   const { data, loading, error, subscribeToMore } = useQuery(FIND_MEMBERS, {
     variables: {
       projectId: params.id && parseInt(params.id, 10),
     },
   });
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-  if (loading) return <Spinner />;
+  if (loading || cpLoading) return <Spinner />;
   if (error) return <Navigate to="/" />;
+
   //todo: generic notification
   //todo: when a member is banned it changes of position, fix it
   return (
@@ -84,6 +76,8 @@ const Members = () => {
           member={member}
           data={pData}
           project={cpData?.findOneProject}
+          evt={evt}
+          handleEvent={handleEvent}
           subs={() =>
             subscribeToMore({
               document: MEMBER_SUB,
@@ -94,15 +88,31 @@ const Members = () => {
               updateQuery(prev, { subscriptionData }: any) {
                 // console.log({ prev, subscriptionData });
                 if (!subscriptionData.data) return prev;
+                const subData = subscriptionData.data.memberSub;
+                const notification =
+                  subscriptionData.data.memberSub.notificationType;
                 console.log({ prev, subscriptionData });
-                if (
-                  subscriptionData.data.memberSub.notificationType ===
-                  'memberAdded'
-                ) {
+                const exists =
+                  prev &&
+                  prev.findMembers.find(
+                    (prev: IMember) => prev.id === subData.id,
+                  );
+                if (exists && notification === 'memberAdded') return;
+
+                if (notification === 'memberRemoved') {
+                  setEvt('removed');
                   return Object.assign({}, prev, {
-                    findMembers: prev.findMembers.concat(
-                      subscriptionData.data.memberSub,
+                    findMembers: prev.findMembers.filter(
+                      (member: Partial<IMember>) => member.id !== subData.id,
                     ),
+                  });
+                }
+
+                if (notification === 'memberAdded') {
+                  if (subData) setEvt(subData.id.toString());
+
+                  return Object.assign({}, prev, {
+                    findMembers: prev.findMembers.concat(subData),
                   });
                 }
               },
@@ -118,23 +128,40 @@ export default Members;
 interface Props {
   member: IMember;
   data?: any;
+  evt?: string;
   project?: any;
   subs?: any;
   memberSub?: number;
+  handleEvent?: any;
 }
 
-const Member = ({ member, data, project, subs }: Props) => {
+//todo: move some functions to redux
+const Member = ({ member, data, project, subs, handleEvent, evt }: Props) => {
   useEffect(() => subs(), []);
+  const ref = useRef<HTMLDivElement>(null);
+  const [className, setClassName] = useState('');
+  useEffect(() => {
+    if (evt && ref.current) {
+      if (evt === ref.current.id) {
+        console.log(evt, ref.current.id);
+        setClassName('added');
+        setTimeout(() => {
+          handleEvent('');
+        }, 3000);
+      }
+    }
+  }, []);
   const params = useParams();
   const location = useLocation();
-
   return (
-    <div id={member.id.toString()}>
+    <div>
       <div
+        ref={ref}
         id={member.id.toString()}
         className={`
     ${member.ban === Ban.BANNED && 'banned'}
     ${member.ban === Ban.PARTIAL_BAN && 'p-banned'}
+    ${className ? className : ''}
      flex justify-between border-t last:border-b border-slate-600 p-3`}
       >
         <MemberInfo member={member} data={data} project={project} />

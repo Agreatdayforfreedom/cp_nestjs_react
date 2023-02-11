@@ -166,11 +166,7 @@ export class MemberService {
     return await this.memberRepository.save(member);
   }
 
-  async removeMember(
-    memberId: number,
-    projectId: number,
-    cUser: User,
-  ): Promise<string> {
+  async removeMember(memberId: number, projectId: number, cUser: User) {
     const memberExists = await this.memberRepository.findOne({
       where: {
         id: memberId,
@@ -184,7 +180,6 @@ export class MemberService {
 
     if (!memberExists) throw new HttpException('Member not found', 404);
     if (!project) throw new HttpException('Project not found', 404);
-    console.log({ cUser });
     if (memberExists.user.id === cUser.id)
       throw new UnauthorizedException('You cannot remove yourself');
 
@@ -197,6 +192,9 @@ export class MemberService {
     ]);
     if (memberRemoved.affected !== 1)
       throw new HttpException("User couldn't be removed", 400);
-    return 'Member removed';
+    return {
+      id: memberId,
+      project,
+    };
   }
 }

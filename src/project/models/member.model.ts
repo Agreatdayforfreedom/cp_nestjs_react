@@ -17,7 +17,7 @@ export class Member {
   @Field((type) => ProjectModel)
   project: ProjectModel;
 
-  @Field((type) => UserModel)
+  @Field((type) => UserModel, { nullable: true })
   user: UserModel;
 
   @Field({ nullable: true })

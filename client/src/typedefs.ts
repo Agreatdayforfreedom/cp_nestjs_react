@@ -207,7 +207,10 @@ export const FIND_MEMBERS = gql`
 
 export const REMOVE_MEMBER = gql`
   mutation Mutation($memberId: Int!, $projectId: Int!) {
-    removeMember(memberId: $memberId, projectId: $projectId)
+    removeMember(memberId: $memberId, projectId: $projectId) {
+      id
+      notificationType
+    }
   }
 `;
 

@@ -22,7 +22,7 @@ type Member {
   role: String
   ban: String
   project: Project!
-  user: User!
+  user: User
   notificationType: String
 }
 
@@ -68,7 +68,7 @@ type Mutation {
   addMember(nextMemberId: Int!, projectId: Int!): Member!
   banMember(memberWhoBanId: Int!, memberToBanId: Int!, banType: String!): Member!
   changeMemberRole(memberId: Int!, roleType: String!): Member!
-  removeMember(memberId: Int!, projectId: Int!): String!
+  removeMember(memberId: Int!, projectId: Int!): Member!
 }
 
 type Subscription {

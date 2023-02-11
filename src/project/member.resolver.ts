@@ -28,17 +28,21 @@ import {
 } from './dtos/member.dto';
 import { Ban, Role } from './entities/member.entity';
 import { Member as MemberModel } from './models/member.model';
+import { Project } from './models/project.model';
 import { MemberService } from './services/member.service';
 
 export const pubSub = new PubSub();
 
 const SkipAuth = () => SetMetadata('SkipAuth', true);
 
-@ObjectType()
-class MemberSubscription extends MemberModel {
-  @Field()
-  notificationType: string;
-}
+// @ObjectType()
+// class RemoveMember {
+//   @Field((type) => Int)
+//   id: number;
+
+//   @Field()
+//   project: Project;
+// }
 
 @Resolver()
 @UseGuards(GqlAuthGuard, RolesGuard, BanGuard)
@@ -51,11 +55,9 @@ export class MemberResolver {
 
   @Subscription((returns) => MemberModel, {
     filter: (payload, variables) => {
-      console.log({ payload, variables });
       return variables.projectId === payload.memberSub.project.id;
     },
     resolve: (value) => {
-      console.log({ value });
       return value.memberSub;
     },
   })
@@ -119,14 +121,25 @@ export class MemberResolver {
     return roleChanged;
   }
 
-  @Mutation((returns) => String)
+  @Mutation((returns) => MemberModel)
   @Roles(Role.ADMIN)
   @Bans(Ban.PARTIAL_BAN, Ban.BANNED)
-  removeMember(
+  async removeMember(
     @Args('memberId', { type: () => Int }) memberId: number,
     @Args('projectId', { type: () => Int }) projectId: number,
     @CurrentUser() cUser: User,
   ) {
-    return this.memberService.removeMember(memberId, projectId, cUser);
+    const removed = await this.memberService.removeMember(
+      memberId,
+      projectId,
+      cUser,
+    );
+    pubSub.publish(MemberResolver.MEMBER_SUB, {
+      memberSub: {
+        ...removed,
+        notificationType: 'memberRemoved',
+      },
+    });
+    return removed;
   }
 }
