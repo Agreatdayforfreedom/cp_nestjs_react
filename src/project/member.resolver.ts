@@ -35,14 +35,12 @@ export const pubSub = new PubSub();
 
 const SkipAuth = () => SetMetadata('SkipAuth', true);
 
-// @ObjectType()
-// class RemoveMember {
-//   @Field((type) => Int)
-//   id: number;
-
-//   @Field()
-//   project: Project;
-// }
+export enum NotificationType {
+  BANNED = 'BANNED',
+  ROLE_CHANGED = 'ROLE_CHANGED',
+  MEMBER_ADDED = 'MEMBER_ADDED',
+  MEMBER_REMOVED = 'MEMBER_REMOVED',
+}
 
 @Resolver()
 @UseGuards(GqlAuthGuard, RolesGuard, BanGuard)
@@ -86,7 +84,7 @@ export class MemberResolver {
     pubSub.publish(MemberResolver.MEMBER_SUB, {
       memberSub: {
         ...memberAdded,
-        notificationType: 'memberAdded',
+        notificationType: NotificationType.MEMBER_ADDED,
       },
     });
     console.log({ memberAdded });
@@ -101,7 +99,7 @@ export class MemberResolver {
     pubSub.publish(MemberResolver.MEMBER_SUB, {
       memberSub: {
         ...banned,
-        notificationType: 'banned',
+        notificationType: NotificationType.BANNED,
       },
     });
     return banned;
@@ -115,7 +113,7 @@ export class MemberResolver {
     pubSub.publish(MemberResolver.MEMBER_SUB, {
       memberSub: {
         ...roleChanged,
-        notificationType: 'roleChanged',
+        notificationType: NotificationType.ROLE_CHANGED,
       },
     });
     return roleChanged;
@@ -137,7 +135,7 @@ export class MemberResolver {
     pubSub.publish(MemberResolver.MEMBER_SUB, {
       memberSub: {
         ...removed,
-        notificationType: 'memberRemoved',
+        notificationType: NotificationType.MEMBER_REMOVED,
       },
     });
     return removed;

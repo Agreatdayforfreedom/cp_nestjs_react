@@ -172,6 +172,11 @@ button:disabled {
   animation: gradient-a 3s forwards;
 }
 
+.member_removed {
+  background-color: var(--t-red);
+  text-decoration: line-through;
+}
+
 .banned {
   background-color: var(--t-red);
   /* background-color: transparent; */

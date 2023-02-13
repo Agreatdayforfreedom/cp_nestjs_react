@@ -10,9 +10,9 @@ const Issues = () => {
   } = useQuery(PROFILE, {
     fetchPolicy: 'network-only',
   });
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
+  // useEffect(() => {
+  //   console.log(data);
+  // }, [data]);
   return <div>Issues</div>;
 };
 

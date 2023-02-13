@@ -15,6 +15,8 @@ import {
   split,
 } from '@apollo/client';
 import { getMainDefinition } from '@apollo/client/utilities';
+import { Provider } from 'react-redux';
+import { store } from './app/store';
 
 const httpLink = new HttpLink({ uri: 'http://localhost:3000/graphql' });
 
@@ -74,7 +76,9 @@ const client = new ApolloClient({
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <App />
+      <Provider store={store}>
+        <App />
+      </Provider>
     </ApolloProvider>
   </React.StrictMode>,
 );

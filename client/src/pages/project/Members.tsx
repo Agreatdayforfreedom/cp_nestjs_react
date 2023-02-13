@@ -14,11 +14,17 @@ import React, {
 import { AiFillDelete } from 'react-icons/ai';
 import { FaBan } from 'react-icons/fa';
 import { MdOutlineEditOff } from 'react-icons/md';
-import { Link, Navigate, useLocation, useParams } from 'react-router-dom';
+import { Navigate, useLocation, useParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import FreezeScreen from '../../components/FreezeScreen';
+import ShineCard from '../../components/loaders/ShineCard';
 import Spinner from '../../components/loaders/Spinner';
-import Notification from '../../components/Notification';
-import useCallRef from '../../hooks/useCallRef';
-import { Ban, Role } from '../../interfaces/enums';
+import {
+  setClass,
+  setRemoved,
+  setState,
+} from '../../features/members/memberSlice';
+import { Ban, NotificationType, Role } from '../../interfaces/enums';
 import { Member as IMember } from '../../interfaces/interfaces';
 import {
   BAN_MEMBER,
@@ -32,7 +38,8 @@ import {
 
 const Members = () => {
   const params = useParams();
-  const [evt, setEvt] = useState('');
+  const dispatch = useAppDispatch();
+  const { memberClass, removed } = useAppSelector((state) => state.memberSlice);
 
   const {
     data: pData,
@@ -54,10 +61,6 @@ const Members = () => {
     },
   });
 
-  const handleEvent = (data: string) => {
-    setEvt(data);
-  };
-
   const { data, loading, error, subscribeToMore } = useQuery(FIND_MEMBERS, {
     variables: {
       projectId: params.id && parseInt(params.id, 10),
@@ -65,19 +68,14 @@ const Members = () => {
   });
   if (loading || cpLoading) return <Spinner />;
   if (error) return <Navigate to="/" />;
-
-  //todo: generic notification
-  //todo: when a member is banned it changes of position, fix it
   return (
-    <section>
-      {data.findMembers?.map((member: IMember, i: number) => (
+    <section className={memberClass ? memberClass : ''}>
+      {data.findMembers?.map((member: IMember) => (
         <Member
           key={nanoid()}
           member={member}
           data={pData}
           project={cpData?.findOneProject}
-          evt={evt}
-          handleEvent={handleEvent}
           subs={() =>
             subscribeToMore({
               document: MEMBER_SUB,
@@ -86,30 +84,47 @@ const Members = () => {
                 projectId: params.id && parseInt(params.id, 10),
               },
               updateQuery(prev, { subscriptionData }: any) {
-                // console.log({ prev, subscriptionData });
                 if (!subscriptionData.data) return prev;
                 const subData = subscriptionData.data.memberSub;
                 const notification =
                   subscriptionData.data.memberSub.notificationType;
-                console.log({ prev, subscriptionData });
                 const exists =
                   prev &&
                   prev.findMembers.find(
                     (prev: IMember) => prev.id === subData.id,
                   );
-                if (exists && notification === 'memberAdded') return;
+                if (exists && notification === NotificationType.MEMBER_ADDED)
+                  return; //to prevent from saving 2 equal instances
 
-                if (notification === 'memberRemoved') {
-                  setEvt('removed');
+                if (notification === NotificationType.MEMBER_REMOVED) {
+                  dispatch(
+                    setState({
+                      memberId: subData.id.toString(),
+                      memberAction: notification,
+                    }),
+                  );
                   return Object.assign({}, prev, {
                     findMembers: prev.findMembers.filter(
                       (member: Partial<IMember>) => member.id !== subData.id,
                     ),
                   });
                 }
-
-                if (notification === 'memberAdded') {
-                  if (subData) setEvt(subData.id.toString());
+                if (notification === NotificationType.BANNED) {
+                  dispatch(
+                    setState({
+                      memberId: 0,
+                      memberAction: notification,
+                    }),
+                  );
+                }
+                if (notification === NotificationType.MEMBER_ADDED) {
+                  if (subData)
+                    dispatch(
+                      setState({
+                        memberId: subData.id.toString(),
+                        memberAction: notification,
+                      }),
+                    );
 
                   return Object.assign({}, prev, {
                     findMembers: prev.findMembers.concat(subData),
@@ -128,31 +143,26 @@ export default Members;
 interface Props {
   member: IMember;
   data?: any;
-  evt?: string;
   project?: any;
   subs?: any;
   memberSub?: number;
-  handleEvent?: any;
 }
 
-//todo: move some functions to redux
-const Member = ({ member, data, project, subs, handleEvent, evt }: Props) => {
+const Member = ({ member, data, project, subs }: Props) => {
   useEffect(() => subs(), []);
+
+  const { memberId } = useAppSelector((state) => state.memberSlice);
   const ref = useRef<HTMLDivElement>(null);
   const [className, setClassName] = useState('');
+
   useEffect(() => {
-    if (evt && ref.current) {
-      if (evt === ref.current.id) {
-        console.log(evt, ref.current.id);
+    if (memberId && ref.current) {
+      if (memberId.toString() === ref.current.id) {
         setClassName('added');
-        setTimeout(() => {
-          handleEvent('');
-        }, 3000);
       }
     }
   }, []);
-  const params = useParams();
-  const location = useLocation();
+  if (!member.user || !data || !project) return <></>;
   return (
     <div>
       <div
@@ -161,7 +171,7 @@ const Member = ({ member, data, project, subs, handleEvent, evt }: Props) => {
         className={`
     ${member.ban === Ban.BANNED && 'banned'}
     ${member.ban === Ban.PARTIAL_BAN && 'p-banned'}
-    ${className ? className : ''}
+    ${className === 'added' ? className : ''}
      flex justify-between border-t last:border-b border-slate-600 p-3`}
       >
         <MemberInfo member={member} data={data} project={project} />
@@ -242,6 +252,7 @@ const Buttons = ({ member, data, project }: Props) => {
   const params = useParams();
   const [fetchRemove] = useMutation(REMOVE_MEMBER);
   const [fetchBan] = useMutation(BAN_MEMBER);
+  const dispatch = useAppDispatch();
 
   const handleBan = (
     memberToBanId: number,
@@ -255,6 +266,12 @@ const Buttons = ({ member, data, project }: Props) => {
         banType,
       },
     });
+    dispatch(
+      setState({
+        memberId: 0,
+        memberAction: 'loadlawodlaow',
+      }),
+    );
   };
 
   const handleDelete = (memberId: number) => {

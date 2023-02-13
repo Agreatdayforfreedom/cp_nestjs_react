@@ -22,9 +22,12 @@ import {
 } from '../../typedefs';
 import { AiOutlineUsergroupAdd } from 'react-icons/ai';
 import Spinner from '../../components/loaders/Spinner';
-import { Role } from '../../interfaces/enums';
+import { NotificationType, Role } from '../../interfaces/enums';
 import InitSpinner from '../../components/loaders/InitSpinner';
 import Notification from '../../components/Notification';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { setClass, setRemoved } from '../../features/members/memberSlice';
+import FreezeScreen from '../../components/FreezeScreen';
 
 const Project = () => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
@@ -32,36 +35,34 @@ const Project = () => {
   const location = useLocation();
   const params = useParams();
 
+  const { removed } = useAppSelector((state) => state.memberSlice);
+  const dispatch = useAppDispatch();
+
   const { data, loading, error } = useQuery(PROFILE, {
     fetchPolicy: 'network-only',
   });
 
-  // const [refreshToken, { data: rtData, loading: rtLoading, error: rtError }] =
-  //   useLazyQuery(REFRESH_TOKEN, {
-  //     fetchPolicy: 'network-only',
-  //   });
-  // useEffect(() => {
-  //   if (data) {
-  //     console.log('hello');
-  //     refreshToken({
-  //       variables: {
-  //         id: data.profile.id,
-  //         projectId: (params.id && parseInt(params.id, 10)) || 0,
-  //       },
-  //     });
-  //   }
-  // }, [data]);
-  // const navigate = useNavigate();
-  // useEffect(() => {
-  //   if (rtData) {
-  //     localStorage.setItem('token', rtData.refreshToken.token);
-  //     window.dispatchEvent(new Event('storage'));
-  //     console.log('redirect');
-  //     navigate('dashboard');
-  //   }
-  // }, [rtData]);
-
-  // useEffect(() => {}, [data, rtData]);
+  const { data: sData } = useSubscription(MEMBER_SUB, {
+    variables: {
+      userId: data && data.profile.id,
+      projectId: params.id && parseInt(params.id, 10),
+    },
+  });
+  useEffect(() => {
+    if (sData) {
+      if (
+        sData.memberSub.id === data.profile.currentProjectMember.id &&
+        sData.memberSub.notificationType === NotificationType.MEMBER_REMOVED
+      ) {
+        dispatch(
+          setClass({
+            memberClass: NotificationType.MEMBER_REMOVED,
+          }),
+        );
+        dispatch(setRemoved(true));
+      }
+    }
+  }, [sData]);
 
   useEffect(() => {
     setShowMenu(false);
@@ -69,6 +70,7 @@ const Project = () => {
 
   return (
     <main>
+      {removed ? <FreezeScreen /> : null}
       <nav className="border-b border-slate-700">
         {/* {data.profile.id} */}
         {/* {rtData && rtData.refreshToken.token} */}

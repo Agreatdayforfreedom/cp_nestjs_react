@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
 import React, { FormEvent, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import FormField from '../../components/FormField';
 import { useForm } from '../../hooks/UseForm';
 import { NEW_PROJECT } from '../../typedefs';
@@ -22,7 +22,6 @@ const ProjectForm = () => {
     if (data && data.createProject) {
       navigate(`/project/${data.createProject.id}/dashboard`);
     }
-    console.log(data);
   }, [data]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
