@@ -17,8 +17,9 @@ import { Project } from '../entities/project.entity';
 //todo: move all types, interfaces and enums to respective files;
 // export interface
 
-export interface findAuthMemberPayload extends User {
+export interface findAuthMemberPayload {
   projectId: number;
+  userId: number;
 }
 
 @Injectable()
@@ -36,7 +37,7 @@ export class MemberService {
           id: payload.projectId,
         },
         user: {
-          id: payload.id,
+          id: payload.userId,
         },
       },
       relations: {
@@ -121,6 +122,7 @@ export class MemberService {
       },
     });
 
+    console.log(memberWhoBan);
     if (!memberToBan || !memberWhoBan)
       throw new UserInputError('There was an error');
 

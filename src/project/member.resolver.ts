@@ -69,10 +69,7 @@ export class MemberResolver {
 
   @Query((returns) => [MemberModel])
   @Roles(Role.ADMIN, Role.MODERATOR, Role.MEMBER)
-  findMembers(
-    @Args('projectId', { type: () => Int }) projectId: number,
-    @CurrentMember() cMember: MemberModel,
-  ) {
+  findMembers(@Args('projectId', { type: () => Int }) projectId: number) {
     return this.memberService.findMembers(projectId);
   }
 
@@ -92,7 +89,7 @@ export class MemberResolver {
   }
 
   @Mutation((returns) => MemberModel)
-  @Roles(Role.ADMIN, Role.MODERATOR, Role.MEMBER)
+  @Roles(Role.ADMIN, Role.MODERATOR)
   @Bans(Ban.PARTIAL_BAN, Ban.BANNED)
   async banMember(@Args() args: BanMemberArgs, @CurrentUser() cUser: User) {
     const banned = await this.memberService.banMember(args, cUser);

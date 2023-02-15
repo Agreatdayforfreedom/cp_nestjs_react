@@ -10,7 +10,6 @@ const ProjectsMemberOf = () => {
   const { data, loading, error } = useQuery(FIND_PROJECTS_MEMBEROF);
 
   if (loading) return <ShineCard />;
-  if (error) return <span>errr</span>;
   return (
     <div className="w-[95%] mx-auto border border-slate-700 bg-[var(--t-blue)] ">
       {data &&

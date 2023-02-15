@@ -1,6 +1,7 @@
 import {
   BrowserRouter,
   Navigate,
+  Outlet,
   Route,
   Routes,
   useNavigate,
@@ -18,6 +19,8 @@ import Issues from './pages/project/Issues';
 import Config from './pages/project/Config';
 import Search from './pages/project/Search';
 import Logic from './pages/project/Logic';
+import NewIssue from './pages/project/NewIssue';
+import Issue from './pages/project/Issue';
 
 function App() {
   return (
@@ -34,7 +37,11 @@ function App() {
             <Route path=":id" element={<Project />}>
               <Route path="logic" element={<Logic />} />
               <Route path="dashboard" element={<Dashboard />} />
-              <Route path="issues" element={<Issues />} />
+              <Route path="issues" element={<Outlet />}>
+                <Route index element={<Issues />} />
+                <Route path="new" element={<NewIssue />} />
+                <Route path=":id" element={<Issue />} />
+              </Route>
               <Route path="search" element={<Search />} />
               <Route path="members" element={<Members />} />
               <Route path="config" element={<Config />} />

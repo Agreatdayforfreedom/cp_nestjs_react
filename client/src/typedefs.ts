@@ -32,6 +32,63 @@ export const FIND_USERS = gql`
   }
 `;
 
+export const FIND_ISSUES = gql`
+  query Query($projectId: Int!) {
+    findIssues(projectId: $projectId) {
+      id
+      title
+      description
+      labels {
+        id
+        color
+        labelName
+      }
+      issueStatus
+    }
+  }
+`;
+
+export const FIND_ISSUE = gql`
+  query Query($issueId: Int!) {
+    findIssue(issueId: $issueId) {
+      id
+      title
+      description
+      labels {
+        id
+        color
+        labelName
+      }
+      issueStatus
+    }
+  }
+`;
+
+export const NEW_ISSUE = gql`
+  mutation Mutation(
+    $title: String!
+    $description: String!
+    $labels: [Label!]
+    $projectId: Int!
+  ) {
+    newIssue(
+      title: $title
+      description: $description
+      labels: $labels
+      projectId: $projectId
+    ) {
+      title
+      updated_at
+      issueStatus
+      issueLabels
+      labels
+      id
+      description
+      created_at
+    }
+  }
+`;
+
 export const ADD_MEMBER = gql`
   mutation Mutation($nextMemberId: Int!, $projectId: Int!) {
     addMember(nextMemberId: $nextMemberId, projectId: $projectId) {
@@ -46,24 +103,6 @@ export const ADD_MEMBER = gql`
     }
   }
 `;
-
-// export const MEMBER_BANNED = gql`
-//   subscription Subscription {
-//     banned {
-//       id
-//       ban
-//     }
-//   }
-// `;
-
-// export const ROLE_CHANGED = gql`
-//   subscription Subscription {
-//     roleChanged {
-//       id
-//       role
-//     }
-//   }
-// `;
 
 export const MEMBER_SUB = gql`
   subscription Subscription($userId: Int!, $projectId: Int!) {

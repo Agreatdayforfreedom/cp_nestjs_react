@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
+import { Issue } from './issue.entity';
 import { Member } from './member.entity';
 
 @Entity()
@@ -27,9 +28,11 @@ export class Project {
   @OneToMany((type) => Member, (member) => member.project)
   members: Member[];
 
-  //? default: 1 is the member create
   @Column({ nullable: true, default: 1 })
   membersTotal: number;
+
+  @OneToMany(() => Issue, (issue) => issue.project)
+  issues: Issue[];
 
   @Column({ default: false })
   status: boolean;

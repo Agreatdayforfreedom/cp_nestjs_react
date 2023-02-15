@@ -1,16 +1,13 @@
 import React, { ChangeEventHandler } from 'react';
 import { useForm } from '../hooks/UseForm';
+import { capitalize } from '../utils/capitalize';
 
 interface Props<T> {
-  name: string;
+  name: Lowercase<string>;
   value?: T;
   onChange?: ChangeEventHandler<HTMLInputElement>;
   type?: string;
   className?: string;
-}
-
-function capitalize(word: string): string {
-  return word.charAt(0).toUpperCase().concat(word.slice(1));
 }
 
 const FormField = <T extends string | number>({
@@ -30,7 +27,7 @@ const FormField = <T extends string | number>({
         id={name}
         name={name}
         value={value}
-        className={`${className} bg-transparent border-b border-slate-700`}
+        className={`${className} input bg-transparent border-b border-slate-700`}
         autoComplete="off"
         onChange={onChange}
       />

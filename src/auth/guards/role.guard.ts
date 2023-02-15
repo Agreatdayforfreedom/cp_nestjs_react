@@ -21,7 +21,10 @@ export class RolesGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = GqlExecutionContext.create(context);
-    const roles = this.reflector.get<Role[]>('roles', ctx.getHandler());
+    const roles = this.reflector.getAllAndOverride<Role[]>('roles', [
+      ctx.getHandler(),
+      ctx.getClass(),
+    ]);
     const req = ctx.getContext().req;
     // if (ctx.getInfo().operation.operation === 'subscription') return true;
     const skipAuth = this.reflector.getAllAndOverride<boolean>('SkipAuth', [
@@ -31,12 +34,18 @@ export class RolesGuard implements CanActivate {
     if (skipAuth) {
       return true;
     }
-    const member = await this.memberService.findAuthMember(req.user);
-    if (ctx.getHandler().name === 'profile' && roles[0] === Role.PROFILE) {
+    const member = await this.memberService.findAuthMember({
+      userId: req.user.id,
+      projectId: req.user.projectId,
+    });
+
+    if (member) {
       req['member'] = member ?? undefined;
-      return req;
     }
 
+    if (roles[0] === Role.PROFILE) {
+      return req.user;
+    }
     const doMatch = this.verifyRoles(member.role, roles as ExcludeProfile);
 
     if (doMatch) {

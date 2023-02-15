@@ -17,6 +17,7 @@
 
   --dark-blue: #06003f;
   --dark-purple: #0a0027;
+  --dark-slate: #0b0e0e;
 
   /* transparents */
   --t-orange: #38150091;
@@ -51,9 +52,16 @@ body {
   background: linear-gradient(-55deg, var(--medium-purple), var(--medium-blue));
 }
 
-input:focus-within {
+.input:focus-within {
   outline: none;
   border-bottom: var(--green) solid 1px;
+}
+
+.label-input:focus-within {
+  outline: none;
+  border: 1px solid #001675;
+  box-shadow: 0 0 0 4px #00167550;
+  /* border-bottom: var(--green) solid 1px; */
 }
 
 button:disabled {
@@ -186,6 +194,19 @@ button:disabled {
 .p-banned {
   background-color: var(--t-orange);
   animation: gradient-p 3s forwards;
+}
+
+.open-label-modal {
+  opacity: 1;
+  animation: open-label-modal 1s forwards;
+}
+@keyframes open-label-modal {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes gradient-a {

@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
+import { Issue } from './issue.entity';
 import { Project } from './project.entity';
 export enum Role {
   /**
@@ -34,12 +35,15 @@ export class Member {
   })
   project: Project;
 
-  @ManyToOne(() => User, (user) => user.memberOf)
-  user: User;
-
   @Column({ nullable: true, default: Role.MEMBER })
   role: Role;
 
   @Column({ nullable: true, default: Ban.UNBANNED })
   ban: Ban;
+
+  @ManyToOne(() => User, (user) => user.memberOf)
+  user: User;
+
+  @OneToMany(() => Issue, (issue) => issue.owner)
+  issues: Issue[];
 }

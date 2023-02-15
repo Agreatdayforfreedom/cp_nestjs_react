@@ -1,4 +1,4 @@
-import { Ban, Role } from './enums';
+import { Ban, IssueStatus, Role } from './enums';
 
 export interface Member {
   id: number;
@@ -22,4 +22,23 @@ export interface Project {
   totalMembers: number;
   owner: User;
   status: boolean; //todo change to enum
+}
+
+export interface Issue {
+  id: number;
+  title: string;
+  description: string;
+  labels: Label[];
+  issueLabels: Label[];
+  issueStatus: IssueStatus;
+  owner: Member;
+  project: Project;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface Label {
+  id: number;
+  labelName: string;
+  color: string;
 }

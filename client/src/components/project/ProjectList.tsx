@@ -35,7 +35,6 @@ export const ProjectList = () => {
   }, [currentPage]);
 
   if (loading) return <ShineCard />;
-  if (error) return <Navigate to="/" />;
   return (
     <div>
       <div className="w-[95%] mx-auto border border-slate-700 bg-[var(--t-blue)] ">

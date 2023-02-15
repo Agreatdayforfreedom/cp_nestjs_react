@@ -6,7 +6,9 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserInputError } from 'apollo-server-core';
 import { DataSource, Repository } from 'typeorm';
+import { User as UserModel } from '../../users/models/user.model';
 import { User } from '../../users/entities/user.entity';
+
 import { ProjectCreateArgs, ProjectUpdateArgs } from '../dtos/project.dto';
 import { Member, Role } from '../entities/member.entity';
 import { Project } from '../entities/project.entity';
@@ -41,7 +43,7 @@ export class ProjectService {
     };
   }
 
-  async findOne(id: number, cUser: User) {
+  async findOne(id: number, cUser: UserModel) {
     const project = await this.projectRepository.findOne({
       where: {
         id,

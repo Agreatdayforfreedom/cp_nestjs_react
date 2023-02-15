@@ -16,3 +16,8 @@ export enum NotificationType {
   MEMBER_ADDED = 'MEMBER_ADDED',
   MEMBER_REMOVED = 'MEMBER_REMOVED',
 }
+
+export enum IssueStatus {
+  OPEN = 'OPEN',
+  CLOSED = 'CLOSED',
+}
