@@ -105,6 +105,7 @@ type Mutation {
   updateIssue(title: String, projectId: Int, description: String, labels: Int, id: Int!): Issue!
   closeIssue(issueId: Int!): Issue!
   newLabel(issueId: Int, labelName: String!, color: String!): Label!
+  quitLabel(labelId: Int!): Label!
 }
 
 type Subscription {

@@ -9,7 +9,7 @@ export class Label {
   @Column({ length: 24 })
   labelName: string;
 
-  @Column({ length: 6 })
+  @Column({ length: 7 })
   color: string;
 
   @ManyToOne(() => Issue, (issue) => issue.labels, { nullable: true })

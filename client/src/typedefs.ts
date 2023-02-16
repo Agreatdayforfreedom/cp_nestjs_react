@@ -89,6 +89,37 @@ export const NEW_ISSUE = gql`
   }
 `;
 
+export const FIND_LABELS = gql`
+  query Query($issueId: Int!) {
+    getLabels(issueId: $issueId) {
+      labelName
+      id
+      color
+    }
+  }
+`;
+
+export const NEW_LABEL = gql`
+  mutation Mutation($issueId: Int!, $labelName: String!, $color: String!) {
+    newLabel(issueId: $issueId, labelName: $labelName, color: $color) {
+      labelName
+      id
+      color
+      issue {
+        id
+      }
+    }
+  }
+`;
+
+export const QUIT_LABEL = gql`
+  mutation Mutation($labelId: Int!) {
+    quitLabel(labelId: $labelId) {
+      id
+    }
+  }
+`;
+
 export const ADD_MEMBER = gql`
   mutation Mutation($nextMemberId: Int!, $projectId: Int!) {
     addMember(nextMemberId: $nextMemberId, projectId: $projectId) {

@@ -26,4 +26,9 @@ export class LabelResolver {
   newLabel(@Args() args: CreateLabelDto) {
     return this.labelService.newLabel(args);
   }
+
+  @Mutation((returns) => Label)
+  quitLabel(@Args('labelId', { type: () => Int }) labelId: number) {
+    return this.labelService.quitLabel(labelId);
+  }
 }

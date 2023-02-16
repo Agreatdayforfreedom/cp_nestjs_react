@@ -24,6 +24,6 @@ export class CreateLabelDto {
   @Field()
   @IsDefined()
   @IsString()
-  @Length(6)
+  @Length(7)
   color: string;
 }

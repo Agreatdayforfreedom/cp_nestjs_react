@@ -4,6 +4,7 @@ import { AiOutlinePlus } from 'react-icons/ai';
 import { VscIssues, VscPass } from 'react-icons/vsc';
 import { useParams } from 'react-router-dom';
 import Spinner from '../../components/loaders/Spinner';
+import LabelCard, { LabelModalInfo } from '../../components/project/LabelCard';
 import LabelModal from '../../components/project/LabelModal';
 import { IssueStatus } from '../../interfaces/enums';
 import { Label } from '../../interfaces/interfaces';
@@ -19,7 +20,6 @@ const Issue = () => {
     },
   });
   if (loading) return <Spinner />;
-  if (data) console.log(data);
   return (
     <section>
       <div className="mt-1.5 flex items-center ">
@@ -49,8 +49,15 @@ interface Props {
 
 const Labels = ({ labels }: Props) => {
   const [openLabelModal, setOpenLabelModal] = useState<boolean>(false);
-
-  const newLabel = () => {};
+  const [openLabelInfoModal, setOpenLabelInfoModal] = useState<boolean>(false);
+  const [currentLabel, setCurrentLabel] = useState<Label>({} as Label);
+  const fnOpenLabelInfoModal = (cLabel: Label) => {
+    setCurrentLabel(cLabel);
+    setOpenLabelInfoModal(true);
+  };
+  const fnCloseLabelInfoModal = () => {
+    setOpenLabelInfoModal(false);
+  };
   const closeLabelModal = () => {
     setOpenLabelModal(false);
   };
@@ -58,16 +65,12 @@ const Labels = ({ labels }: Props) => {
     <div className="flex items-center px-2 pb-2 border-b border-slate-700">
       {labels.map((label: Label) => {
         return (
-          <span
-            style={{
-              color: `#${label.color}`,
-              backgroundColor: `#${label.color}40`,
-              border: `1px solid #${label.color}`,
-            }}
-            className={`mr-1 bg-rand rounded-lg text-sm px-2  border  text-[#d73a4a]`}
-          >
-            {capitalize(label.labelName)}
-          </span>
+          <>
+            <LabelCard
+              label={label}
+              fnOpenLabelInfoModal={fnOpenLabelInfoModal}
+            />
+          </>
         );
       })}
       <AiOutlinePlus
@@ -75,10 +78,17 @@ const Labels = ({ labels }: Props) => {
         onClick={() => setOpenLabelModal((prev) => !prev)}
         className="hover:cursor-pointer"
       />
+      {/*delete label, show info  */}
+      {openLabelInfoModal ? (
+        <LabelModalInfo
+          currentLabel={currentLabel}
+          fnCloseLabelInfoModal={fnCloseLabelInfoModal}
+        />
+      ) : undefined}
+      {/* add new label */}
       {openLabelModal ? (
         <LabelModal closeLabelModal={closeLabelModal} />
       ) : undefined}
-      //todo add new label
     </div>
   );
 };

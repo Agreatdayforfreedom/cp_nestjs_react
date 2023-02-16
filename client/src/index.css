@@ -80,6 +80,14 @@ button:disabled {
 
   transition: 0.5s;
 }
+/* chrome, safari */
+.no-scroll-style::-webkit-scrollbar {
+  display: none;
+}
+/* firefox */
+.no-scroll-style {
+  scrollbar-width: none;
+}
 
 .btn-grad-green {
   background-image: linear-gradient(
@@ -149,6 +157,26 @@ button:disabled {
 .render-grad {
   overflow: hidden;
   position: relative;
+}
+
+.alert {
+  opacity: 1;
+
+  animation: alert-spawn 3s forwards;
+}
+@keyframes alert-spawn {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 .render-grad:after {

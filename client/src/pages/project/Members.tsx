@@ -259,7 +259,6 @@ const Buttons = ({ member, data, project }: Props) => {
     memberWhoBanId: number,
     banType: Ban,
   ) => {
-    console.log(memberWhoBanId, memberToBanId, data);
     fetchBan({
       variables: {
         memberToBanId,

@@ -46,4 +46,21 @@ export class LabelService {
 
     return await this.labelRepository.save(label);
   }
+
+  async quitLabel(labelId: number) {
+    const labelExists = await this.labelRepository.findOne({
+      where: {
+        id: labelId,
+      },
+    });
+    if (!labelExists) throw new HttpException('Label does not exists!', 400);
+
+    const { affected, raw } = await this.labelRepository.delete({
+      id: labelExists.id,
+    });
+    console.log({ affected, raw });
+    if (affected !== 1)
+      throw new HttpException('Something was wrong, try again!', 500);
+    return labelExists;
+  }
 }
