@@ -28,7 +28,10 @@ const LabelModal = ({ closeLabelModal }: Props) => {
           onClick={closeLabelModal}
           size={20}
         />
-        <LabelForm labelSelected={labelSelected} />
+        <LabelForm
+          closeLabelModal={closeLabelModal}
+          labelSelected={labelSelected}
+        />
         <LabelList handleLabelSelected={handleLabelSelected} />
       </div>
     </div>
@@ -39,6 +42,7 @@ interface LabelListProps {
   handleLabelSelected: (data: Form) => void;
 }
 interface LabelFormProps {
+  closeLabelModal: () => void;
   labelSelected?: Form;
 }
 
@@ -91,7 +95,7 @@ interface Form {
   color: string;
 }
 
-const LabelForm = ({ labelSelected }: LabelFormProps) => {
+const LabelForm = ({ labelSelected, closeLabelModal }: LabelFormProps) => {
   const [color, setColor] = useState<string>(randomHexa(6));
   const [alert, setAlert] = useState<string>('');
   const params = useParams();
@@ -122,7 +126,6 @@ const LabelForm = ({ labelSelected }: LabelFormProps) => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log(form.labelName);
     if (!form.labelName || !color) {
       setAlert('Complete all fields');
       return setTimeout(() => {
@@ -140,7 +143,7 @@ const LabelForm = ({ labelSelected }: LabelFormProps) => {
         cache.modify({
           id: cache.identify(iData && iData.findIssue),
           fields: {
-            labels(existing = [], { readField }) {
+            labels(existing = []) {
               const labelAdded = cache.writeFragment({
                 data: newLabel,
                 fragment: gql`
@@ -155,6 +158,9 @@ const LabelForm = ({ labelSelected }: LabelFormProps) => {
             },
           },
         });
+      },
+      onCompleted(data, clientOptions) {
+        closeLabelModal();
       },
     });
   };

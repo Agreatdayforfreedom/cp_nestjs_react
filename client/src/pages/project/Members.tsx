@@ -16,14 +16,8 @@ import { FaBan } from 'react-icons/fa';
 import { MdOutlineEditOff } from 'react-icons/md';
 import { Navigate, useLocation, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import FreezeScreen from '../../components/FreezeScreen';
-import ShineCard from '../../components/loaders/ShineCard';
 import Spinner from '../../components/loaders/Spinner';
-import {
-  setClass,
-  setRemoved,
-  setState,
-} from '../../features/members/memberSlice';
+import { setState } from '../../features/members/memberSlice';
 import { Ban, NotificationType, Role } from '../../interfaces/enums';
 import { Member as IMember } from '../../interfaces/interfaces';
 import {
@@ -172,7 +166,7 @@ const Member = ({ member, data, project, subs }: Props) => {
     ${member.ban === Ban.BANNED && 'banned'}
     ${member.ban === Ban.PARTIAL_BAN && 'p-banned'}
     ${className === 'added' ? className : ''}
-     flex justify-between border-t last:border-b border-slate-600 p-3`}
+     flex justify-between  last:border-b border-slate-600 p-3`}
       >
         <MemberInfo member={member} data={data} project={project} />
         <div className="flex flex-col justify-between">

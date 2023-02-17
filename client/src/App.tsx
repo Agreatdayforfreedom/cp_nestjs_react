@@ -21,6 +21,7 @@ import Search from './pages/project/Search';
 import Logic from './pages/project/Logic';
 import NewIssue from './pages/project/NewIssue';
 import Issue from './pages/project/Issue';
+import EditIssue from './pages/project/EditIssue';
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
                 <Route index element={<Issues />} />
                 <Route path="new" element={<NewIssue />} />
                 <Route path=":id" element={<Issue />} />
+                <Route path=":issueId/edit" element={<EditIssue />} />
               </Route>
               <Route path="search" element={<Search />} />
               <Route path="members" element={<Members />} />

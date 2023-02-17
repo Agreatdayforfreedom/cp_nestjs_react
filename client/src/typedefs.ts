@@ -89,6 +89,27 @@ export const NEW_ISSUE = gql`
   }
 `;
 
+export const UPDATE_ISSUE = gql`
+  mutation Mutation($title: String!, $description: String!, $id: Int!) {
+    updateIssue(title: $title, description: $description, id: $id) {
+      title
+      updated_at
+      labels {
+        id
+      }
+      id
+      description
+      created_at
+    }
+  }
+`;
+
+// export const CLOSE_ISSUE = gql`
+//   mutation Mutation($issueId: Int!) {
+
+//   }
+// `;
+
 export const FIND_LABELS = gql`
   query Query($issueId: Int!) {
     getLabels(issueId: $issueId) {

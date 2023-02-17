@@ -8,7 +8,7 @@ import { capitalize } from '../../utils/capitalize';
 
 interface Props {
   label: Label;
-  fnOpenLabelInfoModal: (currentLabel: Label) => void;
+  fnOpenLabelInfoModal?: (currentLabel: Label) => void;
 }
 
 const LabelCard = ({ label, fnOpenLabelInfoModal }: Props) => {
@@ -20,7 +20,11 @@ const LabelCard = ({ label, fnOpenLabelInfoModal }: Props) => {
         border: `1px solid ${label.color}`,
       }}
       className={`hover:cursor-pointer mr-1 bg-rand rounded-xl text-sm px-2 border`}
-      onClick={() => fnOpenLabelInfoModal(label)}
+      onClick={() =>
+        fnOpenLabelInfoModal instanceof Function
+          ? fnOpenLabelInfoModal(label)
+          : undefined
+      }
     >
       {capitalize(label.labelName)}
     </span>

@@ -100,47 +100,80 @@ const Project = () => {
 };
 
 const Menu = ({ show }: { show: boolean }) => {
+  const location = useLocation();
   return (
     <ul
       className={`${show ? 'block' : 'hidden'} md:flex
        border-t md:border-t-0
         animate-menu justify-center 
-         border-slate-700`}
+         border-slate-700 `}
     >
-      <li>
+      <li
+        className={
+          location.pathname.includes('dashboard')
+            ? `${
+                show ? 'border-0' : 'border-x border-t'
+              } border-slate-700 mb-[-1px] bg-[var(--medium-blue)]`
+            : ''
+        }
+      >
         <Link
           to="dashboard"
-          className="flex items-center hover:bg-[var(--blue)] cursor-pointer px-3 py-1 transition-colors"
+          className="flex items-center hover:bg-[var(--medium-blue)] cursor-pointer px-3 py-1 transition-colors"
         >
           <MdDashboard className="mx-1.5" />
           <span>Dashboard</span>
         </Link>
       </li>
-      <li>
+      <li
+        className={
+          location.pathname.includes('issues')
+            ? `${
+                show ? 'border-0' : 'border-x border-t'
+              } border-slate-700 mb-[-1px] bg-[var(--medium-blue)]`
+            : ''
+        }
+      >
         <Link
           to="issues"
-          className="flex items-center hover:bg-[var(--blue)] cursor-pointer px-3 py-1 transition-colors"
+          className="flex items-center hover:bg-[var(--medium-blue)] cursor-pointer px-3 py-1 transition-colors"
         >
           <VscIssues className="mx-1.5" />
           <span>Issues</span>
         </Link>
       </li>
-      <li>
+      <li
+        className={
+          location.pathname.includes('members')
+            ? `${
+                show ? 'border-0' : 'border-x border-t'
+              } border-slate-700 mb-[-1px] bg-[var(--medium-blue)]`
+            : ''
+        }
+      >
         <Link
           to="members"
-          className="flex items-center hover:bg-[var(--blue)] cursor-pointer px-3 py-1 transition-colors"
+          className="flex items-center hover:bg-[var(--medium-blue)] cursor-pointer px-3 py-1 transition-colors"
         >
           <BsFillPeopleFill className="mx-1.5" />
           <span>Members</span>
         </Link>
       </li>
-      <li className="flex items-center hover:bg-[var(--blue)] cursor-pointer px-3 py-1 transition-colors">
+      <li className="flex items-center hover:bg-[var(--medium-blue)] cursor-pointer px-3 py-1 transition-colors">
         Histoy
       </li>
-      <li>
+      <li
+        className={
+          location.pathname.includes('config')
+            ? `${
+                show ? 'border-0' : 'border-x border-t'
+              }  border-slate-700 mb-[-1px] bg-[var(--medium-blue)]`
+            : ''
+        }
+      >
         <Link
           to="config"
-          className="flex items-center hover:bg-[var(--blue)] cursor-pointer px-3 py-1 transition-colors"
+          className="flex items-center hover:bg-[var(--medium-blue)] cursor-pointer px-3 py-1 transition-colors"
         >
           <BsGearFill className="mx-1.5" />
           <span>Config</span>

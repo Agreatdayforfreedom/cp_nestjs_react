@@ -16,7 +16,9 @@ export const useForm = <T extends Object>() => {
     }
   }, []);
 
-  const handleChange = ({ target }: ChangeEvent<HTMLElements>) => {
+  const handleChange = ({
+    target,
+  }: ChangeEvent<HTMLElements | HTMLTextAreaElement>) => {
     const { name, value } = target;
     console.log({ name, value });
     setForm({

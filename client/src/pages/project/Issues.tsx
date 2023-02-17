@@ -8,6 +8,7 @@ import ArrowBack from '../../components/ArrowBack';
 import Button from '../../components/Button';
 import Spinner from '../../components/loaders/Spinner';
 import IssueForm from '../../components/project/IssueForm';
+import LabelCard from '../../components/project/LabelCard';
 import { IssueStatus } from '../../interfaces/enums';
 import { Issue, Label } from '../../interfaces/interfaces';
 import { FIND_ISSUES, PROFILE } from '../../typedefs';
@@ -66,17 +67,7 @@ const IssueCard = ({ issue }: Props) => {
         <h1 className="text-xl">{issue.title}</h1>
         <div>
           {issue.labels?.map((label: Label) => (
-            <span
-              style={{
-                color: `#${label.color}`,
-                backgroundColor: `#${label.color}40`,
-                border: `1px solid #${label.color}`,
-              }}
-              className="mr-1 rounded-lg text-sm px-2 py-px border"
-              key={nanoid()}
-            >
-              {capitalize(label.labelName)}
-            </span>
+            <LabelCard label={label} />
           ))}
         </div>
         <span className="text-sm text-slate-500">#{issue.id}</span>
