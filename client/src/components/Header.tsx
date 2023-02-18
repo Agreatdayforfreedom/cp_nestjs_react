@@ -8,7 +8,7 @@ const Header = ({ data }: any) => {
   return (
     <header className="absolute w-full h-12 border-b border-slate-700">
       <ul className="flex items-center h-12 ">
-        <li className="flex sm:hidden ">
+        <li className="flex ">
           <Link
             to="/"
             className={`${

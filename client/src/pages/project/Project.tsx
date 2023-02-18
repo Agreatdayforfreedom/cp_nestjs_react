@@ -28,12 +28,16 @@ import Notification from '../../components/Notification';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { setClass, setRemoved } from '../../features/members/memberSlice';
 import FreezeScreen from '../../components/FreezeScreen';
+import SideBar from '../../components/SideBar';
+import useWindowSize from '../../hooks/useWindowSize';
 
 const Project = () => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
 
   const location = useLocation();
   const params = useParams();
+
+  const [width, _] = useWindowSize();
 
   const { removed } = useAppSelector((state) => state.memberSlice);
   const dispatch = useAppDispatch();
@@ -72,9 +76,7 @@ const Project = () => {
     <main>
       {removed ? <FreezeScreen /> : null}
       <nav className="border-b border-slate-700">
-        {/* {data.profile.id} */}
-        {/* {rtData && rtData.refreshToken.token} */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between md:justify-end">
           <RiMenuLine
             size={30}
             className="mx-4 my-2 cursor-pointer md:hidden"
@@ -92,92 +94,96 @@ const Project = () => {
             </Link>
           )}
         </div>
-        <Menu show={showMenu} />
+        {width <= 770 ? <Menu show={showMenu} /> : undefined}
       </nav>
-      <Outlet />
+      <SideBar />
+      <div className="md:ml-32">
+        <Outlet />
+      </div>
     </main>
   );
 };
 
-const Menu = ({ show }: { show: boolean }) => {
+export const Menu = ({ show }: { show: boolean }) => {
   const location = useLocation();
+  const [width, _] = useWindowSize();
+
+  const fullScreen = width >= 770;
+
+  const className = `
+  border-slate-700 bg-[var(--dark-blue-gray)] relative
+  ${show ? 'border-0' : 'border-x border-t'} 
+  ${
+    fullScreen
+      ? ' border-none hover:bg-[var(--medium-blue-gray)] rounded-full bg-[var(--medium-blue-gray)]'
+      : 'mb-[-1px]'
+  }
+  `;
+
+  const noFocuses = ``;
+
   return (
     <ul
-      className={`${show ? 'block' : 'hidden'} md:flex
-       border-t md:border-t-0
-        animate-menu justify-center 
+      className={`${show ? 'block' : 'hidden'} md:block md:mt-4
+        animate-menu justify-center
          border-slate-700 `}
     >
       <li
-        className={
-          location.pathname.includes('dashboard')
-            ? `${
-                show ? 'border-0' : 'border-x border-t'
-              } border-slate-700 mb-[-1px] bg-[var(--medium-blue)]`
-            : ''
-        }
+        className={`py-2 hover:bg-[var(--medium-blue-gray)]  relative ${
+          location.pathname.includes('dashboard') ? className : ''
+        }`}
       >
+        <div className="flex items-center">
+          <MdDashboard className="mx-1.5" size={20} />
+          <span>Dashboard</span>
+        </div>
         <Link
           to="dashboard"
-          className="flex items-center hover:bg-[var(--medium-blue)] cursor-pointer px-3 py-1 transition-colors"
-        >
-          <MdDashboard className="mx-1.5" />
-          <span>Dashboard</span>
-        </Link>
+          className="absolute top-0 w-full h-full  cursor-pointer px-3 py-1 transition-colors"
+        />
       </li>
       <li
-        className={
-          location.pathname.includes('issues')
-            ? `${
-                show ? 'border-0' : 'border-x border-t'
-              } border-slate-700 mb-[-1px] bg-[var(--medium-blue)]`
-            : ''
-        }
+        className={`py-2 hover:bg-[var(--medium-blue-gray)]  relative ${
+          location.pathname.includes('issues') ? className : ''
+        }`}
       >
+        <div className="flex items-center">
+          <VscIssues className="mx-1.5" size={20} />
+          <span>Issues</span>
+        </div>
         <Link
           to="issues"
-          className="flex items-center hover:bg-[var(--medium-blue)] cursor-pointer px-3 py-1 transition-colors"
-        >
-          <VscIssues className="mx-1.5" />
-          <span>Issues</span>
-        </Link>
+          className="absolute top-0 w-full h-full  cursor-pointer px-3 py-1 transition-colors"
+        ></Link>
       </li>
       <li
-        className={
-          location.pathname.includes('members')
-            ? `${
-                show ? 'border-0' : 'border-x border-t'
-              } border-slate-700 mb-[-1px] bg-[var(--medium-blue)]`
-            : ''
-        }
+        className={`py-2 hover:bg-[var(--medium-blue-gray)]  relative ${
+          location.pathname.includes('members') ? className : ''
+        }`}
       >
-        <Link
-          to="members"
-          className="flex items-center hover:bg-[var(--medium-blue)] cursor-pointer px-3 py-1 transition-colors"
-        >
+        <div className="flex items-center">
           <BsFillPeopleFill className="mx-1.5" />
           <span>Members</span>
-        </Link>
-      </li>
-      <li className="flex items-center hover:bg-[var(--medium-blue)] cursor-pointer px-3 py-1 transition-colors">
-        Histoy
-      </li>
-      <li
-        className={
-          location.pathname.includes('config')
-            ? `${
-                show ? 'border-0' : 'border-x border-t'
-              }  border-slate-700 mb-[-1px] bg-[var(--medium-blue)]`
-            : ''
-        }
-      >
+        </div>
         <Link
-          to="config"
-          className="flex items-center hover:bg-[var(--medium-blue)] cursor-pointer px-3 py-1 transition-colors"
-        >
+          to="members"
+          className="absolute top-0 w-full h-full  cursor-pointer px-3 py-1 transition-colors"
+        ></Link>
+      </li>
+
+      <li
+        className={`py-2 hover:bg-[var(--medium-blue-gray)] relative ${
+          location.pathname.includes('config') ? className : ''
+        }`}
+      >
+        <div className="flex items-center">
           <BsGearFill className="mx-1.5" />
           <span>Config</span>
-        </Link>
+        </div>
+        <Link
+          to="config"
+          className="absolute top-0 w-full h-full  cursor-pointer px-3 py-1 transition-colors"
+        ></Link>
       </li>
     </ul>
   );

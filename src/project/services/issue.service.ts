@@ -48,7 +48,6 @@ export class IssueService {
       },
     });
     if (!issue) throw new HttpException('Issue not found', 404);
-
     return issue;
   }
 

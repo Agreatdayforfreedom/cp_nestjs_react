@@ -9,9 +9,10 @@ import LabelCard, { LabelModalInfo } from '../../components/project/LabelCard';
 import LabelModal from '../../components/project/LabelModal';
 import { IssueStatus } from '../../interfaces/enums';
 import { Label } from '../../interfaces/interfaces';
-import { FIND_ISSUE } from '../../typedefs';
+import { FIND_ISSUE, PROFILE } from '../../typedefs';
 import { nanoid } from '@reduxjs/toolkit';
 import { MdClose } from 'react-icons/md';
+import { parseAndCompareDate } from '../../utils/parseAndCompareDate';
 
 const Issue = () => {
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
@@ -21,6 +22,8 @@ const Issue = () => {
   const fnCloseDeleteModal = () => {
     setOpenDeleteModal(false);
   };
+
+  const { data: pData } = useQuery(PROFILE);
 
   const { data, loading, error } = useQuery(FIND_ISSUE, {
     variables: {
@@ -39,22 +42,33 @@ const Issue = () => {
           )}
           <span className="text-slate-500">{data.findIssue.issueStatus}</span>
         </div>
-        <div className="flex items-center">
-          <Link to={`edit`}>
-            <HiPencil
-              size={20}
-              className="fill-orange-700 hover:fill-orange-900 hover:cursor-pointer"
+
+        {pData.profile.currentProjectMember.id === data.findIssue.owner.id && (
+          <div className="flex items-center">
+            <Link to={`edit`}>
+              <HiPencil
+                size={20}
+                className="fill-orange-700 hover:fill-orange-900 hover:cursor-pointer"
+              />
+            </Link>
+            <AiFillDelete
+              className="ml-2 fill-red-700 hover:fill-red-900 hover:cursor-pointer"
+              onClick={() => setOpenDeleteModal((prev) => !prev)}
             />
-          </Link>
-          <AiFillDelete
-            className="ml-2 fill-red-700 hover:fill-red-900 hover:cursor-pointer"
-            onClick={() => setOpenDeleteModal((prev) => !prev)}
-          />
-        </div>
+          </div>
+        )}
       </div>
-      <h1 className="text-slate-200 p-3 px-3 text-2xl m-2 border-b border-slate-700">
-        {data.findIssue.title}
-      </h1>
+      <div className="border-b border-slate-700 m-2">
+        <h1 className="text-slate-200 py-2 px-3 text-2xl  ">
+          {data.findIssue.title}
+        </h1>
+        <span className="text-sm block w-full text-end text-slate-600">
+          {parseAndCompareDate(
+            data.findIssue.created_at,
+            data.findIssue.updated_at,
+          )}
+        </span>
+      </div>
       <Labels labels={data.findIssue.labels} />
       <p className="p-3 border-b text-slate-400 border-slate-700">
         {data.findIssue.description}

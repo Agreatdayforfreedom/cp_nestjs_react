@@ -62,7 +62,6 @@ const IssueForm = ({ updateData }: Props) => {
     }
   };
 
-  //todo: style forms!
   return (
     <div className="w-full mt-20 flex items-center relative mb-10">
       <ArrowBack to={`../${params.issueId}`} className="absolute -top-16" />

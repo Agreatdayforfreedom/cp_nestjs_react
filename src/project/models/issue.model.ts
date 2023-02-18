@@ -1,6 +1,7 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Label } from './label.model';
 import { IssueStatus } from '../entities/issue.entity';
+import { Member } from './member.model';
 
 @ObjectType()
 export class Issue {
@@ -21,6 +22,9 @@ export class Issue {
 
   @Field((type) => Date)
   created_at: Date;
+
+  @Field((type) => Member)
+  owner: Member;
 
   @Field((type) => Date)
   updated_at: Date;

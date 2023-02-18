@@ -59,29 +59,25 @@ export const FIND_ISSUE = gql`
         color
         labelName
       }
+      owner {
+        id
+      }
       issueStatus
+      created_at
+      updated_at
     }
   }
 `;
 
 export const NEW_ISSUE = gql`
-  mutation Mutation(
-    $title: String!
-    $description: String!
-    $labels: [Label!]
-    $projectId: Int!
-  ) {
-    newIssue(
-      title: $title
-      description: $description
-      labels: $labels
-      projectId: $projectId
-    ) {
+  mutation Mutation($title: String!, $description: String!, $projectId: Int!) {
+    newIssue(title: $title, description: $description, projectId: $projectId) {
       title
       updated_at
       issueStatus
-      issueLabels
-      labels
+      labels {
+        id
+      }
       id
       description
       created_at
