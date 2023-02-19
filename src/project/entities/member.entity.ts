@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
+import { Comment } from './comment.entity';
 import { Issue } from './issue.entity';
 import { Project } from './project.entity';
 export enum Role {
@@ -46,4 +47,7 @@ export class Member {
 
   @OneToMany(() => Issue, (issue) => issue.owner)
   issues: Issue[];
+
+  @OneToMany(() => Comment, (comment) => comment.owner)
+  comments: Comment[];
 }

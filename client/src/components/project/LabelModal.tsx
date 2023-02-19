@@ -55,7 +55,7 @@ const LabelList = ({ handleLabelSelected }: LabelListProps) => {
   const params = useParams();
   const { data, loading } = useQuery(FIND_LABELS, {
     variables: {
-      issueId: params.id && parseInt(params.id, 10),
+      issueId: params.issueId && parseInt(params.issueId, 10),
     },
   });
 
@@ -112,7 +112,7 @@ const LabelForm = ({ labelSelected, closeLabelModal }: LabelFormProps) => {
 
   const { data: iData } = useQuery(FIND_ISSUE, {
     variables: {
-      issueId: params.id && parseInt(params.id, 10),
+      issueId: params.issueId && parseInt(params.issueId, 10),
     },
   });
 

@@ -9,7 +9,7 @@ import LabelCard, { LabelModalInfo } from '../../components/project/LabelCard';
 import LabelModal from '../../components/project/LabelModal';
 import { IssueStatus } from '../../interfaces/enums';
 import { Label } from '../../interfaces/interfaces';
-import { FIND_ISSUE, PROFILE } from '../../typedefs';
+import { FIND_COMMENTS, FIND_ISSUE, PROFILE } from '../../typedefs';
 import { nanoid } from '@reduxjs/toolkit';
 import { MdClose } from 'react-icons/md';
 import { parseAndCompareDate } from '../../utils/parseAndCompareDate';
@@ -27,7 +27,7 @@ const Issue = () => {
 
   const { data, loading, error } = useQuery(FIND_ISSUE, {
     variables: {
-      issueId: params.id && parseInt(params.id, 10),
+      issueId: params.issueId && parseInt(params.issueId, 10),
     },
   });
   if (loading) return <Spinner />;
@@ -170,7 +170,21 @@ const Labels = ({ labels }: Props) => {
 };
 
 const Comments = () => {
-  //todo
-  return <div className="py-10">Comments...</div>;
+  const params = useParams();
+  console.log(params);
+  const { data } = useQuery(FIND_COMMENTS, {
+    variables: {
+      issueId: params.issueId && parseInt(params.issueId, 10),
+    },
+  });
+
+  if (data) console.log(data);
+  return (
+    <div className="py-10">
+      {data.findComments.map((x: any) => (
+        <span>{x.content}</span>
+      ))}
+    </div>
+  );
 };
 export default Issue;

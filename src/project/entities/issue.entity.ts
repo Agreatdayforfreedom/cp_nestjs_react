@@ -4,9 +4,11 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Comment } from './comment.entity';
 import { Label } from './label.entity';
 import { Member } from './member.entity';
 import { Project } from './project.entity';
@@ -37,11 +39,18 @@ export class Issue {
   @Column({ default: IssueStatus.OPEN })
   issueStatus: IssueStatus;
 
-  @ManyToOne(() => Member, (member) => member.issues)
+  @ManyToOne(() => Member, (member) => member.issues, {
+    onDelete: 'CASCADE',
+  })
   owner: Member;
 
-  @ManyToOne(() => Project, (project) => project.issues)
+  @ManyToOne(() => Project, (project) => project.issues, {
+    onDelete: 'CASCADE',
+  })
   project: Project;
+
+  @OneToMany(() => Comment, (comment) => comment.issue)
+  comments: Comment[];
 
   @CreateDateColumn()
   created_at: Date;

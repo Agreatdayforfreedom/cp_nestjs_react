@@ -13,10 +13,13 @@ import { Issue } from './entities/issue.entity';
 import { LabelResolver } from './label.resolver';
 import { LabelService } from './services/label.service';
 import { Label } from './entities/label.entity';
+import { CommentResolver } from './comment.resolver';
+import { CommentService } from './services/comment.service';
+import { Comment } from './entities/comment.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Project, Member, Issue, Label]),
+    TypeOrmModule.forFeature([Project, Member, Issue, Label, Comment]),
     UsersModule,
   ],
   providers: [
@@ -28,6 +31,8 @@ import { Label } from './entities/label.entity';
     IssueService,
     LabelResolver,
     LabelService,
+    CommentResolver,
+    CommentService,
   ],
   exports: [MemberService],
 })

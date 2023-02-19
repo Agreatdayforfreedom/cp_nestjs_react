@@ -41,7 +41,7 @@ function App() {
               <Route path="issues" element={<Outlet />}>
                 <Route index element={<Issues />} />
                 <Route path="new" element={<NewIssue />} />
-                <Route path=":id" element={<Issue />} />
+                <Route path=":issueId" element={<Issue />} />
                 <Route path=":issueId/edit" element={<EditIssue />} />
               </Route>
               <Route path="search" element={<Search />} />

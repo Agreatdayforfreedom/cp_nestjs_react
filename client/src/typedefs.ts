@@ -106,6 +106,19 @@ export const UPDATE_ISSUE = gql`
 //   }
 // `;
 
+export const FIND_COMMENTS = gql`
+  query Query($issueId: Int!) {
+    findComments(issueId: $issueId) {
+      id
+      content
+      created_at
+      # owner {
+      #   id
+      # }
+    }
+  }
+`;
+
 export const FIND_LABELS = gql`
   query Query($issueId: Int!) {
     getLabels(issueId: $issueId) {
