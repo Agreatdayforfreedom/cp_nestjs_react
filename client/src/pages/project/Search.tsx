@@ -14,11 +14,7 @@ const Search = () => {
   const params = useParams();
 
   const { data, loading, error } = useQuery(FIND_USERS);
-  const {
-    data: membersData,
-    loading: membersLoading,
-    error: membersError,
-  } = useQuery(FIND_MEMBERS, {
+  const { data: membersData } = useQuery(FIND_MEMBERS, {
     variables: {
       projectId: params.id && parseInt(params.id, 10),
     },
@@ -67,7 +63,12 @@ const Search = () => {
             key={nanoid()}
             className="flex justify-between items-center p-3 border-t last:border-y border-slate-700"
           >
-            <div>
+            <div className="flex items-center">
+              <img
+                src={user.avatar}
+                alt={`${user.username} avatar`}
+                className="w-8 h-8 rounded-full mr-2 text-sm"
+              />
               <span className="px-2">{user.username}</span>
               <span className="px-2">{user.email}</span>
             </div>

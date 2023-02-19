@@ -3,6 +3,7 @@ import { Ban, IssueStatus, Role } from './enums';
 export interface Member {
   id: number;
   user: User;
+  avatar: string;
   project: Project;
   role: Role;
   ban: Ban;
@@ -10,6 +11,7 @@ export interface Member {
 
 export interface User {
   id: number;
+  avatar: string;
   username: string;
   email: string;
   password: string;

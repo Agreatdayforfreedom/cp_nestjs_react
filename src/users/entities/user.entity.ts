@@ -1,7 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Member } from '../../project/entities/member.entity';
 import { Project } from '../../project/entities/project.entity';
-
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
@@ -15,6 +14,13 @@ export class User {
 
   @Column()
   password: string;
+
+  @Column({
+    default: `https://secure.gravatar.com/avatar/${Math.floor(
+      Math.random() * 200,
+    )}?s=90&d=identicon`,
+  })
+  avatar: string;
 
   @OneToMany(() => Project, (project) => project.owner)
   project: Project[];

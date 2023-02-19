@@ -10,6 +10,9 @@ export class User {
   username: string;
 
   @Field()
+  avatar: string;
+
+  @Field()
   email: string;
 
   @Field({ nullable: true }) //? Securiry?

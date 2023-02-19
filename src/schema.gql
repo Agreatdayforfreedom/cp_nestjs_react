@@ -29,6 +29,7 @@ type Member {
 type User {
   id: Int!
   username: String!
+  avatar: String!
   email: String!
   password: String
 }
@@ -36,6 +37,7 @@ type User {
 type Profile {
   id: Int!
   username: String!
+  avatar: String!
   email: String!
   password: String
   projectId: Int

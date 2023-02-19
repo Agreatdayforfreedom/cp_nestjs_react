@@ -27,6 +27,7 @@ export const FIND_USERS = gql`
     findUsers {
       username
       email
+      avatar
       id
     }
   }
@@ -298,6 +299,7 @@ export const FIND_MEMBERS = gql`
       }
       user {
         id
+        avatar
         username
         email
       }

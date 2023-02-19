@@ -192,8 +192,13 @@ const MemberInfo = ({ member, data, project }: Props) => {
       <div
         className={`${
           member.role === Role.ADMIN ? 'text-orange-700' : ''
-        } font-semibold`}
+        } font-semibold flex items-center py-1`}
       >
+        <img
+          src={member.user.avatar}
+          alt={`${member.user.username} avatar`}
+          className="w-8 h-8 rounded-full mr-2 text-sm"
+        />
         {member.role}
         {member.ban !== Ban.UNBANNED && (
           <span className="px-1  text-red-800">{member.ban}</span>
