@@ -22,7 +22,6 @@ const MainLayout = () => {
   return (
     <div className="flex min-h-screen min-w-screen">
       <Header />
-      {/* <SideBar /> */}
       <div className="mt-12 w-full relative">
         <Outlet />
       </div>

@@ -13,6 +13,7 @@ import { FIND_COMMENTS, FIND_ISSUE, PROFILE } from '../../typedefs';
 import { nanoid } from '@reduxjs/toolkit';
 import { MdClose } from 'react-icons/md';
 import { parseAndCompareDate } from '../../utils/parseAndCompareDate';
+import Comments from '../../components/comment/Comments';
 
 const Issue = () => {
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
@@ -86,11 +87,10 @@ const DeleteModal = ({
 }: {
   fnCloseDeleteModal: () => void;
 }) => {
-  // const fetch = useMutation(REMOVE_ISSUE);
   return (
     <div
       className={`
-fixed w-screen  h-screen top-0 left-0 
+fixed w-screen z-10 h-screen top-0 left-0 
 flex items-center justify-center bg-slate-900/60`}
     >
       <div
@@ -169,22 +169,4 @@ const Labels = ({ labels }: Props) => {
   );
 };
 
-const Comments = () => {
-  const params = useParams();
-  console.log(params);
-  const { data } = useQuery(FIND_COMMENTS, {
-    variables: {
-      issueId: params.issueId && parseInt(params.issueId, 10),
-    },
-  });
-
-  if (data) console.log(data);
-  return (
-    <div className="py-10">
-      {data.findComments.map((x: any) => (
-        <span>{x.content}</span>
-      ))}
-    </div>
-  );
-};
 export default Issue;

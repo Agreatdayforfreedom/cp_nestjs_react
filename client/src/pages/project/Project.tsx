@@ -75,7 +75,7 @@ const Project = () => {
   return (
     <main>
       {removed ? <FreezeScreen /> : null}
-      <nav className="border-b border-slate-700">
+      <nav className="border-b fixed top-12 z-20 bg-[var(--medium-blue)] w-full border-slate-700">
         <div className="flex items-center justify-between md:justify-end">
           <RiMenuLine
             size={30}
@@ -97,7 +97,7 @@ const Project = () => {
         {width <= 770 ? <Menu show={showMenu} /> : undefined}
       </nav>
       <SideBar />
-      <div className="md:ml-32">
+      <div className="md:ml-32 mt-10 ">
         <Outlet />
       </div>
     </main>

@@ -16,6 +16,7 @@ import { clearConfigCache } from 'prettier';
 import { Bans } from '../auth/decorators/ban.decorator';
 import { CurrentMember } from '../auth/decorators/member.decorator';
 import { Roles } from '../auth/decorators/role.decorator';
+import { SkipAuth } from '../auth/decorators/skipAuth.decorator';
 import { CurrentUser } from '../auth/decorators/user.decorator';
 import { BanGuard } from '../auth/guards/ban.guard';
 import { GqlAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -32,8 +33,6 @@ import { Project } from './models/project.model';
 import { MemberService } from './services/member.service';
 
 export const pubSub = new PubSub();
-
-const SkipAuth = () => SetMetadata('SkipAuth', true);
 
 export enum NotificationType {
   BANNED = 'BANNED',

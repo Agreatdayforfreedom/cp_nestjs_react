@@ -11,9 +11,11 @@
   --purple: #30155c;
 
   --light-blue: #162fa0;
+  --light-orange: #d86800;
 
   --medium-purple: #140147;
   --medium-blue: #001731;
+  --medium-slate: #161616;
   --medium-blue-gray: #1f2144;
 
   --dark-blue: #06003f;
@@ -32,6 +34,7 @@
   --bg-form-field: #0c0c0c;
 
   --nt-yellow: #ffd000b2;
+  --timeline-color: #79797950;
 }
 
 * {
@@ -71,6 +74,17 @@ button:disabled {
   opacity: 0.5;
 }
 
+.timeline::before {
+  content: '';
+  border: 1.5px solid var(--timeline-color);
+  height: 100%;
+  top: 0;
+  bottom: 0;
+  left: 10px;
+  z-index: 0;
+  position: absolute;
+}
+
 .btn-grad {
   margin: 10px;
   padding: 6px 16px;
@@ -80,7 +94,6 @@ button:disabled {
   background-size: 400% auto;
   color: white;
   display: block;
-
   transition: 0.5s;
 }
 /* chrome, safari */
@@ -231,12 +244,46 @@ button:disabled {
   opacity: 1;
   animation: open-label-modal 1s forwards;
 }
+.open-options {
+  width: 60px;
+  height: 60px;
+  animation: open-options 0.5s forwards;
+}
+
+.flash-orange {
+  background-color: transparent;
+
+  animation: flash 4s forwards;
+}
+
+@keyframes open-options {
+  0% {
+    width: 20px;
+    height: 20px;
+    opacity: 0;
+  }
+  100% {
+    width: 70px;
+    height: 70px;
+    opacity: 1;
+  }
+}
+
 @keyframes open-label-modal {
   0% {
     opacity: 0;
   }
   100% {
     opacity: 1;
+  }
+}
+
+@keyframes flash {
+  0% {
+    background-color: var(--light-orange);
+  }
+  100% {
+    background-color: transparent;
   }
 }
 

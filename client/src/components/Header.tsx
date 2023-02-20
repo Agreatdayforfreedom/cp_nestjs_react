@@ -6,7 +6,7 @@ const Header = ({ data }: any) => {
   const location = useLocation();
 
   return (
-    <header className="absolute w-full h-12 border-b border-slate-700">
+    <header className="fixed bg-[var(--medium-blue)] z-20 w-full h-12 border-b border-slate-700">
       <ul className="flex items-center h-12 ">
         <li className="flex ">
           <Link

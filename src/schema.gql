@@ -126,4 +126,5 @@ type Mutation {
 
 type Subscription {
   memberSub(userId: Int!, projectId: Int!): Member!
+  commentSub: Comment!
 }

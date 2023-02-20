@@ -113,9 +113,44 @@ export const FIND_COMMENTS = gql`
       id
       content
       created_at
-      # owner {
-      #   id
-      # }
+      updated_at
+      owner {
+        id
+        user {
+          avatar
+          username
+        }
+      }
+    }
+  }
+`;
+
+export const NEW_COMMENT = gql`
+  mutation Matation($issueId: Int!, $content: String!) {
+    newComment(issueId: $issueId, content: $content) {
+      id
+      content
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const EDIT_COMMENT = gql`
+  mutation Mutation($commentId: Int!, $content: String!) {
+    updateComment(commentId: $commentId, content: $content) {
+      id
+      content
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const DELETE_COMMENT = gql`
+  mutation Mutation($commentId: Int!) {
+    deleteComment(commentId: $commentId) {
+      id
     }
   }
 `;
@@ -182,6 +217,25 @@ export const MEMBER_SUB = gql`
         email
       }
       notificationType
+    }
+  }
+`;
+
+export const COMMENT_SUB = gql`
+  subscription Subscription {
+    commentSub {
+      id
+      content
+      owner {
+        id
+        user {
+          id
+          username
+          avatar
+        }
+      }
+      created_at
+      updated_at
     }
   }
 `;

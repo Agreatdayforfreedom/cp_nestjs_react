@@ -29,7 +29,7 @@ const Button = ({
   const classColor = `btn-grad-${color}`;
 
   return (
-    <div className={` w-full flex items-center justify-end`}>
+    <div className={`${className} w-full flex items-center justify-end`}>
       {tag === 'link' ? (
         <Link className={`${classColor} btn-grad ${className}`} to={to}>
           {name}

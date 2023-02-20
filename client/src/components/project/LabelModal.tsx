@@ -21,7 +21,7 @@ const LabelModal = ({ closeLabelModal }: Props) => {
   };
 
   return (
-    <div className="fixed w-screen  h-screen top-0 left-0 flex items-center justify-center bg-slate-900/60">
+    <div className="fixed w-screen z-10 h-screen top-0 left-0 flex items-center justify-center bg-slate-900/60">
       <div className="relative open-label-modal bg-[var(--dark-slate)] shadow-lg p-4 shadow-slate-800 rounded w-96 h-96">
         <MdClose
           className="absolute right-1 top-1 hover:cursor-pointer"
@@ -110,6 +110,7 @@ const LabelForm = ({ labelSelected, closeLabelModal }: LabelFormProps) => {
     },
   });
 
+  console.log(params);
   const { data: iData } = useQuery(FIND_ISSUE, {
     variables: {
       issueId: params.issueId && parseInt(params.issueId, 10),
@@ -135,7 +136,7 @@ const LabelForm = ({ labelSelected, closeLabelModal }: LabelFormProps) => {
 
     fetch({
       variables: {
-        issueId: params.id && parseInt(params.id, 10),
+        issueId: params.issueId && parseInt(params.issueId, 10),
         labelName: form.labelName,
         color,
       },

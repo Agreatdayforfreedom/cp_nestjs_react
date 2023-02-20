@@ -11,7 +11,7 @@ const SideBar = () => {
   // }, [window.innerWidth]);
 
   return (
-    <aside className="fixed hidden md:block h-full w-32 border-r border-slate-700">
+    <aside className="fixed hidden md:block h-full top-[85px] w-32 border-r border-slate-700">
       {/* <ul className="flex flex-col items-center mt-10"> */}
       {width >= 770 ? <Menu show={false} /> : undefined}
       {/* </ul> */}
