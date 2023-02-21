@@ -13,6 +13,7 @@ import { ProjectCreateArgs, ProjectUpdateArgs } from '../dtos/project.dto';
 import { Member, Role } from '../entities/member.entity';
 import { Project } from '../entities/project.entity';
 import { MemberService } from './member.service';
+import { RequestProject } from '../entities/requestProject.entity';
 
 export interface Page {
   projects: Project[];
@@ -24,7 +25,6 @@ export class ProjectService {
   constructor(
     private dataSource: DataSource,
     @InjectRepository(Project) private projectRepository: Repository<Project>,
-    @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Member) private memberRepository: Repository<Member>,
   ) {}
 

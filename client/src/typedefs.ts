@@ -409,3 +409,19 @@ export const REFRESH_TOKEN = gql`
     }
   }
 `;
+
+export const FIND_REQUESTS = gql`
+  query Query($projectId: Int!) {
+    findRequests(projectId: $projectId) {
+      id
+      user {
+        id
+        username
+        avatar
+      }
+      project {
+        id
+      }
+    }
+  }
+`;

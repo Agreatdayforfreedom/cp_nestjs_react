@@ -10,6 +10,7 @@ import {
 } from './dtos/project.dto';
 import { Member as MemberModel } from './models/member.model';
 import { Pagination, Project as ProjectModel } from './models/project.model';
+import { RequestProject } from './models/requestProject.model';
 import { ProjectService } from './services/project.service';
 
 @Resolver()

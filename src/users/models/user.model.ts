@@ -1,5 +1,7 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Member } from '../../project/models/member.model';
+import { Project } from '../../project/models/project.model';
+import { RequestProject } from '../../project/models/requestProject.model';
 
 @ObjectType()
 export class User {

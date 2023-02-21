@@ -10,6 +10,7 @@ import {
 import { User } from '../../users/entities/user.entity';
 import { Issue } from './issue.entity';
 import { Member } from './member.entity';
+import { RequestProject } from './requestProject.entity';
 
 @Entity()
 export class Project {
@@ -27,6 +28,12 @@ export class Project {
 
   @OneToMany((type) => Member, (member) => member.project)
   members: Member[];
+
+  @OneToMany(
+    (type) => RequestProject,
+    (requestProject) => requestProject.project,
+  )
+  requestProject: RequestProject[];
 
   @Column({ nullable: true, default: 1 })
   membersTotal: number;

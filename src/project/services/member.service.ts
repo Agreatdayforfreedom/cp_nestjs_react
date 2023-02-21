@@ -66,6 +66,9 @@ export class MemberService {
     });
 
     const project = await this.projectRepository.findOne({
+      relations: {
+        owner: true,
+      },
       where: {
         id: projectId,
       },
@@ -85,7 +88,7 @@ export class MemberService {
     if (!project) throw new HttpException('Project not found', 404);
     if (member)
       throw new HttpException('Member is already in the project!', 400);
-    if (nextMemberExists.id === cUser.id)
+    if (nextMemberExists.id === project.owner.id)
       throw new UserInputError('You can no be a member of your own project');
 
     const newMember = this.memberRepository.create({

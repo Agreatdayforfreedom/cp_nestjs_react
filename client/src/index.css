@@ -58,6 +58,12 @@ body {
   background: linear-gradient(-55deg, var(--medium-purple), var(--medium-blue));
 }
 
+textarea:focus-within {
+  outline: none;
+  border: var(--dark-purple) solid 1px;
+  box-shadow: 0 0 0 4px var(--purple);
+}
+
 .input:focus-within {
   outline: none;
   border-bottom: var(--green) solid 1px;

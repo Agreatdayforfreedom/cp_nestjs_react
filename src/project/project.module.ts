@@ -16,10 +16,20 @@ import { Label } from './entities/label.entity';
 import { CommentResolver } from './comment.resolver';
 import { CommentService } from './services/comment.service';
 import { Comment } from './entities/comment.entity';
+import { RequestProject } from './entities/requestProject.entity';
+import { RequestProjectResolver } from './request-project.resolver';
+import { RequestProjectService } from './services/request-project.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Project, Member, Issue, Label, Comment]),
+    TypeOrmModule.forFeature([
+      Project,
+      Member,
+      Issue,
+      Label,
+      Comment,
+      RequestProject,
+    ]),
     UsersModule,
   ],
   providers: [
@@ -33,6 +43,8 @@ import { Comment } from './entities/comment.entity';
     LabelService,
     CommentResolver,
     CommentService,
+    RequestProjectResolver,
+    RequestProjectService,
   ],
   exports: [MemberService],
 })

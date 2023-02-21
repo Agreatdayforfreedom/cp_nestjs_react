@@ -34,7 +34,7 @@ const Issue = () => {
   if (loading) return <Spinner />;
   return (
     <section>
-      <div className="mt-1.5 px-2 flex justify-between items-center ">
+      <div className="px-2 pt-1 flex justify-between items-center ">
         <div className="flex items-center">
           {data.findIssue.issueStatus === IssueStatus.OPEN ? (
             <VscIssues size={20} className="fill-green-500 mx-1" />

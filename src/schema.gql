@@ -82,6 +82,19 @@ type Comment {
   updated_at: DateTime!
 }
 
+type RequestProject {
+  id: Int!
+  requestStatus: RequestStatus!
+  project: Project!
+  user: User!
+}
+
+enum RequestStatus {
+  PENDING
+  REJECTED
+  ACCEPTED
+}
+
 type Auth {
   token: String!
   user: User!
@@ -101,6 +114,7 @@ type Query {
   findIssue(issueId: Int!): Issue!
   getLabels(issueId: Int!): [Label!]!
   findComments(issueId: Int!): [Comment!]!
+  findRequests(projectId: Int!): [RequestProject!]!
 }
 
 type Mutation {
@@ -122,6 +136,8 @@ type Mutation {
   newComment(issueId: Int!, content: String!): Comment!
   updateComment(commentId: Int!, content: String!): Comment!
   deleteComment(commentId: Int!): Comment!
+  requestProject(projectId: Int!): RequestProject!
+  acceptOrRejectRequest(requestId: Int!, status: RequestStatus!): RequestProject!
 }
 
 type Subscription {

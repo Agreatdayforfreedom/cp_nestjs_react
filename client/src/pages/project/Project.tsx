@@ -75,10 +75,10 @@ const Project = () => {
   return (
     <main>
       {removed ? <FreezeScreen /> : null}
-      <nav className="border-b fixed top-12 z-20 bg-[var(--medium-blue)] w-full border-slate-700">
-        <div className="flex items-center justify-between md:justify-end">
+      <nav className="border-b fixed h-9 top-12 z-20 bg-[var(--medium-blue)] w-full border-slate-700">
+        <div className="flex h-9 items-center justify-between md:justify-end">
           <RiMenuLine
-            size={30}
+            size={25}
             className="mx-4 my-2 cursor-pointer md:hidden"
             onClick={() => setShowMenu((prev) => !prev)}
           />
@@ -97,7 +97,7 @@ const Project = () => {
         {width <= 770 ? <Menu show={showMenu} /> : undefined}
       </nav>
       <SideBar />
-      <div className="md:ml-32 mt-10 ">
+      <div className="md:ml-32 mt-9">
         <Outlet />
       </div>
     </main>
@@ -120,13 +120,11 @@ export const Menu = ({ show }: { show: boolean }) => {
   }
   `;
 
-  const noFocuses = ``;
-
   return (
     <ul
       className={`${show ? 'block' : 'hidden'} md:block md:mt-4
         animate-menu justify-center
-         border-slate-700 `}
+         border-slate-700 bg-[var(--medium-blue)] border-b md:bg-transparent md:border-none `}
     >
       <li
         className={`py-2 hover:bg-[var(--medium-blue-gray)]  relative ${
