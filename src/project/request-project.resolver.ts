@@ -57,22 +57,12 @@ export class RequestProjectResolver {
     return pubSub.asyncIterator(RequestProjectResolver.REQUEST_SUB);
   }
 
-  // @Subscription((returns) => RequestProject, {
-  //   filter: (payload, variables) => {
-  //     console.log(payload, variables);
-  //     return true;
-  //   },
-  //   resolve: (value) => {
-  //     console.log(value);
-  //     return value.statusRequestSub;
-  //   },
-  // })
-  // @SkipAuth()
-  // statusRequestSub() {
-  //   console.log('executed?2');
-
-  //   return pubSub.asyncIterator(RequestProjectResolver.STATUS_REQUEST_SUB);
-  // }
+  @Query((returns) => Int)
+  @Roles(Role.MEMBER, Role.MODERATOR, Role.ADMIN)
+  @Bans(Ban.UNBANNED)
+  findCount(@Args('projectId', { type: () => Int }) projectId: number) {
+    return this.requestProjectService.findCount(projectId);
+  }
 
   @Query((returns) => RequestProject)
   @Roles(Role.PROFILE)

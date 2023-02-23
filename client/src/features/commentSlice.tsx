@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { NotificationType } from '../../interfaces/enums';
+import { NotificationType } from '../interfaces/enums';
 
 interface InitialState {
   id: number;

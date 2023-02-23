@@ -427,6 +427,12 @@ export const FIND_REQUESTS = gql`
   }
 `;
 
+export const FIND_REQUESTS_COUNT = gql`
+  query Query($projectId: Int!) {
+    findCount(projectId: $projectId)
+  }
+`;
+
 export const REQUEST_PROJECT = gql`
   mutation Mutation($projectId: Int!) {
     requestProject(projectId: $projectId) {

@@ -3,14 +3,24 @@ import { VscIssues } from 'react-icons/vsc';
 import { BsFillPeopleFill, BsGearFill } from 'react-icons/bs';
 import { FaUserFriends } from 'react-icons/fa';
 import { HiUser } from 'react-icons/hi';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import useWindowSize from '../hooks/useWindowSize';
+import { useQuery } from '@apollo/client';
+import { FIND_REQUESTS_COUNT } from '../typedefs';
+import { useAppSelector } from '../app/hooks';
 
 export const Menu = ({ show }: { show: boolean }) => {
+  const params = useParams();
   const location = useLocation();
   const [width, _] = useWindowSize();
+  const { newRequest } = useAppSelector((state) => state.projectSlice);
 
   const fullScreen = width >= 770;
+  const { data } = useQuery(FIND_REQUESTS_COUNT, {
+    variables: {
+      projectId: params.id && parseInt(params.id, 10),
+    },
+  });
 
   const className = `
   border-slate-700 bg-[var(--dark-blue-gray)] relative
@@ -75,9 +85,17 @@ export const Menu = ({ show }: { show: boolean }) => {
           location.pathname.includes('requests') ? className : ''
         }`}
       >
-        <div className="flex items-center">
+        <div className="relative flex items-center">
           <HiUser className="mx-1.5" size={20} />
           <span>Requests</span>
+          <div className="absolute h-5 w-5 flex items-center justify-center right-1 rounded-full font-bold text-slate-200 text-xs bg-red-600/70">
+            {data?.findCount > 9 ? '+9' : data?.findCount}
+          </div>
+          {newRequest ? (
+            <span className="absolute -right-12 font-bold text-lg new-req-ad">
+              New!
+            </span>
+          ) : undefined}
         </div>
         <Link
           to="requests"

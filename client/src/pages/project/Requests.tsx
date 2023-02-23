@@ -7,13 +7,12 @@ import { ACTION_REQUEST, FIND_REQUESTS } from '../../typedefs';
 
 const Requests = () => {
   const params = useParams();
-  const { data, subscribeToMore } = useQuery(FIND_REQUESTS, {
+  const { data } = useQuery(FIND_REQUESTS, {
     variables: {
       projectId: params.id && parseInt(params.id, 10),
     },
   });
-
-  if (data.findRequests.length === 0) {
+  if (data && data.findRequests.length === 0) {
     return (
       <div className=" flex items-center justify-center h-60">
         <h4 className="px-1 text-2xl text-blue-300">No requests yet.</h4>
@@ -50,6 +49,9 @@ const RequestCard = ({ request }: any) => {
             findRequests(existing, { readField }) {
               return existing.filter((m: any) => readField('id', m) !== id);
             },
+            findCount(existing) {
+              return existing - 1;
+            },
           },
         });
       },
@@ -66,6 +68,9 @@ const RequestCard = ({ request }: any) => {
           fields: {
             findRequests(existing, { readField }) {
               return existing.filter((m: any) => readField('id', m) !== id);
+            },
+            findCount(existing) {
+              return existing - 1;
             },
           },
         });

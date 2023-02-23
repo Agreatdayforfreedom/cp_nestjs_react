@@ -6,7 +6,7 @@ import { MEMBER_SUB, PROFILE } from '../../typedefs';
 import { AiOutlineUsergroupAdd } from 'react-icons/ai';
 import { NotificationType, Role } from '../../interfaces/enums';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { setClass, setRemoved } from '../../features/members/memberSlice';
+import { setClass, setRemoved } from '../../features/memberSlice';
 import FreezeScreen from '../../components/FreezeScreen';
 import SideBar from '../../components/SideBar';
 import useWindowSize from '../../hooks/useWindowSize';

@@ -17,7 +17,7 @@ import { MdOutlineEditOff } from 'react-icons/md';
 import { Navigate, useLocation, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import Spinner from '../../components/loaders/Spinner';
-import { setState } from '../../features/members/memberSlice';
+import { setState } from '../../features/memberSlice';
 import { Ban, NotificationType, Role } from '../../interfaces/enums';
 import { Member as IMember } from '../../interfaces/interfaces';
 import {

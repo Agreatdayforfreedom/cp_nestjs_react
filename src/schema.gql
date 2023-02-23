@@ -115,6 +115,7 @@ type Query {
   findIssue(issueId: Int!): Issue!
   getLabels(issueId: Int!): [Label!]!
   findComments(issueId: Int!): [Comment!]!
+  findCount(projectId: Int!): Int!
   alreadyRequested(projectId: Int!): RequestProject!
   findRequests(projectId: Int!): [RequestProject!]!
 }

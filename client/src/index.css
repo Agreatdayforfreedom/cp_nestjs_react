@@ -256,10 +256,41 @@ button:disabled {
   animation: open-options 0.5s forwards;
 }
 
+.new-req-ad {
+  background: -webkit-linear-gradient(#34fc02, #0a3b00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: 0;
+  text-shadow: 3px 2px 2px #f5e9e93d;
+  animation: jump-to-left 2s infinite, appear 1s forwards;
+}
+
 .flash-orange {
   background-color: transparent;
 
   animation: flash 4s forwards;
+}
+
+@keyframes appear {
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes jump-to-left {
+  0% {
+    right: -48px;
+    text-shadow: 3px 2px 2px #f5e9e93d;
+  }
+  50% {
+    right: -40px;
+    text-shadow: 11px 2px 2px #f5e9e93d;
+    opacity: 9;
+  }
+  100% {
+    right: -48px;
+    text-shadow: 3px 2px 2px #f5e9e93d;
+  }
 }
 
 @keyframes open-options {

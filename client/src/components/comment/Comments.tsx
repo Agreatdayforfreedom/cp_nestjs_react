@@ -14,7 +14,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import { parseAndCompareDate } from '../../utils/parseAndCompareDate';
 import { BsThreeDots } from 'react-icons/bs';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { clearState, setState } from '../../features/members/commentSlice';
+import { clearState, setState } from '../../features/commentSlice';
 import { nanoid } from '@reduxjs/toolkit';
 
 const Comments = () => {

@@ -20,6 +20,21 @@ export class RequestProjectService {
     private memberService: MemberService,
   ) {}
 
+  async findCount(projectId: number) {
+    return await this.requestRepository.count({
+      relations: {
+        project: true,
+        user: true,
+      },
+      where: {
+        project: {
+          id: projectId,
+        },
+        requestStatus: RequestStatus.PENDING,
+      },
+    });
+  }
+
   async findRequests(projectId: number) {
     return await this.requestRepository.find({
       relations: {
