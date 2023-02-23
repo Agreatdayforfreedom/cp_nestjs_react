@@ -414,6 +414,68 @@ export const FIND_REQUESTS = gql`
   query Query($projectId: Int!) {
     findRequests(projectId: $projectId) {
       id
+      requestStatus
+      user {
+        id
+        username
+        avatar
+      }
+      project {
+        id
+      }
+    }
+  }
+`;
+
+export const REQUEST_PROJECT = gql`
+  mutation Mutation($projectId: Int!) {
+    requestProject(projectId: $projectId) {
+      id
+      requestStatus
+    }
+  }
+`;
+
+export const ACTION_REQUEST = gql`
+  mutation Mutation($requestId: Int!, $status: RequestStatus!) {
+    acceptOrRejectRequest(requestId: $requestId, status: $status) {
+      id
+      requestStatus
+    }
+  }
+`;
+
+export const ALREADY_REQUESTED = gql`
+  query Query($projectId: Int!) {
+    alreadyRequested(projectId: $projectId) {
+      id
+    }
+  }
+`;
+
+export const REQUEST_SUB = gql`
+  subscription Subscription($userId: Int!, $projectId: Int) {
+    requestSub(userId: $userId, projectId: $projectId) {
+      id
+      requestStatus
+      user {
+        id
+        username
+        avatar
+      }
+      project {
+        id
+      }
+      notificationType
+    }
+  }
+`;
+
+export const STATUS_REQUEST_SUB = gql`
+  subscription Subscription {
+    statusRequestSub {
+      id
+      requestStatus
       user {
         id
         username

@@ -87,6 +87,7 @@ type RequestProject {
   requestStatus: RequestStatus!
   project: Project!
   user: User!
+  notificationType: String
 }
 
 enum RequestStatus {
@@ -114,6 +115,7 @@ type Query {
   findIssue(issueId: Int!): Issue!
   getLabels(issueId: Int!): [Label!]!
   findComments(issueId: Int!): [Comment!]!
+  alreadyRequested(projectId: Int!): RequestProject!
   findRequests(projectId: Int!): [RequestProject!]!
 }
 
@@ -143,4 +145,5 @@ type Mutation {
 type Subscription {
   memberSub(userId: Int!, projectId: Int!): Member!
   commentSub: Comment!
+  requestSub(userId: Int!, projectId: Int): RequestProject!
 }

@@ -83,7 +83,6 @@ export class MemberResolver {
         notificationType: NotificationType.MEMBER_ADDED,
       },
     });
-    console.log({ memberAdded });
     return memberAdded;
   }
 

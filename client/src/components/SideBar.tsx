@@ -1,8 +1,8 @@
 import React, { useEffect, useLayoutEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { AiOutlineHome, AiOutlineUsergroupAdd } from 'react-icons/ai';
-import { Menu } from '../pages/project/Project';
 import useWindowSize from '../hooks/useWindowSize';
+import { Menu } from './Menu';
 
 const SideBar = () => {
   const location = useLocation();

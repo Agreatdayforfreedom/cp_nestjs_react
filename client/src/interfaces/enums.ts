@@ -17,6 +17,12 @@ export enum NotificationType {
   MEMBER_REMOVED = 'MEMBER_REMOVED',
 }
 
+export enum RequestStatus {
+  PENDING = 'PENDING',
+  REJECTED = 'REJECTED',
+  ACCEPTED = 'ACCEPTED',
+}
+
 export enum IssueStatus {
   OPEN = 'OPEN',
   CLOSED = 'CLOSED',

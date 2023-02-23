@@ -322,7 +322,6 @@ button:disabled {
 
 @media all and (max-width: 770px) {
   .animate-menu {
-    height: auto;
     overflow: hidden;
     animation: animate-menu 1s forwards;
   }
@@ -335,7 +334,7 @@ button:disabled {
   }
   100% {
     opacity: 1;
-    height: 160px;
+    height: 200px;
   }
 }
 

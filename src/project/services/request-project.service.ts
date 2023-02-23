@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
@@ -30,6 +30,7 @@ export class RequestProjectService {
         project: {
           id: projectId,
         },
+        requestStatus: RequestStatus.PENDING,
       },
     });
   }
@@ -37,8 +38,24 @@ export class RequestProjectService {
   async requestProject(projectId: number, cUser: UserModel) {
     const user = await this.userRepository.findOneBy({ id: cUser.id });
     const project = await this.projectRepository.findOneBy({ id: projectId });
-
+    const alreadyRequested = await this.requestRepository.findOne({
+      relations: {
+        user: true,
+        project: true,
+      },
+      where: {
+        user: {
+          id: user.id,
+        },
+        project: {
+          id: projectId,
+        },
+        requestStatus: RequestStatus.PENDING,
+      },
+    });
     // validate that the user is not already in the project
+    if (alreadyRequested)
+      throw new HttpException('The request is still pending.', 400);
 
     const newRequest = new RequestProject();
 
@@ -46,6 +63,24 @@ export class RequestProjectService {
     newRequest.project = project;
 
     return await this.requestRepository.save(newRequest);
+  }
+
+  async alreadyRequested(projectId: number, cUser: UserModel) {
+    return await this.requestRepository.findOne({
+      relations: {
+        user: true,
+        project: true,
+      },
+      where: {
+        user: {
+          id: cUser.id,
+        },
+        project: {
+          id: projectId,
+        },
+        requestStatus: RequestStatus.PENDING,
+      },
+    });
   }
 
   async acceptOrRejectRequest(

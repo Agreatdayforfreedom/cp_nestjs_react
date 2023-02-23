@@ -22,6 +22,7 @@ import Logic from './pages/project/Logic';
 import NewIssue from './pages/project/NewIssue';
 import Issue from './pages/project/Issue';
 import EditIssue from './pages/project/EditIssue';
+import Requests from './pages/project/Requests';
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
               </Route>
               <Route path="search" element={<Search />} />
               <Route path="members" element={<Members />} />
+              <Route path="requests" element={<Requests />} />
               <Route path="config" element={<Config />} />
               <Route path="*" element={<Navigate to="dashboard" />} />
             </Route>

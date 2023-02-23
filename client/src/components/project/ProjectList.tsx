@@ -40,7 +40,11 @@ export const ProjectList = () => {
       <div className="w-[95%] mx-auto border border-slate-700 bg-[var(--t-blue)] ">
         {data &&
           data.findProjectByPage.projects.map((project: any) => (
-            <ProjectCard key={nanoid()} project={project} />
+            <ProjectCard
+              key={nanoid()}
+              canBeRequested={true}
+              project={project}
+            />
           ))}
       </div>
       <Pagination

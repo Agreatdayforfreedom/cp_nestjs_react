@@ -20,4 +20,7 @@ export class RequestProject {
 
   @Field((type) => User)
   user: User;
+
+  @Field({ nullable: true })
+  notificationType: string;
 }
