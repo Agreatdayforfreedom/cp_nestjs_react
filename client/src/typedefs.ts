@@ -493,3 +493,29 @@ export const STATUS_REQUEST_SUB = gql`
     }
   }
 `;
+
+export const FIND_NOTIFICATIONS = gql`
+  query Query {
+    findNotifications {
+      id
+      data
+      read
+      user {
+        id
+      }
+    }
+  }
+`;
+
+export const NOTIFICATION_SUB = gql`
+  subscription Subscription($userId: Int!) {
+    notificationSub(userId: $userId) {
+      id
+      data
+      read
+      user {
+        id
+      }
+    }
+  }
+`;

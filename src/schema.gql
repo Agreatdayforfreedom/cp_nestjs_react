@@ -96,6 +96,14 @@ enum RequestStatus {
   ACCEPTED
 }
 
+type Notification {
+  id: Float!
+  read: Boolean!
+  data: String!
+  type: String!
+  user: User!
+}
+
 type Auth {
   token: String!
   user: User!
@@ -118,6 +126,7 @@ type Query {
   findCount(projectId: Int!): Int!
   alreadyRequested(projectId: Int!): RequestProject!
   findRequests(projectId: Int!): [RequestProject!]!
+  findNotifications: [Notification!]!
 }
 
 type Mutation {
@@ -141,10 +150,12 @@ type Mutation {
   deleteComment(commentId: Int!): Comment!
   requestProject(projectId: Int!): RequestProject!
   acceptOrRejectRequest(requestId: Int!, status: RequestStatus!): RequestProject!
+  createNotification(data: String!, userId: Int!): Notification!
 }
 
 type Subscription {
   memberSub(userId: Int!, projectId: Int!): Member!
   commentSub: Comment!
   requestSub(userId: Int!, projectId: Int): RequestProject!
+  notificationSub(userId: Int!): Notification!
 }

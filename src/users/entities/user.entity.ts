@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Member } from '../../project/entities/member.entity';
+import { Notification } from '../../project/entities/notification.entity';
 import { Project } from '../../project/entities/project.entity';
 import { RequestProject } from '../../project/entities/requestProject.entity';
 @Entity()
@@ -31,4 +32,7 @@ export class User {
 
   @OneToMany(() => Member, (member) => member.user)
   memberOf: Member[];
+
+  @OneToMany(() => Notification, (notification) => notification.user)
+  notifications: Notification[];
 }

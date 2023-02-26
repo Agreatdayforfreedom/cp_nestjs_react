@@ -53,11 +53,12 @@ const Project = () => {
   useEffect(() => {
     setShowMenu(false);
   }, [location]);
+  const { newRequest } = useAppSelector((state) => state.projectSlice);
 
   return (
     <main>
       {removed ? <FreezeScreen /> : null}
-      <nav className="border-b fixed h-9 top-12 z-20 bg-[var(--medium-blue)] w-full border-slate-700">
+      <nav className="border-b fixed h-9 top-12 z-10 bg-[var(--medium-blue)] w-full border-slate-700">
         <div className="flex h-9 items-center justify-between md:justify-end">
           <RiMenuLine
             size={25}
@@ -78,10 +79,10 @@ const Project = () => {
         </div>
         {width <= 770 ? <Menu show={showMenu} /> : undefined}
       </nav>
-      <SideBar />
       <div className="md:ml-32 mt-9">
         <Outlet />
       </div>
+      <SideBar />
     </main>
   );
 };

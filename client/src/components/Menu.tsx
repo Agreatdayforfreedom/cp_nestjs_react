@@ -8,8 +8,11 @@ import useWindowSize from '../hooks/useWindowSize';
 import { useQuery } from '@apollo/client';
 import { FIND_REQUESTS_COUNT } from '../typedefs';
 import { useAppSelector } from '../app/hooks';
+import { useEffect, useState } from 'react';
 
 export const Menu = ({ show }: { show: boolean }) => {
+  const [countRequest, setCountRequest] = useState('');
+
   const params = useParams();
   const location = useLocation();
   const [width, _] = useWindowSize();
@@ -21,6 +24,16 @@ export const Menu = ({ show }: { show: boolean }) => {
       projectId: params.id && parseInt(params.id, 10),
     },
   });
+
+  useEffect(() => {
+    if (data?.findCount > 9) {
+      setCountRequest('+9');
+    } else if (data?.findCount < 9 && data.findCount > 0) {
+      setCountRequest(data.findCount.toString());
+    } else if (data?.findCount <= 0) {
+      setCountRequest('');
+    }
+  }, [data?.findCount]);
 
   const className = `
   border-slate-700 bg-[var(--dark-blue-gray)] relative
@@ -85,23 +98,26 @@ export const Menu = ({ show }: { show: boolean }) => {
           location.pathname.includes('requests') ? className : ''
         }`}
       >
-        <div className="relative flex items-center">
+        <div className="z-20 flex items-center">
           <HiUser className="mx-1.5" size={20} />
           <span>Requests</span>
-          <div className="absolute h-5 w-5 flex items-center justify-center right-1 rounded-full font-bold text-slate-200 text-xs bg-red-600/70">
-            {data?.findCount > 9 ? '+9' : data?.findCount}
-          </div>
+          {countRequest ? (
+            <div className="absolute h-5 w-5 flex items-center justify-center right-1 rounded-full font-bold text-slate-200 text-xs bg-red-600/70">
+              {countRequest}
+            </div>
+          ) : undefined}
           {newRequest ? (
-            <span className="absolute -right-12 font-bold text-lg new-req-ad">
+            <div className="absolute left-28 md:left-auto md:-right-12 z-50 font-bold text-lg new-req-ad">
               New!
-            </span>
+            </div>
           ) : undefined}
         </div>
         <Link
           to="requests"
-          className="absolute top-0 w-full h-full  cursor-pointer px-3 py-1 transition-colors"
+          className="absolute top-0 z-10 w-full h-full  cursor-pointer px-3 py-1 transition-colors"
         ></Link>
       </li>
+
       <li
         className={`py-2 hover:bg-[var(--medium-blue-gray)] relative ${
           location.pathname.includes('config') ? className : ''

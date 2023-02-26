@@ -115,52 +115,51 @@ const Comment = ({ comment, subs }: Props) => {
   };
 
   return (
-    <div className="relative py-4 first:pt-0">
-      <div className="timeline z-10 border-slate-700">
-        <div className="relative border border-neutral-900 bg-[var(--medium-blue)] p-2 rounded mx-auto">
-          <div className="border-b flex items-end justify-between pb-2 pt-1 border-slate-700">
-            <div className="flex items-end">
-              <img
-                src={comment.owner.user.avatar}
-                alt={`${comment.owner.user.username} avatar`}
-                className="w-8 h-8 rounded-full"
-              />
-              <h2 className="px-2">{comment.owner.user.username}</h2>
-            </div>
-            <button className="absolute top-0.5 right-2" onClick={openOptions}>
-              <BsThreeDots size={20} />
-            </button>
-            {options ? (
-              <div className=" absolute bg-[var(--dark-purple)] top-5 right-5 rounded shadow flex items-center shadow-slate-800 text-sm font-semibold open-options">
-                <ul className="w-full text-center">
-                  <li>
-                    <button
-                      className="hover:text-orange-600 transition-colors"
-                      onClick={editClicked}
-                    >
-                      Edit
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      className="hover:text-red-600 transition-colors"
-                      onClick={deleteClicked}
-                    >
-                      Delete
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            ) : undefined}
-            <span className="text-xs text-slate-500">
-              {parseAndCompareDate(
-                comment.created_at.toString(),
-                comment.updated_at.toString(),
-              )}
-            </span>
+    <div className="relative z-0 py-4 first:pt-0">
+      <div className="timeline border-slate-700"></div>
+      <div className="border border-neutral-900 bg-[var(--medium-blue)] p-2 rounded mx-auto">
+        <div className="relative border-b flex items-end justify-between pb-2 pt-1 border-slate-700">
+          <div className="flex items-end">
+            <img
+              src={comment.owner.user.avatar}
+              alt={`${comment.owner.user.username} avatar`}
+              className="w-8 h-8 rounded-full"
+            />
+            <h2 className="px-2">{comment.owner.user.username}</h2>
           </div>
-          <p className="break-all p-2">{comment.content}</p>
+          <button className="absolute top-0.5 right-2" onClick={openOptions}>
+            <BsThreeDots size={20} />
+          </button>
+          {options ? (
+            <div className=" absolute bg-[var(--dark-purple)] top-5 right-5 rounded shadow flex items-center shadow-slate-800 text-sm font-semibold open-options">
+              <ul className="w-full text-center">
+                <li>
+                  <button
+                    className="hover:text-orange-600 transition-colors"
+                    onClick={editClicked}
+                  >
+                    Edit
+                  </button>
+                </li>
+                <li>
+                  <button
+                    className="hover:text-red-600 transition-colors"
+                    onClick={deleteClicked}
+                  >
+                    Delete
+                  </button>
+                </li>
+              </ul>
+            </div>
+          ) : undefined}
+          <span className="text-xs text-slate-500">
+            {parseAndCompareDate(
+              comment.created_at.toString(),
+              comment.updated_at.toString(),
+            )}
+          </span>
         </div>
+        <p className="break-all p-2">{comment.content}</p>
       </div>
     </div>
   );

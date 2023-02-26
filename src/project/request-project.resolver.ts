@@ -21,6 +21,8 @@ import { Ban, Role } from './entities/member.entity';
 import { Bans } from '../auth/decorators/ban.decorator';
 import { SkipAuth } from '../auth/decorators/skipAuth.decorator';
 import { PubSub } from 'graphql-subscriptions';
+import { NotificationResolver } from './notification.resolver';
+import { NotificationService } from './services/notification.service';
 
 const pubSub = new PubSub();
 
@@ -30,12 +32,14 @@ export class RequestProjectResolver {
   static readonly REQUEST_SUB = 'requestSub';
   // static readonly STATUS_REQUEST_SUB = 'statusRequestSub';
 
-  constructor(private requestProjectService: RequestProjectService) {}
+  constructor(
+    private requestProjectService: RequestProjectService,
+    private notificationService: NotificationService,
+    private notificationResolver: NotificationResolver,
+  ) {}
 
   @Subscription((returns) => RequestProject, {
     filter(this: RequestProjectResolver, payload, variables) {
-      // console.log(payload.requestSub.notificationType);
-      // console.log(payload.requestSub.project, variables);
       if (
         payload.requestSub.notificationType === this.acceptOrRejectRequest.name
       ) {
@@ -45,7 +49,7 @@ export class RequestProjectResolver {
         return payload.requestSub.project.id === variables.projectId;
       }
     },
-    resolve: (value) => {
+    resolve(value) {
       return value.requestSub;
     },
   })
@@ -92,6 +96,7 @@ export class RequestProjectResolver {
       projectId,
       cUser,
     );
+
     pubSub.publish(RequestProjectResolver.REQUEST_SUB, {
       requestSub: { ...request, notificationType: this.requestProject.name },
     });
@@ -111,6 +116,15 @@ export class RequestProjectResolver {
       requestId,
       status,
       cUser,
+    );
+    let data: string;
+    if (reqStatus.requestStatus === 'REJECTED') {
+      data = `You has been rejected from ${reqStatus.project.title} project`;
+    }
+    await this.notificationResolver.createNotification(
+      data,
+      // reqStatus.requestStatus,
+      reqStatus.user.id,
     );
     pubSub.publish(RequestProjectResolver.REQUEST_SUB, {
       requestSub: {

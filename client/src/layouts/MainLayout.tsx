@@ -54,10 +54,6 @@ const MainLayout = () => {
             },
           },
         });
-      } else {
-        alert(
-          `You have been ${data.data.requestSub.requestStatus} from ${data.data.requestSub.project.title}`,
-        );
       }
     },
   });

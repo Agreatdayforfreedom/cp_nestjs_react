@@ -2,16 +2,22 @@ import { useMutation, useQuery } from '@apollo/client';
 import { nanoid } from '@reduxjs/toolkit';
 import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { setState } from '../../features/projectSlice';
 import { RequestStatus } from '../../interfaces/enums';
 import { ACTION_REQUEST, FIND_REQUESTS } from '../../typedefs';
 
 const Requests = () => {
   const params = useParams();
+  const dispatch = useAppDispatch();
   const { data } = useQuery(FIND_REQUESTS, {
     variables: {
       projectId: params.id && parseInt(params.id, 10),
     },
   });
+  useEffect(() => {
+    dispatch(setState({ newRequest: false }));
+  }, []);
   if (data && data.findRequests.length === 0) {
     return (
       <div className=" flex items-center justify-center h-60">
@@ -37,6 +43,9 @@ const Requests = () => {
 
 const RequestCard = ({ request }: any) => {
   const [acceptOrRejectFetch] = useMutation(ACTION_REQUEST);
+
+  const dispatch = useAppDispatch();
+
   const handleAccept = (id: number) => {
     acceptOrRejectFetch({
       variables: {
@@ -67,9 +76,13 @@ const RequestCard = ({ request }: any) => {
         cache.modify({
           fields: {
             findRequests(existing, { readField }) {
+              dispatch(setState({ newRequest: false }));
+
               return existing.filter((m: any) => readField('id', m) !== id);
             },
             findCount(existing) {
+              dispatch(setState({ newRequest: false }));
+
               return existing - 1;
             },
           },

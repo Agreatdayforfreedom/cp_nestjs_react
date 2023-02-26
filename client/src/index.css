@@ -87,7 +87,7 @@ button:disabled {
   top: 0;
   bottom: 0;
   left: 10px;
-  z-index: 0;
+  z-index: -10;
   position: absolute;
 }
 
@@ -262,7 +262,7 @@ button:disabled {
   -webkit-text-fill-color: transparent;
   opacity: 0;
   text-shadow: 3px 2px 2px #f5e9e93d;
-  animation: jump-to-left 2s infinite, appear 1s forwards;
+  animation: hithere 10s infinite, appear 1s forwards;
 }
 
 .flash-orange {
@@ -277,20 +277,52 @@ button:disabled {
   }
 }
 
-@keyframes jump-to-left {
-  0% {
-    right: -48px;
-    text-shadow: 3px 2px 2px #f5e9e93d;
+@keyframes hithere {
+  3% {
+    transform: scale(0.8);
   }
-  50% {
-    right: -40px;
-    text-shadow: 11px 2px 2px #f5e9e93d;
-    opacity: 9;
+  4%,
+  6% {
+    transform: rotate(-20deg) scale(1.2);
+  }
+  5% {
+    transform: rotate(20deg) scale(1.2);
+  }
+  7% {
+    transform: rotate(0deg) scale(1.2);
+  }
+  10% {
+    transform: scale(1);
+  }
+  /* 75% {
+    transform: translateX(-5%);
+  }
+  90% {
+    transform: translateX(5%);
   }
   100% {
-    right: -48px;
+    transform: translateX(0%);
+  } */
+  /* 0%,
+  100% {
+    transform: translateX(0);
     text-shadow: 3px 2px 2px #f5e9e93d;
   }
+  10%,
+  20%,
+  30% {
+    transform: translateX(-7px);
+  }
+  50% {
+    transform: translateX(-15px);
+    text-shadow: 18px 2px 2px #f5e9e93d;
+  }
+  70%,
+  80%,
+  90% {
+    transform: translateX(1px);
+    text-shadow: 13px 2px 2px #f5e9e93d;
+  } */
 }
 
 @keyframes open-options {

@@ -19,6 +19,9 @@ import { Comment } from './entities/comment.entity';
 import { RequestProject } from './entities/requestProject.entity';
 import { RequestProjectResolver } from './request-project.resolver';
 import { RequestProjectService } from './services/request-project.service';
+import { Notification } from './entities/notification.entity';
+import { NotificationResolver } from './notification.resolver';
+import { NotificationService } from './services/notification.service';
 
 @Module({
   imports: [
@@ -29,6 +32,7 @@ import { RequestProjectService } from './services/request-project.service';
       Label,
       Comment,
       RequestProject,
+      Notification,
     ]),
     UsersModule,
   ],
@@ -45,6 +49,8 @@ import { RequestProjectService } from './services/request-project.service';
     CommentService,
     RequestProjectResolver,
     RequestProjectService,
+    NotificationResolver,
+    NotificationService,
   ],
   exports: [MemberService],
 })
