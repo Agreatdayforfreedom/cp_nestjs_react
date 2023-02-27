@@ -8,15 +8,11 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { IssueStatus } from '../../interfaces/enums';
 import { Comment } from './comment.entity';
 import { Label } from './label.entity';
 import { Member } from './member.entity';
 import { Project } from './project.entity';
-
-export enum IssueStatus {
-  OPEN = 'OPEN',
-  CLOSED = 'CLOSED',
-}
 
 registerEnumType(IssueStatus, {
   name: 'IssueStatus',

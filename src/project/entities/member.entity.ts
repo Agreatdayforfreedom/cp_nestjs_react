@@ -6,25 +6,11 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Ban, Role } from '../../interfaces/enums';
 import { User } from '../../users/entities/user.entity';
 import { Comment } from './comment.entity';
 import { Issue } from './issue.entity';
 import { Project } from './project.entity';
-export enum Role {
-  /**
-   * @member PROFILE member is to determine if the guard is accessing from the profile role */
-  PROFILE = 'PROFILE',
-  ADMIN = 'ADMIN',
-  MODERATOR = 'MODERATOR',
-  MEMBER = 'MEMBER',
-}
-
-export enum Ban {
-  PROFILE = 'PROFILE',
-  UNBANNED = 'UNBANNED',
-  PARTIAL_BAN = 'PARTIAL_BAN',
-  BANNED = 'BANNED',
-}
 
 @Entity()
 export class Member {

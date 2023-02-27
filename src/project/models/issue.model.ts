@@ -1,6 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { IssueStatus } from '../../interfaces/enums';
 import { Label } from './label.model';
-import { IssueStatus } from '../entities/issue.entity';
 import { Member } from './member.model';
 
 @ObjectType()

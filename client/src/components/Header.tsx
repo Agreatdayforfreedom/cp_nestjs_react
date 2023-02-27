@@ -1,16 +1,29 @@
-import { gql, useQuery, useSubscription } from '@apollo/client';
+import { gql, useMutation, useQuery, useSubscription } from '@apollo/client';
 import { nanoid } from '@reduxjs/toolkit';
 import React, { useEffect, useState } from 'react';
 import { AiOutlineHome } from 'react-icons/ai';
 import { IoMdNotifications } from 'react-icons/io';
 import { Link, useLocation } from 'react-router-dom';
-import { FIND_NOTIFICATIONS, NOTIFICATION_SUB, PROFILE } from '../typedefs';
+import {
+  FIND_NOTIFICATIONS,
+  MARK_AS_READ,
+  NOTIFICATION_SUB,
+  PROFILE,
+} from '../typedefs';
+import moment from 'moment';
 
 const Header = ({ data }: any) => {
   const [openNotifications, setOpenNotifications] = useState<boolean>(false);
+  const [someNoRead, setSomeNoRead] = useState(false);
 
   const { data: pData } = useQuery(PROFILE);
   const { data: notiData, loading } = useQuery(FIND_NOTIFICATIONS);
+
+  useEffect(() => {
+    if (notiData) {
+      setSomeNoRead(notiData.findNotifications.some((x: any) => x.read));
+    }
+  }, [notiData]);
 
   const location = useLocation();
   useSubscription(NOTIFICATION_SUB, {
@@ -52,45 +65,91 @@ const Header = ({ data }: any) => {
           </Link>
         </div>
         <div className="relative z-50 flex items-center hover:cursor-pointer  ">
-          <span className="text-sm font-semibold text-slate-400">
-            {notiData?.findNotifications.length}
-          </span>
+          {notiData?.findNotifications.length > 0 ? (
+            <span className="text-sm font-semibold text-slate-400">
+              {notiData?.findNotifications.length}
+            </span>
+          ) : undefined}
           <IoMdNotifications
             size={25}
             className="[&+div]:hover:-translate-y-0.5"
             onClick={() => setOpenNotifications((prev) => !prev)}
           />
-          <div className="w-3 h-3 bg-red-800 rounded-full absolute border-2 border-[var(--medium-blue)] top-0 right-0 transition-transform"></div>
+
+          {notiData?.findNotifications.some((x: any) => !x.read) ? (
+            <div className="w-3 h-3 bg-red-800 rounded-full absolute border-2 border-[var(--medium-blue)] top-0 right-0 transition-transform"></div>
+          ) : undefined}
         </div>
         <Notifications open={openNotifications} data={notiData} />
       </div>
     </header>
   );
 };
+//todo: fixed alert
 
 const Notifications = ({ open, data }: { open: boolean; data: any }) => {
+  const [fetch] = useMutation(MARK_AS_READ);
+
+  const markAsRead = (id: number) => {
+    fetch({
+      variables: {
+        notificationId: id,
+      },
+    });
+  };
+  //todo: reset removed state once the user click 'go to home'
   if (!open) return <></>;
   return (
     <div
       className="
-      absolute top-12 shadow shadow-slate-600 right-0 left-0 sm:left-auto sm:right-2
-       w-11/12 mx-auto sm:w-64 h-56 bg-[var(--dark-purple)] z-50 "
+        absolute top-12 shadow shadow-slate-600 right-0 left-0 sm:left-auto sm:right-2
+         w-11/12 mx-auto sm:w-80 bg-[var(--dark-purple)] z-50 "
     >
-      {data?.findNotifications.map((noti: any) => (
-        <div
-          key={nanoid()}
-          className={`${
-            noti.read ? '' : 'bg-slate-900'
-          } flex justify-between border-b text-slate-600 border-slate-700 text-sm p-2.5`}
-        >
-          <p>{noti.data}</p>
-          <button
-            title="Click to mark as read"
-            onClick={() => console.log('marked as read')}
-            className="w-2 h-2 relative bg-blue-700 rounded-full "
-          ></button>
-        </div>
-      ))}
+      <header className="flex items-center justify-between py-1 px-2 border-b-2 border-slate-700 ">
+        <h2 className="font-bold text-slate-400">Inbox</h2>
+        <button className="text-sm text-blue-600">Mark all as read</button>
+      </header>
+      <div className="overflow-scroll no-scroll-style w-full h-96">
+        {data?.findNotifications.map((noti: any) => (
+          <div
+            key={nanoid()}
+            className={`${
+              noti.read ? '' : 'bg-slate-900'
+            } flex flex-col justify-between items-end border-b text-slate-600 border-slate-700 text-sm p-2.5`}
+          >
+            <div className="flex w-full items-center justify-between">
+              <span
+                className={`${
+                  noti.type === 'REJECTED' || noti.type === 'BANNED'
+                    ? 'text-red-700'
+                    : 'text-green-700'
+                }`}
+              >
+                {noti.type}
+              </span>
+              <div className="flex items-center">
+                <span className="text-slate-500 px-2">
+                  {moment(new Date(noti.created_at), 'YYYYMMDD').fromNow()}
+                </span>
+                {noti.read ? undefined : (
+                  <button
+                    title="Click to mark as read"
+                    onClick={() => markAsRead(noti.id)}
+                    className="w-2 h-2 my-2 relative bg-blue-700 rounded-full "
+                  ></button>
+                )}
+              </div>
+            </div>
+            <p className="w-full text-start">
+              {noti.data.split(':')[0]}
+              <span className="font-bold underline">
+                {noti.data.split(':')[1]}
+              </span>
+              {noti.data.split(':')[2]}
+            </p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

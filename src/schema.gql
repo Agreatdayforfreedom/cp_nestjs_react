@@ -44,6 +44,20 @@ type Profile {
   currentProjectMember: Member
 }
 
+type Notification {
+  id: Float!
+  read: Boolean!
+  data: String!
+  type: String!
+  user: User!
+  created_at: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Label {
   id: Int!
   labelName: String!
@@ -68,11 +82,6 @@ enum IssueStatus {
   CLOSED
 }
 
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
 type Comment {
   id: Int!
   content: String!
@@ -94,14 +103,6 @@ enum RequestStatus {
   PENDING
   REJECTED
   ACCEPTED
-}
-
-type Notification {
-  id: Float!
-  read: Boolean!
-  data: String!
-  type: String!
-  user: User!
 }
 
 type Auth {
@@ -150,7 +151,8 @@ type Mutation {
   deleteComment(commentId: Int!): Comment!
   requestProject(projectId: Int!): RequestProject!
   acceptOrRejectRequest(requestId: Int!, status: RequestStatus!): RequestProject!
-  createNotification(data: String!, userId: Int!): Notification!
+  createNotification(data: String!, type: String!, userId: Int!): Notification!
+  markAsRead(notificationId: Int!): Notification!
 }
 
 type Subscription {

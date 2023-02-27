@@ -6,13 +6,14 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserInputError } from 'apollo-server-core';
 import { Repository } from 'typeorm';
+import { Ban, Role } from '../../interfaces/enums';
 import { User } from '../../users/entities/user.entity';
 import {
   AddMemberArgs,
   BanMemberArgs,
   ChangeRoleArgs,
 } from '../dtos/member.dto';
-import { Ban, Member, Role } from '../entities/member.entity';
+import { Member } from '../entities/member.entity';
 import { Project } from '../entities/project.entity';
 //todo: move all types, interfaces and enums to respective files;
 // export interface

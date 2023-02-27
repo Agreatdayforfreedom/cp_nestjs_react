@@ -21,25 +21,27 @@ import { CurrentUser } from '../auth/decorators/user.decorator';
 import { BanGuard } from '../auth/guards/ban.guard';
 import { GqlAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/role.guard';
+import {
+  Ban,
+  NotificationType,
+  Notification_Enum,
+  Notification_Type,
+  Role,
+} from '../interfaces/enums';
 import { User } from '../users/entities/user.entity';
 import {
   AddMemberArgs,
   BanMemberArgs,
   ChangeRoleArgs,
 } from './dtos/member.dto';
-import { Ban, Role } from './entities/member.entity';
+// import { Ban, Role } from './entities/member.entity';
 import { Member as MemberModel } from './models/member.model';
-import { Project } from './models/project.model';
+import { NotificationResolver } from './notification.resolver';
 import { MemberService } from './services/member.service';
 
 export const pubSub = new PubSub();
 
-export enum NotificationType {
-  BANNED = 'BANNED',
-  ROLE_CHANGED = 'ROLE_CHANGED',
-  MEMBER_ADDED = 'MEMBER_ADDED',
-  MEMBER_REMOVED = 'MEMBER_REMOVED',
-}
+// this is an adopted child by the enum family
 
 @Resolver()
 @UseGuards(GqlAuthGuard, RolesGuard, BanGuard)
@@ -48,7 +50,10 @@ export enum NotificationType {
 export class MemberResolver {
   static readonly MEMBER_SUB = 'memberSub';
 
-  constructor(private memberService: MemberService) {}
+  constructor(
+    private memberService: MemberService,
+    private notificationResolver: NotificationResolver,
+  ) {}
 
   @Subscription((returns) => MemberModel, {
     filter: (payload, variables) => {
@@ -85,12 +90,23 @@ export class MemberResolver {
     });
     return memberAdded;
   }
-
   @Mutation((returns) => MemberModel)
   @Roles(Role.ADMIN, Role.MODERATOR)
   @Bans(Ban.PARTIAL_BAN, Ban.BANNED)
   async banMember(@Args() args: BanMemberArgs, @CurrentUser() cUser: User) {
     const banned = await this.memberService.banMember(args, cUser);
+    let data: string;
+    if (
+      (banned.ban as Notification_Type) ===
+      (Notification_Enum.BANNED as Notification_Type)
+    ) {
+      data = `you have been banned from :${banned.project.title}: project`;
+      await this.notificationResolver.createNotification(
+        data,
+        banned.ban,
+        banned.user.id,
+      );
+    }
     pubSub.publish(MemberResolver.MEMBER_SUB, {
       memberSub: {
         ...banned,

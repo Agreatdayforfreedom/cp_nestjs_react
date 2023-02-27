@@ -8,7 +8,7 @@ import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Observable } from 'rxjs';
 import { CLIENT_RENEG_LIMIT } from 'tls';
-import { Ban } from '../../project/entities/member.entity';
+import { Ban } from '../../interfaces/enums';
 import { MemberService } from '../../project/services/member.service';
 
 type ExcludeProfileBan = Exclude<Ban, Ban.PROFILE>;

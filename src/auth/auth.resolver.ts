@@ -7,7 +7,7 @@ import {
   Query,
   Resolver,
 } from '@nestjs/graphql';
-import { Role } from '../project/entities/member.entity';
+import { Role } from '../interfaces/enums';
 import { Member as MemberModel } from '../project/models/member.model';
 import {
   RefreshTokenArgs,

@@ -1,6 +1,6 @@
 import { ArgsType, Field, Int } from '@nestjs/graphql';
 import { IsDefined, IsEnum, IsNumber } from 'class-validator';
-import { Ban, Role } from '../entities/member.entity';
+import { Ban, Role } from '../../interfaces/enums';
 
 @ArgsType()
 export class AddMemberArgs {

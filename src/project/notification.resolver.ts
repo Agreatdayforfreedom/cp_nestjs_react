@@ -8,6 +8,7 @@ import {
   Subscription,
 } from '@nestjs/graphql';
 import { PubSub } from 'graphql-subscriptions';
+import { NotificationKind } from 'rxjs';
 import { SkipAuth } from '../auth/decorators/skipAuth.decorator';
 import { CurrentUser } from '../auth/decorators/user.decorator';
 import { GqlAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -46,11 +47,12 @@ export class NotificationResolver {
   @Mutation((returns) => Notification)
   async createNotification(
     @Args('data') data: string,
-    // @Args('type') type: string,
+    @Args('type') type: string,
     @Args('userId', { type: () => Int }) userId: number,
   ) {
     const notification = await this.notificationService.createNotification(
       data,
+      type,
       userId,
     );
 
@@ -59,5 +61,13 @@ export class NotificationResolver {
     });
 
     return notification;
+  }
+
+  @Mutation((returns) => Notification)
+  async markAsRead(
+    @Args('notificationId', { type: () => Int }) notificationId: number,
+    @CurrentUser() cUser: User,
+  ) {
+    return this.notificationService.markAsRead(notificationId, cUser);
   }
 }

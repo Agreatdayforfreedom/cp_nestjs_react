@@ -499,10 +499,21 @@ export const FIND_NOTIFICATIONS = gql`
     findNotifications {
       id
       data
+      type
       read
+      created_at
       user {
         id
       }
+    }
+  }
+`;
+
+export const MARK_AS_READ = gql`
+  mutation Mutation($notificationId: Int!) {
+    markAsRead(notificationId: $notificationId) {
+      id
+      read
     }
   }
 `;
@@ -512,6 +523,7 @@ export const NOTIFICATION_SUB = gql`
     notificationSub(userId: $userId) {
       id
       data
+      type
       read
       user {
         id

@@ -5,8 +5,8 @@ import { Roles } from '../auth/decorators/role.decorator';
 import { BanGuard } from '../auth/guards/ban.guard';
 import { GqlAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/role.guard';
+import { Ban, Role } from '../interfaces/enums';
 import { CreateLabelDto } from './dtos/label.dto';
-import { Ban, Role } from './entities/member.entity';
 import { Label } from './models/label.model';
 import { LabelService } from './services/label.service';
 

@@ -15,7 +15,7 @@ import { SkipAuth } from '../auth/decorators/skipAuth.decorator';
 import { BanGuard } from '../auth/guards/ban.guard';
 import { GqlAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/role.guard';
-import { Ban, Role } from './entities/member.entity';
+import { Ban, Role } from '../interfaces/enums';
 import { Comment } from './models/comment.model';
 import { Member } from './models/member.model';
 import { CommentService } from './services/comment.service';

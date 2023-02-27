@@ -17,12 +17,12 @@ import { CreateIssueArgs, UpdateIssueArgs } from './dtos/issue.dto';
 import { Issue } from './models/issue.model';
 import { IssueService } from './services/issue.service';
 import { Roles } from '../auth/decorators/role.decorator';
-import { Ban, Role } from './entities/member.entity';
 import { Bans } from '../auth/decorators/ban.decorator';
 import { CurrentMember } from '../auth/decorators/member.decorator';
 import { Member } from './models/member.model';
 import { Label } from './models/label.model';
 import { LabelService } from './services/label.service';
+import { Ban, Role } from '../interfaces/enums';
 
 @Resolver((of) => Issue)
 @UseGuards(GqlAuthGuard, RolesGuard, BanGuard)

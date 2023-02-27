@@ -10,10 +10,11 @@ import { User as UserModel } from '../../users/models/user.model';
 import { User } from '../../users/entities/user.entity';
 
 import { ProjectCreateArgs, ProjectUpdateArgs } from '../dtos/project.dto';
-import { Member, Role } from '../entities/member.entity';
+import { Member } from '../entities/member.entity';
 import { Project } from '../entities/project.entity';
 import { MemberService } from './member.service';
 import { RequestProject } from '../entities/requestProject.entity';
+import { Role } from '../../interfaces/enums';
 
 export interface Page {
   projects: Project[];

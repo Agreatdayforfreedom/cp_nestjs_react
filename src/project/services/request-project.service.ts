@@ -1,13 +1,11 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { RequestStatus } from '../../interfaces/enums';
 import { User } from '../../users/entities/user.entity';
 import { User as UserModel } from '../../users/models/user.model';
 import { Project } from '../entities/project.entity';
-import {
-  RequestProject,
-  RequestStatus,
-} from '../entities/requestProject.entity';
+import { RequestProject } from '../entities/requestProject.entity';
 import { MemberService } from './member.service';
 
 @Injectable()
@@ -69,6 +67,12 @@ export class RequestProjectService {
       },
     });
     // validate that the user is not already in the project
+    const isMember = await this.memberService.findAuthMember({
+      projectId: projectId,
+      userId: cUser.id,
+    });
+    if (isMember)
+      throw new HttpException('You are already a member of this project.', 400);
     if (alreadyRequested)
       throw new HttpException('The request is still pending.', 400);
 

@@ -1,5 +1,6 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ManyToMany,
   ManyToOne,
@@ -7,11 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
-
-enum NotificationType {
-  REJECTED,
-  ACCEPTED,
-}
+import { Notification_Type } from '../../interfaces/enums';
 
 @Entity()
 export class Notification {
@@ -24,9 +21,12 @@ export class Notification {
   @Column()
   data: string;
 
-  @Column({ enum: NotificationType, nullable: true })
-  type: NotificationType;
+  @Column({ nullable: true })
+  type: string;
 
   @ManyToOne(() => User, (user) => user.notifications)
   user: User;
+
+  @CreateDateColumn()
+  created_at: Date;
 }

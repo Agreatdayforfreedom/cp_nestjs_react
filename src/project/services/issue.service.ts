@@ -5,9 +5,10 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { IssueStatus } from '../../interfaces/enums';
 import { User } from '../../users/models/user.model';
 import { CreateIssueArgs, UpdateIssueArgs } from '../dtos/issue.dto';
-import { Issue, IssueStatus } from '../entities/issue.entity';
+import { Issue } from '../entities/issue.entity';
 import { Member } from '../models/member.model';
 import { MemberService } from './member.service';
 import { ProjectService } from './project.service';

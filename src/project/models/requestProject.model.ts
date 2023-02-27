@@ -1,6 +1,6 @@
 import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { RequestStatus } from '../../interfaces/enums';
 import { User } from '../../users/models/user.model';
-import { RequestStatus } from '../entities/requestProject.entity';
 import { Project } from './project.model';
 
 registerEnumType(RequestStatus, {

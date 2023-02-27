@@ -7,7 +7,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { clearConfigCache } from 'prettier';
-import { Role } from '../../project/entities/member.entity';
+import { Role } from '../../interfaces/enums';
 import { MemberService } from '../../project/services/member.service';
 
 type ExcludeProfile = Exclude<Role, Role.PROFILE>[];

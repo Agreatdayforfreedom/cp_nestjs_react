@@ -1,6 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Ban, Role } from '../../interfaces/enums';
 import { User as UserModel } from '../../users/models/user.model';
-import { Ban, Role } from '../entities/member.entity';
 import { Project as ProjectModel } from './project.model';
 
 @ObjectType()

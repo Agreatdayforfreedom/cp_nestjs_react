@@ -1,6 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { User } from '../../users/models/user.model';
-import { NotificationType } from '../member.resolver';
+import { Notification_Type } from '../../interfaces/enums';
 
 @ObjectType()
 export class Notification {
@@ -14,8 +14,11 @@ export class Notification {
   data: string;
 
   @Field()
-  type: NotificationType;
+  type: string;
 
   @Field()
   user: User;
+
+  @Field()
+  created_at: Date;
 }

@@ -9,7 +9,6 @@ import {
 import { CurrentUser } from '../auth/decorators/user.decorator';
 import { User } from '../users/models/user.model';
 import { User as UserEntity } from '../users/entities/user.entity';
-import { RequestStatus } from './entities/requestProject.entity';
 import { RequestProject } from './models/requestProject.model';
 import { RequestProjectService } from './services/request-project.service';
 import { UseGuards } from '@nestjs/common';
@@ -17,12 +16,18 @@ import { GqlAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Roles } from '../auth/decorators/role.decorator';
 import { BanGuard } from '../auth/guards/ban.guard';
 import { RolesGuard } from '../auth/guards/role.guard';
-import { Ban, Role } from './entities/member.entity';
 import { Bans } from '../auth/decorators/ban.decorator';
 import { SkipAuth } from '../auth/decorators/skipAuth.decorator';
 import { PubSub } from 'graphql-subscriptions';
 import { NotificationResolver } from './notification.resolver';
 import { NotificationService } from './services/notification.service';
+import {
+  Ban,
+  Notification_Enum,
+  Notification_Type,
+  RequestStatus,
+  Role,
+} from '../interfaces/enums';
 
 const pubSub = new PubSub();
 
@@ -118,12 +123,20 @@ export class RequestProjectResolver {
       cUser,
     );
     let data: string;
-    if (reqStatus.requestStatus === 'REJECTED') {
-      data = `You has been rejected from ${reqStatus.project.title} project`;
+    if (
+      (reqStatus.requestStatus as Notification_Type) ===
+      (Notification_Enum.REJECTED as Notification_Type)
+    ) {
+      data = `You have been rejected from :${reqStatus.project.title}: project`;
+    } else if (
+      (reqStatus.requestStatus as Notification_Type) ===
+      (Notification_Enum.ACCEPTED as Notification_Type)
+    ) {
+      data = `You are now a member of :${reqStatus.project.title}: project`;
     }
     await this.notificationResolver.createNotification(
       data,
-      // reqStatus.requestStatus,
+      reqStatus.requestStatus,
       reqStatus.user.id,
     );
     pubSub.publish(RequestProjectResolver.REQUEST_SUB, {

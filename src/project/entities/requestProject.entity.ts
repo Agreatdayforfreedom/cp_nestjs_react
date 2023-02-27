@@ -1,12 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { RequestStatus } from '../../interfaces/enums';
 import { User } from '../../users/entities/user.entity';
 import { Project } from './project.entity';
-
-export enum RequestStatus {
-  PENDING = 'PENDING',
-  REJECTED = 'REJECTED',
-  ACCEPTED = 'ACCEPTED',
-}
 
 @Entity()
 export class RequestProject {
