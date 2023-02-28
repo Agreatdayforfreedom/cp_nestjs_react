@@ -2,6 +2,7 @@ import { useLazyQuery, useQuery } from '@apollo/client';
 import { nanoid } from '@reduxjs/toolkit';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, Navigate, useSearchParams } from 'react-router-dom';
+import { Project } from '../../interfaces/interfaces';
 import { FIND_PROJECT_BY_PAGE } from '../../typedefs';
 import ShineCard from '../loaders/ShineCard';
 import Pagination from '../Pagination';
@@ -39,7 +40,7 @@ export const ProjectList = () => {
     <div>
       <div className="w-[95%] mx-auto border border-slate-700 bg-[var(--t-blue)] ">
         {data &&
-          data.findProjectByPage.projects.map((project: any) => (
+          data.findProjectByPage.projects.map((project: Project) => (
             <ProjectCard
               key={nanoid()}
               canBeRequested={true}

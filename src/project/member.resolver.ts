@@ -88,6 +88,7 @@ export class MemberResolver {
         notificationType: NotificationType.MEMBER_ADDED,
       },
     });
+    //todo: noti here
     return memberAdded;
   }
   @Mutation((returns) => MemberModel)
@@ -101,12 +102,20 @@ export class MemberResolver {
       (Notification_Enum.BANNED as Notification_Type)
     ) {
       data = `you have been banned from :${banned.project.title}: project`;
-      await this.notificationResolver.createNotification(
-        data,
-        banned.ban,
-        banned.user.id,
-      );
+    } else if (
+      (banned.ban as Notification_Type) ===
+      (Notification_Enum.PARTIAL_BAN as Notification_Type)
+    ) {
+      data = `you have been restricted with partial ban from :${banned.project.title}: project`;
+    } else {
+      //unbanned
+      data = `you have been unbanned from :${banned.project.title}: project!`;
     }
+    await this.notificationResolver.createNotification(
+      data,
+      banned.ban,
+      banned.user.id,
+    );
     pubSub.publish(MemberResolver.MEMBER_SUB, {
       memberSub: {
         ...banned,
@@ -127,6 +136,27 @@ export class MemberResolver {
         notificationType: NotificationType.ROLE_CHANGED,
       },
     });
+    let data: string;
+    if (
+      (roleChanged.role as Notification_Type) ===
+      (Notification_Enum.MODERATOR as Notification_Type)
+    ) {
+      data = `Now you are moderator in the :${roleChanged.project.title}: project`;
+    } else if (
+      (roleChanged.role as Notification_Type) ===
+      (Notification_Enum.ADMIN as Notification_Type)
+    ) {
+      data = `Now you are admin in the :${roleChanged.project.title}: project!`;
+    } else {
+      //member
+      data = `Now you are member in the :${roleChanged.project.title}: project`;
+    }
+
+    await this.notificationResolver.createNotification(
+      data,
+      roleChanged.role,
+      roleChanged.user.id,
+    );
     return roleChanged;
   }
 
@@ -149,6 +179,12 @@ export class MemberResolver {
         notificationType: NotificationType.MEMBER_REMOVED,
       },
     });
+    let data = `You have been removed from :${removed.project.title}: project.`;
+    await this.notificationResolver.createNotification(
+      data,
+      'REMOVED',
+      removed.userId,
+    );
     return removed;
   }
 }

@@ -64,4 +64,12 @@ export class NotificationService {
     notification.read = true;
     return await this.notificationRepository.save(notification);
   }
+
+  async markAllAsRead(cUser: User) {
+    await this.notificationRepository.update(
+      { user: { id: cUser.id } },
+      { read: true },
+    );
+    return cUser.id;
+  }
 }

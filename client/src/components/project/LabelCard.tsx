@@ -2,6 +2,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import React from 'react';
 import { MdClose } from 'react-icons/md';
 import { useParams } from 'react-router-dom';
+import { useAlert } from '../../hooks/useAlert';
 import { Label } from '../../interfaces/interfaces';
 import { FIND_ISSUE, QUIT_LABEL } from '../../typedefs';
 import { capitalize } from '../../utils/capitalize';
@@ -43,14 +44,14 @@ export const LabelModalInfo = ({
   const [fetch, { loading }] = useMutation(QUIT_LABEL);
   const params = useParams();
 
+  const [handleAlert] = useAlert();
   const { data: iData } = useQuery(FIND_ISSUE, {
     variables: {
-      issueId: params.id && parseInt(params.id, 10),
+      issueId: params.issueId && parseInt(params.issueId, 10),
     },
   });
 
   const quitLabel = () => {
-    console.log(iData);
     fetch({
       variables: {
         labelId: currentLabel.id,
@@ -69,6 +70,9 @@ export const LabelModalInfo = ({
       },
       onCompleted() {
         fnCloseLabelInfoModal();
+      },
+      onError(data) {
+        handleAlert(data.message);
       },
     });
   };

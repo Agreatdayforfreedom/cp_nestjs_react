@@ -518,6 +518,12 @@ export const MARK_AS_READ = gql`
   }
 `;
 
+export const MARK_ALL_AS_READ = gql`
+  mutation Mutation {
+    markAllAsRead
+  }
+`;
+
 export const NOTIFICATION_SUB = gql`
   subscription Subscription($userId: Int!) {
     notificationSub(userId: $userId) {

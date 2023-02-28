@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { setState } from '../../features/projectSlice';
+import { useAlert } from '../../hooks/useAlert';
 import { RequestStatus } from '../../interfaces/enums';
 import { ACTION_REQUEST, FIND_REQUESTS } from '../../typedefs';
 
@@ -35,7 +36,7 @@ const Requests = () => {
     <div>
       {data &&
         data.findRequests.map((request: any) => (
-          <RequestCard request={request} />
+          <RequestCard key={nanoid()} request={request} />
         ))}
     </div>
   );
@@ -45,7 +46,7 @@ const RequestCard = ({ request }: any) => {
   const [acceptOrRejectFetch] = useMutation(ACTION_REQUEST);
 
   const dispatch = useAppDispatch();
-
+  const [handleAlert] = useAlert();
   const handleAccept = (id: number) => {
     acceptOrRejectFetch({
       variables: {
@@ -63,6 +64,9 @@ const RequestCard = ({ request }: any) => {
             },
           },
         });
+      },
+      onError(data) {
+        handleAlert(data.message);
       },
     });
   };
@@ -87,6 +91,9 @@ const RequestCard = ({ request }: any) => {
             },
           },
         });
+      },
+      onError(data) {
+        handleAlert(data.message);
       },
     });
   };

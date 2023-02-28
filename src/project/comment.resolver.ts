@@ -25,7 +25,7 @@ export const pubSub = new PubSub();
 @Resolver()
 @UseGuards(GqlAuthGuard, RolesGuard, BanGuard)
 @Roles(Role.MEMBER, Role.MODERATOR, Role.ADMIN)
-@Bans(Ban.BANNED)
+@Bans(Ban.UNBANNED)
 export class CommentResolver {
   static readonly COMMENT_SUB = 'commentSub';
 
@@ -48,6 +48,7 @@ export class CommentResolver {
   }
 
   @Mutation((returns) => Comment)
+  @Bans(Ban.BANNED)
   async newComment(
     @Args('issueId', { type: () => Int }) issueId: number,
     @Args('content') content: string,
@@ -68,6 +69,7 @@ export class CommentResolver {
 
   //todo: validate that the current issue is not closed
   @Mutation((returns) => Comment)
+  @Bans(Ban.UNBANNED)
   updateComment(
     @Args('commentId', { type: () => Int }) commentId: number,
     @Args('content') content: string,
@@ -77,6 +79,7 @@ export class CommentResolver {
   }
 
   @Mutation((returns) => Comment)
+  @Bans(Ban.UNBANNED)
   deleteComment(
     @Args('commentId', { type: () => Int }) commentId: number,
     @CurrentMember() cMember: Member,

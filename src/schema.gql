@@ -153,6 +153,7 @@ type Mutation {
   acceptOrRejectRequest(requestId: Int!, status: RequestStatus!): RequestProject!
   createNotification(data: String!, type: String!, userId: Int!): Notification!
   markAsRead(notificationId: Int!): Notification!
+  markAllAsRead: Int!
 }
 
 type Subscription {

@@ -70,4 +70,9 @@ export class NotificationResolver {
   ) {
     return this.notificationService.markAsRead(notificationId, cUser);
   }
+
+  @Mutation((returns) => Int)
+  async markAllAsRead(@CurrentUser() cUser: User) {
+    return this.notificationService.markAllAsRead(cUser);
+  }
 }

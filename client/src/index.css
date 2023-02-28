@@ -271,6 +271,23 @@ button:disabled {
   animation: flash 4s forwards;
 }
 
+.falling_down {
+  opacity: 0;
+  animation: appear 1s forwards;
+}
+
+@keyframes falling_down {
+  0% {
+    transform: translateY(-40px);
+  }
+  85% {
+    transform: translateY(6px);
+  }
+  100% {
+    transform: translateY(6px);
+  }
+}
+
 @keyframes appear {
   100% {
     opacity: 1;
@@ -294,35 +311,6 @@ button:disabled {
   10% {
     transform: scale(1);
   }
-  /* 75% {
-    transform: translateX(-5%);
-  }
-  90% {
-    transform: translateX(5%);
-  }
-  100% {
-    transform: translateX(0%);
-  } */
-  /* 0%,
-  100% {
-    transform: translateX(0);
-    text-shadow: 3px 2px 2px #f5e9e93d;
-  }
-  10%,
-  20%,
-  30% {
-    transform: translateX(-7px);
-  }
-  50% {
-    transform: translateX(-15px);
-    text-shadow: 18px 2px 2px #f5e9e93d;
-  }
-  70%,
-  80%,
-  90% {
-    transform: translateX(1px);
-    text-shadow: 13px 2px 2px #f5e9e93d;
-  } */
 }
 
 @keyframes open-options {

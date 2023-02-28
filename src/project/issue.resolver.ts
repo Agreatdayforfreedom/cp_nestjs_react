@@ -27,7 +27,7 @@ import { Ban, Role } from '../interfaces/enums';
 @Resolver((of) => Issue)
 @UseGuards(GqlAuthGuard, RolesGuard, BanGuard)
 @Roles(Role.ADMIN, Role.MEMBER, Role.MODERATOR)
-@Bans(Ban.BANNED)
+@Bans(Ban.UNBANNED)
 export class IssueResolver {
   constructor(
     private issueService: IssueService,
@@ -45,6 +45,7 @@ export class IssueResolver {
   }
 
   @Mutation((returns) => Issue)
+  @Bans(Ban.BANNED, Ban.PARTIAL_BAN)
   newIssue(@Args() args: CreateIssueArgs, @CurrentUser() cUser: User) {
     return this.issueService.newIssue(args, cUser);
   }
@@ -58,18 +59,19 @@ export class IssueResolver {
   }
 
   @Mutation((returns) => Issue)
+  @Bans(Ban.BANNED, Ban.PARTIAL_BAN)
   updateIssue(@Args() args: UpdateIssueArgs, @CurrentMember() cMember: Member) {
     return this.issueService.updateIssue(args, cMember);
   }
 
   @Mutation((returns) => Issue)
+  @Bans(Ban.BANNED, Ban.PARTIAL_BAN)
   closeIssue(@Args('issueId', { type: () => Int }) issueId: number) {
     return this.issueService.closeIssue(issueId);
   }
 
   @ResolveField('labels', (returns) => [Label])
   async labels(@Parent() issue: Issue) {
-    console.log(issue);
     return this.labelService.getLabels(issue.id);
   }
 }

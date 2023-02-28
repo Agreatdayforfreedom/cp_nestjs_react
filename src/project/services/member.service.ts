@@ -200,6 +200,7 @@ export class MemberService {
       throw new HttpException("User couldn't be removed", 400);
     return {
       id: memberId,
+      userId: memberExists.user.id,
       project,
     };
   }

@@ -1,11 +1,12 @@
 import { gql, useQuery, useSubscription } from '@apollo/client';
+import { nanoid } from '@reduxjs/toolkit';
 import { useEffect, useState } from 'react';
 import { Link, Navigate, Outlet, useParams } from 'react-router-dom';
 import { URLSearchParams } from 'url';
-import { useAppDispatch } from '../app/hooks';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
+import Alert from '../components/Alert';
 import Header from '../components/Header';
 import InitSpinner from '../components/loaders/InitSpinner';
-import Notification from '../components/Notification';
 import SideBar from '../components/SideBar';
 import { setState } from '../features/projectSlice';
 import {
@@ -21,6 +22,7 @@ const MainLayout = () => {
   const params = useParams();
 
   const dispatch = useAppDispatch();
+  const { alert } = useAppSelector((state) => state.projectSlice);
 
   const { data, loading, error } = useQuery(PROFILE, {
     fetchPolicy: 'network-only',
@@ -64,6 +66,13 @@ const MainLayout = () => {
   if (error) return <Navigate to="/login" />;
   return (
     <div className="flex min-h-screen min-w-screen">
+      <div className="fixed top-0 h-auto right-0 left-0 w-fit mx-auto z-50">
+        {alert && alert.length > 0
+          ? alert.map((alert: string) => (
+              <Alert key={nanoid()} content={alert} />
+            ))
+          : ''}
+      </div>
       <Header />
       <div className="mt-12 w-full relative">
         <Outlet />

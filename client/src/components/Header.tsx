@@ -6,6 +6,7 @@ import { IoMdNotifications } from 'react-icons/io';
 import { Link, useLocation } from 'react-router-dom';
 import {
   FIND_NOTIFICATIONS,
+  MARK_ALL_AS_READ,
   MARK_AS_READ,
   NOTIFICATION_SUB,
   PROFILE,
@@ -88,16 +89,42 @@ const Header = ({ data }: any) => {
 //todo: fixed alert
 
 const Notifications = ({ open, data }: { open: boolean; data: any }) => {
-  const [fetch] = useMutation(MARK_AS_READ);
+  //todo: reset removed state once the user click 'go to home'
 
-  const markAsRead = (id: number) => {
+  const [fetch] = useMutation(MARK_ALL_AS_READ);
+
+  const markAllAsRead = () => {
     fetch({
-      variables: {
-        notificationId: id,
+      update(cache, { data: { markAllAsRead } }) {
+        const { findNotifications }: any = cache.readQuery({
+          query: FIND_NOTIFICATIONS,
+        });
+        for (let i = 0; i < findNotifications?.length; i++) {
+          cache.writeQuery({
+            query: gql`
+              query MarkAsRead($notificationId: Int!) {
+                markAsRead(notificationId: $notificationId) {
+                  id
+                  read
+                }
+              }
+            `,
+            data: {
+              markAsRead: {
+                __typename: findNotifications[i].__typename,
+                id: findNotifications[i].id,
+                read: true,
+                user: {
+                  id: markAllAsRead, //markAllAsRead returns the userId
+                },
+              },
+            },
+          });
+        }
       },
     });
   };
-  //todo: reset removed state once the user click 'go to home'
+
   if (!open) return <></>;
   return (
     <div
@@ -107,49 +134,78 @@ const Notifications = ({ open, data }: { open: boolean; data: any }) => {
     >
       <header className="flex items-center justify-between py-1 px-2 border-b-2 border-slate-700 ">
         <h2 className="font-bold text-slate-400">Inbox</h2>
-        <button className="text-sm text-blue-600">Mark all as read</button>
+        <button className="text-sm text-blue-600" onClick={markAllAsRead}>
+          Mark all as read
+        </button>
       </header>
       <div className="overflow-scroll no-scroll-style w-full h-96">
         {data?.findNotifications.map((noti: any) => (
-          <div
-            key={nanoid()}
-            className={`${
-              noti.read ? '' : 'bg-slate-900'
-            } flex flex-col justify-between items-end border-b text-slate-600 border-slate-700 text-sm p-2.5`}
-          >
-            <div className="flex w-full items-center justify-between">
-              <span
-                className={`${
-                  noti.type === 'REJECTED' || noti.type === 'BANNED'
-                    ? 'text-red-700'
-                    : 'text-green-700'
-                }`}
-              >
-                {noti.type}
-              </span>
-              <div className="flex items-center">
-                <span className="text-slate-500 px-2">
-                  {moment(new Date(noti.created_at), 'YYYYMMDD').fromNow()}
-                </span>
-                {noti.read ? undefined : (
-                  <button
-                    title="Click to mark as read"
-                    onClick={() => markAsRead(noti.id)}
-                    className="w-2 h-2 my-2 relative bg-blue-700 rounded-full "
-                  ></button>
-                )}
-              </div>
-            </div>
-            <p className="w-full text-start">
-              {noti.data.split(':')[0]}
-              <span className="font-bold underline">
-                {noti.data.split(':')[1]}
-              </span>
-              {noti.data.split(':')[2]}
-            </p>
-          </div>
+          <NotificationCard key={nanoid()} noti={noti} />
         ))}
       </div>
+    </div>
+  );
+};
+
+const NotificationCard = ({ noti }: any) => {
+  // const [data, setData] = useState(noti.data ? noti.data : undefined);
+  let data = noti.data ? noti.data : '';
+  const [fetch] = useMutation(MARK_AS_READ);
+
+  const markAsRead = (id: number) => {
+    fetch({
+      variables: {
+        notificationId: id,
+      },
+    });
+  };
+
+  useEffect(() => {
+    if (data) {
+      if (data.includes(':')) {
+        data.split(':')[1];
+      }
+    }
+  }, []);
+  return (
+    <div
+      key={nanoid()}
+      className={`${noti.read ? '' : 'bg-slate-900'} ${
+        noti.type === 'REMOVED' ? 'bg-red-900/20' : ''
+      } flex flex-col justify-between items-end border-b text-slate-600 border-slate-700 text-sm p-2.5`}
+    >
+      <div className="flex w-full items-center justify-between">
+        <span
+          className={`${
+            noti.type === 'REJECTED' ||
+            noti.type === 'BANNED' ||
+            noti.type === 'REMOVED'
+              ? 'text-red-700'
+              : noti.type === 'PARTIAL_BAN'
+              ? 'text-orange-700'
+              : 'text-green-700'
+          }`}
+        >
+          {noti.type}
+        </span>
+        <div className="flex items-center">
+          <span className="text-slate-500 px-2">
+            {moment(new Date(noti.created_at), 'YYYYMMDD').fromNow()}
+          </span>
+          {noti.read ? undefined : (
+            <button
+              title="Click to mark as read"
+              onClick={() => markAsRead(noti.id)}
+              className="w-2 h-2 my-2 relative bg-blue-700 rounded-full "
+            ></button>
+          )}
+        </div>
+      </div>
+      <p className="w-full text-start">
+        {noti.data.split(':')[0]}
+        <span className="font-bold underline">{noti.data.split(':')[1]}</span>
+        {noti.data.split(':')[2]}
+      </p>
     </div>
   );
 };

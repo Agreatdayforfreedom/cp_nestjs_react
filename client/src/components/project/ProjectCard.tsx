@@ -1,8 +1,13 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { useEffect } from 'react';
+import { nanoid } from '@reduxjs/toolkit';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useAppDispatch } from '../../app/hooks';
+import { quitLastAlert, setAlert } from '../../features/projectSlice';
+import { useAlert } from '../../hooks/useAlert';
 import { Project } from '../../interfaces/interfaces';
 import { ALREADY_REQUESTED, REQUEST_PROJECT } from '../../typedefs';
+import Alert from '../Alert';
 import Button from '../Button';
 
 interface ProjectProps {
@@ -13,6 +18,8 @@ interface ProjectProps {
 const ProjectCard = ({ project, canBeRequested = false }: ProjectProps) => {
   const [fetch] = useMutation(REQUEST_PROJECT);
 
+  const dispatch = useAppDispatch();
+  const [handleAlert] = useAlert();
   const { data, loading, error, refetch } = useQuery(ALREADY_REQUESTED, {
     variables: {
       projectId: project.id,
@@ -24,9 +31,11 @@ const ProjectCard = ({ project, canBeRequested = false }: ProjectProps) => {
       onCompleted() {
         refetch();
       },
+      onError(data) {
+        handleAlert(data.message);
+      },
     });
   };
-
   return (
     <div className="flex items-center justify-between border-b border-slate-700 last:border-none hover:cursor-pointer hover:bg-[var(--medium-blue)] transition-colors">
       <div className="flex flex-col justify-center">

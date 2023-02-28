@@ -6,6 +6,7 @@ import {
   EDIT_COMMENT,
   FIND_COMMENTS,
   NEW_COMMENT,
+  PROFILE,
 } from '../../typedefs';
 import { Comment as IComment } from '../../interfaces/interfaces';
 import Spinner from '../loaders/Spinner';
@@ -16,6 +17,8 @@ import { BsThreeDots } from 'react-icons/bs';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { clearState, setState } from '../../features/commentSlice';
 import { nanoid } from '@reduxjs/toolkit';
+import { useAlert } from '../../hooks/useAlert';
+import { Ban } from '../../interfaces/enums';
 
 const Comments = () => {
   const params = useParams();
@@ -76,6 +79,8 @@ const Comment = ({ comment, subs }: Props) => {
   const [options, setOptions] = useState<boolean>(false);
   const dispatch = useAppDispatch();
 
+  const { data } = useQuery(PROFILE);
+
   const [fetch] = useMutation(DELETE_COMMENT);
 
   const openOptions = () => {
@@ -113,7 +118,7 @@ const Comment = ({ comment, subs }: Props) => {
     });
     setOptions(false);
   };
-
+  //todo: comment form cannot be empty
   return (
     <div className="relative z-0 py-4 first:pt-0">
       <div className="timeline border-slate-700"></div>
@@ -130,7 +135,7 @@ const Comment = ({ comment, subs }: Props) => {
           <button className="absolute top-0.5 right-2" onClick={openOptions}>
             <BsThreeDots size={20} />
           </button>
-          {options ? (
+          {options && data?.profile.currentProjectMember.ban !== Ban.BANNED ? (
             <div className=" absolute bg-[var(--dark-purple)] top-5 right-5 rounded shadow flex items-center shadow-slate-800 text-sm font-semibold open-options">
               <ul className="w-full text-center">
                 <li>
@@ -176,6 +181,8 @@ const CommentForm = () => {
     setContent(actionPayload.content);
   }, [actionPayload.content]);
 
+  const [handleAlert] = useAlert();
+
   const [fetch] = useMutation(NEW_COMMENT);
   const [fetchEdit] = useMutation(EDIT_COMMENT);
 
@@ -219,6 +226,9 @@ const CommentForm = () => {
         },
         onCompleted(data, clientOptions) {
           dispatch(clearState());
+        },
+        onError(data) {
+          handleAlert(data.message);
         },
       });
     }

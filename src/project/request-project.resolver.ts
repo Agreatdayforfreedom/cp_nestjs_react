@@ -33,6 +33,7 @@ const pubSub = new PubSub();
 
 @Resolver()
 @UseGuards(GqlAuthGuard, RolesGuard, BanGuard)
+@Bans(Ban.UNBANNED)
 export class RequestProjectResolver {
   static readonly REQUEST_SUB = 'requestSub';
   // static readonly STATUS_REQUEST_SUB = 'statusRequestSub';
@@ -84,8 +85,7 @@ export class RequestProjectResolver {
   }
 
   @Query((returns) => [RequestProject])
-  @Roles(Role.ADMIN)
-  @Bans(Ban.BANNED, Ban.PARTIAL_BAN)
+  @Roles(Role.MEMBER, Role.MODERATOR, Role.ADMIN)
   findRequests(@Args('projectId', { type: () => Int }) projectId: number) {
     return this.requestProjectService.findRequests(projectId);
   }

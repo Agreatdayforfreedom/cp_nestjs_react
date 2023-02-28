@@ -13,7 +13,7 @@ import { LabelService } from './services/label.service';
 @Resolver()
 @UseGuards(GqlAuthGuard, RolesGuard, BanGuard)
 @Roles(Role.ADMIN, Role.MEMBER, Role.MODERATOR)
-@Bans(Ban.BANNED)
+@Bans(Ban.UNBANNED)
 export class LabelResolver {
   constructor(private labelService: LabelService) {}
 
@@ -23,11 +23,13 @@ export class LabelResolver {
   }
 
   @Mutation((returns) => Label)
+  @Bans(Ban.BANNED, Ban.PARTIAL_BAN)
   newLabel(@Args() args: CreateLabelDto) {
     return this.labelService.newLabel(args);
   }
 
   @Mutation((returns) => Label)
+  @Bans(Ban.BANNED, Ban.PARTIAL_BAN)
   quitLabel(@Args('labelId', { type: () => Int }) labelId: number) {
     return this.labelService.quitLabel(labelId);
   }
