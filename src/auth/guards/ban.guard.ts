@@ -36,17 +36,17 @@ export class BanGuard implements CanActivate {
     if (skipAuth) {
       return true;
     }
+    const bans = this.reflector.getAllAndOverride<Ban[]>('bans', [
+      ctx.getHandler(),
+      ctx.getClass(),
+    ]);
+    if (bans[0] === Ban.PROFILE) return true;
     // if (ctx.getInfo().operation.operation === 'subscription') return true;
     const member = await this.memberService.findAuthMember({
       userId: req.user.id,
       projectId: req.user.projectId,
     });
-    const bans = this.reflector.getAllAndOverride<Ban[]>('bans', [
-      ctx.getHandler(),
-      ctx.getClass(),
-    ]);
     if (member.ban === Ban.UNBANNED) return true;
-    if (bans[0] === Ban.PROFILE) return true;
     const doMatch = this.matchBan(member.ban as ExcludeProfileBan, bans);
     if (doMatch) {
       throw new UnauthorizedException("You don't have enough permissions");

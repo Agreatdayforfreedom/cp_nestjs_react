@@ -26,7 +26,7 @@ export class NotificationService {
       order: {
         created_at: 'DESC',
       },
-      take: 20,
+      take: 50,
     });
   }
 

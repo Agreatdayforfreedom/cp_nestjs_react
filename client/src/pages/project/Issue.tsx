@@ -7,7 +7,7 @@ import { Link, useParams } from 'react-router-dom';
 import Spinner from '../../components/loaders/Spinner';
 import LabelCard, { LabelModalInfo } from '../../components/project/LabelCard';
 import LabelModal from '../../components/project/LabelModal';
-import { IssueStatus } from '../../interfaces/enums';
+import { Ban, IssueStatus } from '../../interfaces/enums';
 import { Label } from '../../interfaces/interfaces';
 import { FIND_COMMENTS, FIND_ISSUE, PROFILE } from '../../typedefs';
 import { nanoid } from '@reduxjs/toolkit';
@@ -31,20 +31,22 @@ const Issue = () => {
       issueId: params.issueId && parseInt(params.issueId, 10),
     },
   });
+  console.log(data);
   if (loading) return <Spinner />;
   return (
     <section>
       <div className="px-2 pt-1 flex justify-between items-center ">
         <div className="flex items-center">
-          {data.findIssue.issueStatus === IssueStatus.OPEN ? (
+          {data?.findIssue.issueStatus === IssueStatus.OPEN ? (
             <VscIssues size={20} className="fill-green-500 mx-1" />
           ) : (
             <VscPass size={20} className="mx-1 fill-purple-500 " />
           )}
-          <span className="text-slate-500">{data.findIssue.issueStatus}</span>
+          <span className="text-slate-500">{data?.findIssue.issueStatus}</span>
         </div>
 
-        {pData.profile.currentProjectMember.id === data.findIssue.owner.id && (
+        {pData?.profile.currentProjectMember?.id ===
+          data?.findIssue.owner.id && (
           <div className="flex items-center">
             <Link to={`edit`}>
               <HiPencil
@@ -61,18 +63,18 @@ const Issue = () => {
       </div>
       <div className="border-b border-slate-700 m-2">
         <h1 className="text-slate-200 py-2 px-3 text-2xl  ">
-          {data.findIssue.title}
+          {data?.findIssue.title}
         </h1>
         <span className="text-sm block w-full text-end text-slate-600">
           {parseAndCompareDate(
-            data.findIssue.created_at,
-            data.findIssue.updated_at,
+            data?.findIssue.created_at,
+            data?.findIssue.updated_at,
           )}
         </span>
       </div>
-      <Labels labels={data.findIssue.labels} />
+      <Labels labels={data?.findIssue.labels} />
       <p className="p-3 border-b text-slate-400 border-slate-700">
-        {data.findIssue.description}
+        {data?.findIssue.description}
       </p>
       {openDeleteModal ? (
         <DeleteModal fnCloseDeleteModal={fnCloseDeleteModal} />
@@ -123,6 +125,8 @@ const Labels = ({ labels }: Props) => {
   const [openLabelModal, setOpenLabelModal] = useState<boolean>(false);
   const [openLabelInfoModal, setOpenLabelInfoModal] = useState<boolean>(false);
   const [currentLabel, setCurrentLabel] = useState<Label>({} as Label);
+  const [alert, setAlert] = useState<string>('');
+  const { data } = useQuery(PROFILE);
 
   const fnOpenLabelInfoModal = (cLabel: Label) => {
     setCurrentLabel(cLabel);
@@ -140,7 +144,7 @@ const Labels = ({ labels }: Props) => {
   return (
     <div className="flex items-center px-2 pb-2 border-b border-slate-700">
       <span className="mr-3 text-slate-500">Labels: </span>
-      {labels.map((label: Label) => {
+      {labels?.map((label: Label) => {
         return (
           <LabelCard
             key={nanoid()}
@@ -149,11 +153,46 @@ const Labels = ({ labels }: Props) => {
           />
         );
       })}
-      <AiOutlinePlus
-        size={20}
-        onClick={() => setOpenLabelModal((prev) => !prev)}
-        className="hover:cursor-pointer"
-      />
+      {(data && data.profile.currentProjectMember?.ban === Ban.PARTIAL_BAN) ||
+      data.profile.currentProjectMember?.ban === Ban.BANNED ? (
+        alert ? (
+          <span
+            className={`alert break-all  ${
+              data.profile.currentProjectMember.ban === Ban.BANNED
+                ? '!text-red-600'
+                : '!text-orange-600'
+            }`}
+          >
+            {alert}
+          </span>
+        ) : (
+          <AiOutlinePlus
+            size={20}
+            onClick={() => {
+              if (data.profile.currentProjectMember.ban === Ban.BANNED) {
+                setAlert('You has been banned');
+              } else {
+                setAlert('You has been partially banned');
+              }
+              setTimeout(() => {
+                setAlert('');
+              }, 3000);
+            }}
+            className={`${
+              data.profile.currentProjectMember?.ban === Ban.BANNED
+                ? 'fill-red-600'
+                : 'fill-orange-600'
+            } hover:cursor-pointer`}
+          />
+        )
+      ) : (
+        <AiOutlinePlus
+          size={20}
+          onClick={() => setOpenLabelModal((prev) => !prev)}
+          className="hover:cursor-pointer"
+        />
+      )}
+
       {/*delete label, show info  */}
       {openLabelInfoModal ? (
         <LabelModalInfo

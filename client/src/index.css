@@ -64,6 +64,12 @@ textarea:focus-within {
   box-shadow: 0 0 0 4px var(--purple);
 }
 
+.input-border-within:focus-within {
+  outline: none;
+  border: var(--purple) solid 1px;
+  box-shadow: 0 0 0 4px var(--purple);
+}
+
 .input:focus-within {
   outline: none;
   border-bottom: var(--green) solid 1px;
@@ -183,7 +189,8 @@ button:disabled {
 
 .alert {
   opacity: 1;
-
+  font-weight: 600;
+  color: #750019;
   animation: alert-spawn 3s forwards;
 }
 @keyframes alert-spawn {
@@ -227,7 +234,7 @@ button:disabled {
 .added {
   background-color: var(--green);
   /* display: inline-block !important; */
-  animation: gradient-a 3s forwards;
+  animation: gradient-a 1s forwards;
 }
 
 .member_removed {
@@ -238,12 +245,12 @@ button:disabled {
 .banned {
   background-color: var(--t-red);
   /* background-color: transparent; */
-  animation: gradient-b 3s forwards;
+  animation: gradient-b 1s forwards;
 }
 
 .p-banned {
   background-color: var(--t-orange);
-  animation: gradient-p 3s forwards;
+  animation: gradient-p 1s forwards;
 }
 
 .open-label-modal {
@@ -354,10 +361,10 @@ button:disabled {
 }
 
 @keyframes gradient-b {
-  0% {
+  from {
     background-color: transparent;
   }
-  100% {
+  to {
     background-color: var(--t-red);
   }
 }

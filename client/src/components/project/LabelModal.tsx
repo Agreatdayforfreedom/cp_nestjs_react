@@ -221,9 +221,7 @@ const LabelForm = ({ labelSelected, closeLabelModal }: LabelFormProps) => {
             alert ? 'justify-between' : 'justify-end'
           } `}
         >
-          {alert ? (
-            <span className="alert  text-red-700 font-semibold ">{alert}</span>
-          ) : undefined}
+          {alert ? <span className="alert ">{alert}</span> : undefined}
           <button
             className="bg-slate-700 text-sm p-1 mt-4 rounded-lg hover:bg-slate-800  whitespace-nowrap transition-colors"
             type="submit"

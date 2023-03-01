@@ -19,6 +19,7 @@ import { clearState, setState } from '../../features/commentSlice';
 import { nanoid } from '@reduxjs/toolkit';
 import { useAlert } from '../../hooks/useAlert';
 import { Ban } from '../../interfaces/enums';
+import { FaBan } from 'react-icons/fa';
 
 const Comments = () => {
   const params = useParams();
@@ -118,7 +119,7 @@ const Comment = ({ comment, subs }: Props) => {
     });
     setOptions(false);
   };
-  //todo: comment form cannot be empty
+  console.log(comment.owner);
   return (
     <div className="relative z-0 py-4 first:pt-0">
       <div className="timeline border-slate-700"></div>
@@ -126,15 +127,30 @@ const Comment = ({ comment, subs }: Props) => {
         <div className="relative border-b flex items-end justify-between pb-2 pt-1 border-slate-700">
           <div className="flex items-end">
             <img
-              src={comment.owner.user.avatar}
-              alt={`${comment.owner.user.username} avatar`}
+              src={
+                comment.owner?.user
+                  ? comment.owner.user?.avatar
+                  : '/public/empty-user.webp'
+              }
+              alt={`${
+                comment.owner?.user
+                  ? comment.owner.user?.username
+                  : `user${comment.id}`
+              } avatar`}
               className="w-8 h-8 rounded-full"
             />
-            <h2 className="px-2">{comment.owner.user.username}</h2>
+            <h2 className="px-2">{`${
+              comment.owner?.user
+                ? comment.owner.user?.username
+                : `user${comment.id}`
+            }`}</h2>
           </div>
-          <button className="absolute top-0.5 right-2" onClick={openOptions}>
-            <BsThreeDots size={20} />
-          </button>
+          {data &&
+          comment.owner?.id === data.profile.currentProjectMember?.id ? (
+            <button className="absolute top-0.5 right-2" onClick={openOptions}>
+              <BsThreeDots size={20} />
+            </button>
+          ) : undefined}
           {options && data?.profile.currentProjectMember.ban !== Ban.BANNED ? (
             <div className=" absolute bg-[var(--dark-purple)] top-5 right-5 rounded shadow flex items-center shadow-slate-800 text-sm font-semibold open-options">
               <ul className="w-full text-center">
@@ -171,6 +187,7 @@ const Comment = ({ comment, subs }: Props) => {
 };
 
 const CommentForm = () => {
+  const [alert, setAlert] = useState<string>('');
   const [content, setContent] = useState<string>('');
 
   const actionPayload = useAppSelector((state) => state.commentSlice);
@@ -180,16 +197,21 @@ const CommentForm = () => {
   useEffect(() => {
     setContent(actionPayload.content);
   }, [actionPayload.content]);
-
   const [handleAlert] = useAlert();
 
+  const { data } = useQuery(PROFILE);
   const [fetch] = useMutation(NEW_COMMENT);
   const [fetchEdit] = useMutation(EDIT_COMMENT);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (content === '') {
+      setAlert('The content cannot be empty');
+      return setTimeout(() => {
+        setAlert('');
+      }, 3000);
+    }
     if (actionPayload.editMode) {
-      console.log(content);
       fetchEdit({
         variables: {
           commentId: actionPayload.id,
@@ -205,30 +227,9 @@ const CommentForm = () => {
           issueId: params.issueId && parseInt(params.issueId, 10),
           content,
         },
-        update: (cache, { data: { newComment } }) => {
-          console.log(newComment);
-          cache.modify({
-            fields: {
-              findComments(existing) {
-                const commentAdded = cache.writeFragment({
-                  data: newComment,
-                  fragment: gql`
-                    fragment NewComment on Comment {
-                      id
-                      __typename
-                    }
-                  `,
-                });
-                return [...existing, commentAdded];
-              },
-            },
-          });
-        },
+
         onCompleted(data, clientOptions) {
           dispatch(clearState());
-        },
-        onError(data) {
-          handleAlert(data.message);
         },
       });
     }
@@ -238,19 +239,24 @@ const CommentForm = () => {
     <div className=" border-t-2 border-[var(--timeline-color)] pt-2 border-slate-700">
       <form
         onSubmit={handleSubmit}
-        className={`p-1 ${actionPayload.editMode ? 'flash-orange' : ''}`}
+        className={`p-1  rounded ${
+          actionPayload.editMode ? 'flash-orange' : ''
+        } `}
       >
         <textarea
+          disabled={
+            data && data.profile.currentProjectMember?.ban === Ban.BANNED
+          }
           name="content"
           id="content"
           placeholder="leave a comment"
           className={`${
             actionPayload.editMode ? 'border-orange-900 ' : ''
-          } w-full border p-2 outline-none bg-[var(--dark-purple)] border-slate-700 rounded`}
+          } w-full border p-2 outline-none bg-[var(--dark-purple)] input-border-within border-slate-700 rounded`}
           value={content ? content : content}
           onChange={(e) => setContent(e.target.value)}
         ></textarea>
-        <div className="flex justify-end">
+        <div className="flex justify-end items-center">
           {actionPayload.editMode ? (
             <button
               type="button"
@@ -260,9 +266,21 @@ const CommentForm = () => {
               Cancel
             </button>
           ) : undefined}
+          {data && data.profile.currentProjectMember?.ban === Ban.BANNED ? (
+            <>
+              <span className="px-1 text-red-700">You has been banned.</span>
+              <FaBan size={20} className="fill-red-700" />
+            </>
+          ) : (
+            ''
+          )}
+          {alert ? <span className="alert">{alert}</span> : undefined}
           <Button
             type="submit"
             className="w-fit"
+            disabled={
+              data && data.profile.currentProjectMember?.ban === Ban.BANNED
+            }
             name={actionPayload.editMode ? 'Save changes' : 'Comment'}
           />
         </div>

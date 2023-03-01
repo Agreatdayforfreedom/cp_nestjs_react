@@ -4,7 +4,7 @@ const FreezeScreen = () => {
   return (
     <div
       className="
-    fixed bg-[var(--t-red)] left-0 z-50 flex items-start justify-center text-center opacity-80 w-full h-screen top-0"
+    fixed bg-[var(--t-red)] left-0 z-50 flex items-start justify-center text-center opacity-80 w-full h-screen top-0 overflow-y-hidden"
     >
       <div className="bg-[var(--blood)] shadow-lg shadow-pink-900/50 text-white font-bold text-2xl mt-10 p-4">
         <h2>You has been removed.</h2>

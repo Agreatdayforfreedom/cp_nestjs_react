@@ -12,6 +12,8 @@ export enum Ban {
 
 export enum NotificationType {
   BANNED = 'BANNED',
+  UNBANNED = 'UNBANNED',
+  PARTIAL_BAN = 'PARTIAL_BAN',
   ROLE_CHANGED = 'ROLE_CHANGED',
   MEMBER_ADDED = 'MEMBER_ADDED',
   MEMBER_REMOVED = 'MEMBER_REMOVED',

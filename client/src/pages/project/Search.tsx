@@ -7,6 +7,7 @@ import ArrowBack from '../../components/ArrowBack';
 import Button from '../../components/Button';
 import ShineCard from '../../components/loaders/ShineCard';
 import Spinner from '../../components/loaders/Spinner';
+import { SearchBar } from '../../components/SearchBar';
 import { RequestStatus } from '../../interfaces/enums';
 import { Member, User } from '../../interfaces/interfaces';
 import {
@@ -21,7 +22,9 @@ import {
 const Search = () => {
   const params = useParams();
 
-  const { data, loading, error } = useQuery(FIND_USERS);
+  const { data, loading, error, refetch } = useQuery(FIND_USERS, {
+    variables: {},
+  });
   const { data: membersData } = useQuery(FIND_MEMBERS, {
     variables: {
       projectId: params.id && parseInt(params.id, 10),
@@ -62,15 +65,14 @@ const Search = () => {
 
   if (loading) return <Spinner />;
   if (error) return <Navigate to="/" />;
-  //todo: a page for requests
   return (
     <div>
       <ArrowBack to="../members" />
-      <h2>Requests</h2>
 
       <h2>Find a user</h2>
+      <SearchBar refetch={refetch} />
       {data &&
-        data.findUsers.map((user: any) => (
+        data.findUsers.map((user: User) => (
           <div
             key={nanoid()}
             className="flex justify-between items-center p-3 border-t last:border-y border-slate-700"

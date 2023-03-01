@@ -86,7 +86,7 @@ type Comment {
   id: Int!
   content: String!
   issue: Issue!
-  owner: Member!
+  owner: Member
   created_at: DateTime!
   updated_at: DateTime!
 }

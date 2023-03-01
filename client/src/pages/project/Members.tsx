@@ -17,7 +17,7 @@ import { MdOutlineEditOff } from 'react-icons/md';
 import { Navigate, useLocation, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import Spinner from '../../components/loaders/Spinner';
-import { setState } from '../../features/memberSlice';
+import { clearState, setState } from '../../features/memberSlice';
 import { Ban, NotificationType, Role } from '../../interfaces/enums';
 import { Member as IMember } from '../../interfaces/interfaces';
 import {
@@ -106,10 +106,26 @@ const Members = () => {
                 if (notification === NotificationType.BANNED) {
                   dispatch(
                     setState({
-                      memberId: 0,
+                      memberId: subData.id.toString(),
                       memberAction: notification,
+                      activateBanStyles: Ban.BANNED,
                     }),
                   );
+                  setTimeout(() => {
+                    dispatch(clearState());
+                  }, 1000);
+                }
+                if (notification === NotificationType.PARTIAL_BAN) {
+                  dispatch(
+                    setState({
+                      memberId: subData.id.toString(),
+                      memberAction: notification,
+                      activateBanStyles: Ban.PARTIAL_BAN,
+                    }),
+                  );
+                  setTimeout(() => {
+                    dispatch(clearState());
+                  }, 1000);
                 }
                 if (notification === NotificationType.MEMBER_ADDED) {
                   if (subData)
@@ -145,13 +161,19 @@ interface Props {
 const Member = ({ member, data, project, subs }: Props) => {
   useEffect(() => subs(), []);
 
-  const { memberId } = useAppSelector((state) => state.memberSlice);
+  const { memberId, activateBanStyles } = useAppSelector(
+    (state) => state.memberSlice,
+  );
   const ref = useRef<HTMLDivElement>(null);
   const [className, setClassName] = useState('');
 
   useEffect(() => {
-    if (memberId && ref.current) {
-      if (memberId.toString() === ref.current.id) {
+    if (memberId && ref.current && memberId.toString() === ref.current.id) {
+      if (activateBanStyles === Ban.BANNED) {
+        ref.current.className += ' banned';
+      } else if (activateBanStyles === Ban.PARTIAL_BAN) {
+        ref.current.className += ' p-banned';
+      } else {
         setClassName('added');
       }
     }
@@ -163,8 +185,8 @@ const Member = ({ member, data, project, subs }: Props) => {
         ref={ref}
         id={member.id.toString()}
         className={`
-    ${member.ban === Ban.BANNED && 'banned'}
-    ${member.ban === Ban.PARTIAL_BAN && 'p-banned'}
+        ${member.ban === Ban.BANNED && 'bg-[var(--t-red)]'}
+        ${member.ban === Ban.PARTIAL_BAN && 'bg-[var(--t-orange)]'}
     ${className === 'added' ? className : ''}
      flex justify-between  last:border-b border-slate-600 p-3`}
       >

@@ -116,10 +116,20 @@ export class MemberResolver {
       banned.ban,
       banned.user.id,
     );
+
+    let notificationType: NotificationType;
+
+    if (banned.ban === Ban.BANNED) {
+      notificationType = NotificationType.BANNED;
+    } else if (banned.ban === Ban.PARTIAL_BAN) {
+      notificationType = NotificationType.PARTIAL_BAN;
+    } else {
+      notificationType = NotificationType.UNBANNED;
+    }
     pubSub.publish(MemberResolver.MEMBER_SUB, {
       memberSub: {
         ...banned,
-        notificationType: NotificationType.BANNED,
+        notificationType,
       },
     });
     return banned;

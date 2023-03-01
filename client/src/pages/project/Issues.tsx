@@ -67,7 +67,7 @@ const IssueCard = ({ issue }: Props) => {
         <h1 className="text-xl">{issue.title}</h1>
         <div>
           {issue.labels?.map((label: Label) => (
-            <LabelCard label={label} />
+            <LabelCard key={nanoid()} label={label} />
           ))}
         </div>
         <span className="text-sm text-slate-500">#{issue.id}</span>

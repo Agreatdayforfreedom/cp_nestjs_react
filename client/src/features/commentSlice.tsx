@@ -18,7 +18,6 @@ export const commentSlice = createSlice({
   initialState,
   reducers: {
     setState: (state, action) => {
-      console.log(action);
       state.id = action.payload.id;
       state.content = action.payload.content;
       state.editMode = action.payload.editMode;

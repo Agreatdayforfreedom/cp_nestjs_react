@@ -48,7 +48,9 @@ export class NotificationResolver {
   async createNotification(
     @Args('data') data: string,
     @Args('type') type: string,
-    @Args('userId', { type: () => Int }) userId: number,
+    @Args('userId', { type: () => Int }) userId?: number,
+    // @Args('issueId', { type: () => Int }) issueId?: number,
+    // @Args('from', { nullable: true }) from?: 'issue' | 'project',
   ) {
     const notification = await this.notificationService.createNotification(
       data,

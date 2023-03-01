@@ -14,7 +14,7 @@ export class Comment {
   @Field((type) => Issue)
   issue: Issue;
 
-  @Field((type) => Member)
+  @Field((type) => Member, { nullable: true })
   owner: Member;
 
   @Field((type) => Date)

@@ -23,7 +23,7 @@ export class Comment {
   issue: Issue;
 
   @ManyToOne(() => Member, (member) => member.comments, {
-    onDelete: 'CASCADE',
+    onDelete: 'SET NULL',
   })
   owner: Member;
 

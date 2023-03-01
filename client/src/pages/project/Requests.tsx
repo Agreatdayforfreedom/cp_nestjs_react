@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@apollo/client';
+import { gql, useMutation, useQuery } from '@apollo/client';
 import { nanoid } from '@reduxjs/toolkit';
 import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -53,9 +53,21 @@ const RequestCard = ({ request }: any) => {
         requestId: id,
         status: RequestStatus.ACCEPTED,
       },
-      update(cache) {
+      update(cache, { data: { acceptOrRejectRequest } }) {
         cache.modify({
           fields: {
+            findMembers(existing) {
+              const newMember = cache.writeFragment({
+                data: acceptOrRejectRequest,
+                fragment: gql`
+                  fragment NewMember on Member {
+                    id
+                    __typename
+                  }
+                `,
+              });
+              return [...existing, newMember];
+            },
             findRequests(existing, { readField }) {
               return existing.filter((m: any) => readField('id', m) !== id);
             },

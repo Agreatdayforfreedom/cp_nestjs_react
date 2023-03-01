@@ -24,8 +24,13 @@ export class LabelResolver {
 
   @Mutation((returns) => Label)
   @Bans(Ban.BANNED, Ban.PARTIAL_BAN)
-  newLabel(@Args() args: CreateLabelDto) {
-    return this.labelService.newLabel(args);
+  async newLabel(@Args() args: CreateLabelDto) {
+    const newLabel = await this.labelService.newLabel(args);
+
+    console.log({ newLabel });
+    let data: string = `Label ${newLabel.labelName} was added to the :${newLabel.issue.title}: issue.`;
+
+    return newLabel;
   }
 
   @Mutation((returns) => Label)

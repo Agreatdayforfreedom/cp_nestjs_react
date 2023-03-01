@@ -25,6 +25,7 @@ export class CommentService {
       .leftJoinAndSelect('comment.issue', 'issue')
       .leftJoinAndSelect('owner.user', 'user')
       .where('issue.id = :id', { id: issueId })
+      .orderBy('comment.created_at', 'ASC')
       .getMany();
   }
 
@@ -38,6 +39,7 @@ export class CommentService {
         id: cMember.id,
       },
     });
+    if (!content) throw new HttpException('The content cannot be empty', 400);
 
     if (!issueExists || !memberExists)
       throw new HttpException('Issue and/or member not found.', 404);
@@ -63,9 +65,7 @@ export class CommentService {
     if (cMember.id !== comment.owner.id)
       throw new UnauthorizedException("This comment wasn't issued by you");
 
-    if (content === '')
-      throw new HttpException('The content should not be empty', 400);
-
+    if (!content) throw new HttpException('The content cannot be empty', 400);
     comment.content = content;
 
     return await this.commentRepository.save(comment);

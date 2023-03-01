@@ -10,12 +10,14 @@ const ArrowBack = ({
   className?: string;
 }) => {
   return (
-    <Link to={to} className={className}>
-      <MdOutlineKeyboardArrowLeft
-        size={40}
-        className="ml-2 hover:-translate-x-1 hover:cursor-pointer transition-transform"
-      />
-    </Link>
+    <div className="h-10">
+      <Link to={to} className="absolute">
+        <MdOutlineKeyboardArrowLeft
+          size={40}
+          className="ml-2 hover:-translate-x-1 hover:cursor-pointer transition-transform"
+        />
+      </Link>
+    </div>
   );
 };
 

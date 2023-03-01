@@ -36,7 +36,6 @@ const Header = ({ data }: any) => {
       client.cache.modify({
         fields: {
           findNotifications(existing) {
-            console.log(existing, data);
             const newNotification = client.cache.writeFragment({
               data: data.data.notificationSub,
               fragment: gql`
@@ -86,11 +85,8 @@ const Header = ({ data }: any) => {
     </header>
   );
 };
-//todo: fixed alert
 
 const Notifications = ({ open, data }: { open: boolean; data: any }) => {
-  //todo: reset removed state once the user click 'go to home'
-
   const [fetch] = useMutation(MARK_ALL_AS_READ);
 
   const markAllAsRead = () => {
