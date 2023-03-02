@@ -15,8 +15,6 @@ import {
 } from '../dtos/member.dto';
 import { Member } from '../entities/member.entity';
 import { Project } from '../entities/project.entity';
-//todo: move all types, interfaces and enums to respective files;
-// export interface
 
 export interface findAuthMemberPayload {
   projectId: number;
@@ -160,7 +158,6 @@ export class MemberService {
         },
       },
     });
-    //todo: validate that project owner cannot be modified or deleted
     if (!member) throw new HttpException('Member not found', 404);
 
     if (member.user.id === member.project.owner.id)

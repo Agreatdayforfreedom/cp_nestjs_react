@@ -1,5 +1,5 @@
 import { OperationVariables } from '@apollo/client';
-import React, { FormEvent, useState } from 'react';
+import { FormEvent, useState } from 'react';
 
 interface Props {
   refetch: (variables: Partial<OperationVariables>) => void;
@@ -10,8 +10,7 @@ export const SearchBar = ({ refetch }: Props) => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(searchValue);
-    refetch({ filter: searchValue });
+    refetch({ searchValue });
   };
 
   return (

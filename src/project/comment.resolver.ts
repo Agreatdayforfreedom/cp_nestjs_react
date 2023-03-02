@@ -86,4 +86,14 @@ export class CommentResolver {
   ) {
     return this.commentService.deleteComment(commentId, cMember);
   }
+
+  @Mutation((returns) => Comment)
+  @Bans(Ban.UNBANNED)
+  @Roles(Role.ADMIN)
+  minimizeComment(
+    @Args('commentId', { type: () => Int }) commentId: number,
+    @Args('minimized') minimized: boolean,
+  ) {
+    return this.commentService.minimizeComment(commentId, minimized);
+  }
 }

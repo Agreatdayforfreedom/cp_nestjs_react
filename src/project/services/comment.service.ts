@@ -90,4 +90,18 @@ export class CommentService {
 
     return comment;
   }
+
+  async minimizeComment(commentId: number, minimized: boolean) {
+    const comment = await this.commentRepository.findOneBy({ id: commentId });
+
+    if (!comment) throw new HttpException('Comment not found', 404);
+
+    if (comment.minimized === minimized && minimized === true) {
+      throw new HttpException('The comment is already minimized.', 404);
+    }
+
+    comment.minimized = minimized;
+
+    return await this.commentRepository.save(comment);
+  }
 }

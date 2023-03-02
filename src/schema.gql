@@ -44,6 +44,11 @@ type Profile {
   currentProjectMember: Member
 }
 
+type UserModelCount {
+  users: [User!]!
+  count: Int!
+}
+
 type Notification {
   id: Float!
   read: Boolean!
@@ -87,6 +92,7 @@ type Comment {
   content: String!
   issue: Issue!
   owner: Member
+  minimized: Boolean!
   created_at: DateTime!
   updated_at: DateTime!
 }
@@ -112,6 +118,7 @@ type Auth {
 
 type Query {
   findUsers: [User!]!
+  searchUsers(searchValue: String): UserModelCount!
   profile: Profile!
   refreshToken(id: Int!, projectId: Int!): Auth!
   findAllProjects: [Project!]!
@@ -149,6 +156,7 @@ type Mutation {
   newComment(issueId: Int!, content: String!): Comment!
   updateComment(commentId: Int!, content: String!): Comment!
   deleteComment(commentId: Int!): Comment!
+  minimizeComment(commentId: Int!, minimized: Boolean!): Comment!
   requestProject(projectId: Int!): RequestProject!
   acceptOrRejectRequest(requestId: Int!, status: RequestStatus!): RequestProject!
   createNotification(data: String!, type: String!, userId: Int!): Notification!

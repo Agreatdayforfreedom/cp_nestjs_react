@@ -27,7 +27,8 @@ export class Comment {
   })
   owner: Member;
 
-  //   likes:
+  @Column({ default: false })
+  minimized: boolean;
 
   @CreateDateColumn()
   created_at: Date;

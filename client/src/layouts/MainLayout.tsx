@@ -59,9 +59,7 @@ const MainLayout = () => {
       }
     },
   });
-  // if (srData) console.log(srData);
 
-  //todo: improve notification and do something else.
   if (loading) return <InitSpinner />;
   if (error) return <Navigate to="/login" />;
   return (

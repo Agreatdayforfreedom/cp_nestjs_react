@@ -145,8 +145,6 @@ export class ProjectService {
     } finally {
       await queryRunner.release();
     }
-
-    //todo: validate that the project was created successfully and then to do it as admin
   }
 
   async update(args: ProjectUpdateArgs, cUser: User): Promise<Project> {

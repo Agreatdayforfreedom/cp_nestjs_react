@@ -49,6 +49,7 @@ export interface Comment {
   content: string;
   owner: Member;
   issue: Issue;
+  minimized: boolean;
   created_at: Date;
   updated_at: Date;
 }

@@ -1,30 +1,19 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
 import { nanoid } from '@reduxjs/toolkit';
-import React, { useEffect, useState } from 'react';
 import { BiCheck } from 'react-icons/bi';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import ArrowBack from '../../components/ArrowBack';
 import Button from '../../components/Button';
-import ShineCard from '../../components/loaders/ShineCard';
 import Spinner from '../../components/loaders/Spinner';
 import { SearchBar } from '../../components/SearchBar';
-import { RequestStatus } from '../../interfaces/enums';
 import { Member, User } from '../../interfaces/interfaces';
-import {
-  ACTION_REQUEST,
-  ADD_MEMBER,
-  FIND_MEMBERS,
-  FIND_REQUESTS,
-  FIND_USERS,
-  REQUEST_SUB,
-} from '../../typedefs';
+import { ADD_MEMBER, FIND_MEMBERS, SEARCH_USERS } from '../../typedefs';
 
 const Search = () => {
   const params = useParams();
 
-  const { data, loading, error, refetch } = useQuery(FIND_USERS, {
-    variables: {},
-  });
+  const { data, loading, error, refetch } = useQuery(SEARCH_USERS);
+
   const { data: membersData } = useQuery(FIND_MEMBERS, {
     variables: {
       projectId: params.id && parseInt(params.id, 10),
@@ -69,10 +58,14 @@ const Search = () => {
     <div>
       <ArrowBack to="../members" />
 
-      <h2>Find a user</h2>
       <SearchBar refetch={refetch} />
+      <div className="w-full flex justify-center">
+        <p className="text-slate-400 text-xl font-bold">
+          {data && data.searchUsers.count} users found
+        </p>
+      </div>
       {data &&
-        data.findUsers.map((user: User) => (
+        data.searchUsers.users.map((user: User) => (
           <div
             key={nanoid()}
             className="flex justify-between items-center p-3 border-t last:border-y border-slate-700"
@@ -95,7 +88,6 @@ const Search = () => {
                 name="Add"
                 color="blue"
                 className="!my-0"
-                // disabled={mLoading}
                 onClick={() => handleClick(user.id)}
               />
             )}

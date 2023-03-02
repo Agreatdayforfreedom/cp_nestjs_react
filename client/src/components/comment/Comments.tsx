@@ -5,6 +5,7 @@ import {
   DELETE_COMMENT,
   EDIT_COMMENT,
   FIND_COMMENTS,
+  MINIMIZE_COMMENT,
   NEW_COMMENT,
   PROFILE,
 } from '../../typedefs';
@@ -77,16 +78,85 @@ interface Props {
 const Comment = ({ comment, subs }: Props) => {
   useEffect(() => subs(), []);
 
+  if (comment.minimized) {
+    return (
+      <div className="relative flex flex-col rounded-r items-center py-2 justify-center border-2  ml-[10px] border-[var(--timeline-color)]">
+        <img
+          src={
+            comment.owner?.user
+              ? comment.owner.user?.avatar
+              : '/public/empty-user.webp'
+          }
+          alt={`${
+            comment.owner?.user
+              ? comment.owner.user?.username
+              : `user${comment.id}`
+          } avatar`}
+          className="w-8 h-8 rounded-full"
+        />
+        <CommentActions comment={comment} />
+        <span className="font-bold text-slate-700">Minimized</span>
+      </div>
+    );
+  }
+  return (
+    <div className="relative z-0 py-4 first:pt-0">
+      <div className="timeline border-slate-700"></div>
+      <div className="border border-neutral-900 bg-[var(--medium-blue)] p-2 rounded mx-auto">
+        <div className="relative border-b flex items-end justify-between pb-2 pt-1 border-slate-700">
+          <div className="flex items-end">
+            <img
+              src={
+                comment.owner?.user
+                  ? comment.owner.user?.avatar
+                  : '/public/empty-user.webp'
+              }
+              alt={`${
+                comment.owner?.user
+                  ? comment.owner.user?.username
+                  : `user${comment.id}`
+              } avatar`}
+              className="w-8 h-8 rounded-full"
+            />
+            <h2 className="px-2">{`${
+              comment.owner?.user
+                ? comment.owner.user?.username
+                : `user${comment.id}`
+            }`}</h2>
+          </div>
+
+          <CommentActions comment={comment} />
+
+          <span className="text-xs text-slate-500">
+            {parseAndCompareDate(
+              comment.created_at.toString(),
+              comment.updated_at.toString(),
+            )}
+          </span>
+        </div>
+        <p className="break-all p-2">{comment.content}</p>
+      </div>
+    </div>
+  );
+};
+
+interface CAProps {
+  comment: IComment;
+}
+
+const CommentActions = ({ comment }: CAProps) => {
   const [options, setOptions] = useState<boolean>(false);
-  const dispatch = useAppDispatch();
-
-  const { data } = useQuery(PROFILE);
-
-  const [fetch] = useMutation(DELETE_COMMENT);
 
   const openOptions = () => {
     setOptions((prev) => !prev);
   };
+
+  const { data } = useQuery(PROFILE);
+
+  const dispatch = useAppDispatch();
+
+  const [fetch] = useMutation(DELETE_COMMENT);
+  const [fetchMinimize] = useMutation(MINIMIZE_COMMENT);
 
   const editClicked = () => {
     dispatch(
@@ -119,41 +189,27 @@ const Comment = ({ comment, subs }: Props) => {
     });
     setOptions(false);
   };
-  console.log(comment.owner);
+
+  const handleMinimize = () => {
+    fetchMinimize({
+      variables: {
+        commentId: comment.id,
+        minimized: !comment.minimized,
+      },
+    });
+  };
+
   return (
-    <div className="relative z-0 py-4 first:pt-0">
-      <div className="timeline border-slate-700"></div>
-      <div className="border border-neutral-900 bg-[var(--medium-blue)] p-2 rounded mx-auto">
-        <div className="relative border-b flex items-end justify-between pb-2 pt-1 border-slate-700">
-          <div className="flex items-end">
-            <img
-              src={
-                comment.owner?.user
-                  ? comment.owner.user?.avatar
-                  : '/public/empty-user.webp'
-              }
-              alt={`${
-                comment.owner?.user
-                  ? comment.owner.user?.username
-                  : `user${comment.id}`
-              } avatar`}
-              className="w-8 h-8 rounded-full"
-            />
-            <h2 className="px-2">{`${
-              comment.owner?.user
-                ? comment.owner.user?.username
-                : `user${comment.id}`
-            }`}</h2>
-          </div>
-          {data &&
-          comment.owner?.id === data.profile.currentProjectMember?.id ? (
-            <button className="absolute top-0.5 right-2" onClick={openOptions}>
-              <BsThreeDots size={20} />
-            </button>
-          ) : undefined}
-          {options && data?.profile.currentProjectMember.ban !== Ban.BANNED ? (
-            <div className=" absolute bg-[var(--dark-purple)] top-5 right-5 rounded shadow flex items-center shadow-slate-800 text-sm font-semibold open-options">
-              <ul className="w-full text-center">
+    <>
+      <button className="absolute top-0.5 right-2" onClick={openOptions}>
+        <BsThreeDots size={20} />
+      </button>
+      {options && data?.profile.currentProjectMember.ban !== Ban.BANNED ? (
+        <div className=" absolute bg-[var(--dark-purple)] top-5 right-5 rounded shadow flex items-center shadow-slate-800 text-sm font-semibold open-options">
+          <ul className="w-full text-center">
+            {data &&
+            data.profile?.currentProjectMember.id === comment.owner?.id ? (
+              <>
                 <li>
                   <button
                     className="hover:text-orange-600 transition-colors"
@@ -170,19 +226,21 @@ const Comment = ({ comment, subs }: Props) => {
                     Delete
                   </button>
                 </li>
-              </ul>
-            </div>
-          ) : undefined}
-          <span className="text-xs text-slate-500">
-            {parseAndCompareDate(
-              comment.created_at.toString(),
-              comment.updated_at.toString(),
-            )}
-          </span>
+              </>
+            ) : undefined}
+
+            <li>
+              <button
+                className="hover:text-slate-400 transition-colors"
+                onClick={handleMinimize}
+              >
+                {comment.minimized ? 'Maximize' : 'Minimize'}
+              </button>
+            </li>
+          </ul>
         </div>
-        <p className="break-all p-2">{comment.content}</p>
-      </div>
-    </div>
+      ) : undefined}
+    </>
   );
 };
 

@@ -17,6 +17,9 @@ export class Comment {
   @Field((type) => Member, { nullable: true })
   owner: Member;
 
+  @Field()
+  minimized: boolean;
+
   @Field((type) => Date)
   created_at: Date;
 

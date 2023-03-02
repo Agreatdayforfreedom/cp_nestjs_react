@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { UserCreateArgs } from '../dtos/user.dto';
-import { Issue } from '../../project/entities/issue.entity';
 
 @Injectable()
 export class UsersService {
@@ -22,6 +21,14 @@ export class UsersService {
   async create(args: UserCreateArgs) {
     const user = this.userRepository.create(args);
     return await this.userRepository.save(user);
+  }
+
+  async searchUsers(searchValue: string = '') {
+    const users = await this.userRepository
+      .createQueryBuilder('users')
+      .where('users.username like :name', { name: `%${searchValue}%` })
+      .getManyAndCount();
+    return users;
   }
 
   async find(args: any) {

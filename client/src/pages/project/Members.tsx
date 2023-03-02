@@ -360,6 +360,5 @@ const Buttons = ({ member, data, project }: Props) => {
           </div>
         )}
     </div>
-    //todo: moderator cannot chage the role of others members to admin.
   );
 };

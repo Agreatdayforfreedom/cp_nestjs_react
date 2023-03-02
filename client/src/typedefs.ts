@@ -33,6 +33,20 @@ export const FIND_USERS = gql`
   }
 `;
 
+export const SEARCH_USERS = gql`
+  query Query($searchValue: String) {
+    searchUsers(searchValue: $searchValue) {
+      users {
+        username
+        email
+        avatar
+        id
+      }
+      count
+    }
+  }
+`;
+
 export const FIND_ISSUES = gql`
   query Query($projectId: Int!) {
     findIssues(projectId: $projectId) {
@@ -112,6 +126,7 @@ export const FIND_COMMENTS = gql`
     findComments(issueId: $issueId) {
       id
       content
+      minimized
       created_at
       updated_at
       owner {
@@ -151,6 +166,15 @@ export const DELETE_COMMENT = gql`
   mutation Mutation($commentId: Int!) {
     deleteComment(commentId: $commentId) {
       id
+    }
+  }
+`;
+
+export const MINIMIZE_COMMENT = gql`
+  mutation Mutation($commentId: Int!, $minimized: Boolean!) {
+    minimizeComment(commentId: $commentId, minimized: $minimized) {
+      id
+      minimized
     }
   }
 `;
