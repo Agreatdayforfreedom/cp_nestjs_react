@@ -66,6 +66,7 @@ export class IssueResolver {
 
   @Mutation((returns) => Issue)
   @Bans(Ban.BANNED, Ban.PARTIAL_BAN)
+  @Roles(Role.ADMIN, Role.MODERATOR)
   closeIssue(@Args('issueId', { type: () => Int }) issueId: number) {
     return this.issueService.closeIssue(issueId);
   }

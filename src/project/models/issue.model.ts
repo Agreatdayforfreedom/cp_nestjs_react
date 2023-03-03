@@ -29,6 +29,9 @@ export class Issue {
   @Field((type) => Date)
   updated_at: Date;
 
+  @Field((type) => Date, { nullable: true })
+  closed_at: Date;
+
   @Field({ nullable: true })
   notificationType: string;
 }

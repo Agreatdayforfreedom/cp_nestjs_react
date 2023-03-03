@@ -205,22 +205,19 @@ const CommentActions = ({ comment }: CAProps) => {
         <BsThreeDots size={20} />
       </button>
       {options && data?.profile.currentProjectMember.ban !== Ban.BANNED ? (
-        <div className=" absolute bg-[var(--dark-purple)] top-5 right-5 rounded shadow flex items-center shadow-slate-800 text-sm font-semibold open-options">
+        <div className=" absolute bg-[var(--dark-slate)]  top-5 right-5 rounded shadow flex items-center shadow-slate-800 text-sm font-semibold open-options">
           <ul className="w-full text-center">
             {data &&
             data.profile?.currentProjectMember.id === comment.owner?.id ? (
               <>
-                <li>
-                  <button
-                    className="hover:text-orange-600 transition-colors"
-                    onClick={editClicked}
-                  >
+                <li className="p-1 hover:bg-slate-700">
+                  <button className=" transition-colors" onClick={editClicked}>
                     Edit
                   </button>
                 </li>
-                <li>
+                <li className="p-1 hover:bg-slate-700">
                   <button
-                    className="hover:text-red-600 transition-colors"
+                    className=" transition-colors"
                     onClick={deleteClicked}
                   >
                     Delete
@@ -229,11 +226,8 @@ const CommentActions = ({ comment }: CAProps) => {
               </>
             ) : undefined}
 
-            <li>
-              <button
-                className="hover:text-slate-400 transition-colors"
-                onClick={handleMinimize}
-              >
+            <li className="p-1 hover:bg-slate-700">
+              <button className=" transition-colors" onClick={handleMinimize}>
                 {comment.minimized ? 'Maximize' : 'Minimize'}
               </button>
             </li>

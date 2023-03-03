@@ -159,20 +159,23 @@ export class ProjectService {
     return await this.projectRepository.save(merged);
   }
 
-  async delete(id: number, cUser: User): Promise<string> {
+  async delete(id: number, validateName: string, cUser: User): Promise<number> {
     const project = await this.projectRepository.findOne({
       where: { id },
       relations: { owner: true },
     });
 
     if (!project) throw new HttpException('Project not found', 404);
+
+    if (project.title !== validateName)
+      throw new HttpException('Incorrent project name', 400);
+
     if (project.owner.id !== cUser.id) throw new UnauthorizedException();
-    console.log({ project, cUser });
     const deleted = await this.projectRepository.delete(id);
 
     if (deleted.affected !== 1)
       throw new HttpException('Something was wrong', 500);
 
-    return 'Deleted successfully';
+    return project.id;
   }
 }

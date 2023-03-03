@@ -26,11 +26,12 @@
   /* transparents */
   --t-orange: #38150091;
   --t-red: #38000091;
+  --t-blood: #130000b7;
   --t-blue: #06003f40;
   --t-purple: #18003f40;
   --t-gray: #aaaaaa4f;
 
-  --bg-form: #1b1b1b;
+  --bg-form: #2c2c2c80;
   --bg-form-field: #0c0c0c;
 
   --nt-yellow: #ffd000b2;
@@ -60,13 +61,11 @@ body {
 
 textarea:focus-within {
   outline: none;
-  border: var(--dark-purple) solid 1px;
   box-shadow: 0 0 0 4px var(--purple);
 }
 
 .input-border-within:focus-within {
   outline: none;
-  border: var(--purple) solid 1px;
   box-shadow: 0 0 0 4px var(--purple);
 }
 
@@ -258,8 +257,9 @@ button:disabled {
   animation: open-label-modal 1s forwards;
 }
 .open-options {
-  width: 60px;
-  height: 60px;
+  width: 120px;
+  height: 90px;
+  z-index: 100;
   animation: open-options 0.5s forwards;
 }
 
@@ -327,8 +327,9 @@ button:disabled {
     opacity: 0;
   }
   100% {
-    width: 70px;
-    height: 70px;
+    width: 120px;
+
+    height: 90px;
     opacity: 1;
   }
 }

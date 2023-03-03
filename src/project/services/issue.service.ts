@@ -114,8 +114,10 @@ export class IssueService {
   async closeIssue(issueId: number) {
     const issue = await this.issueRepository.findOneBy({ id: issueId });
     if (!issue) throw new HttpException('Issue not found', 404);
-
+    if (issue.issueStatus === IssueStatus.CLOSED)
+      throw new HttpException('Issue is already closed', 400);
     issue.issueStatus = IssueStatus.CLOSED;
+    issue.closed_at = new Date();
     return await this.issueRepository.save(issue);
   }
 }

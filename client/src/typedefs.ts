@@ -79,6 +79,7 @@ export const FIND_ISSUE = gql`
       }
       issueStatus
       created_at
+      closed_at
       updated_at
     }
   }
@@ -115,11 +116,15 @@ export const UPDATE_ISSUE = gql`
   }
 `;
 
-// export const CLOSE_ISSUE = gql`
-//   mutation Mutation($issueId: Int!) {
-
-//   }
-// `;
+export const CLOSE_ISSUE = gql`
+  mutation Mutation($issueId: Int!) {
+    closeIssue(issueId: $issueId) {
+      id
+      closed_at
+      issueStatus
+    }
+  }
+`;
 
 export const FIND_COMMENTS = gql`
   query Query($issueId: Int!) {
@@ -289,6 +294,12 @@ export const FIND_PROJECT = gql`
         id
       }
     }
+  }
+`;
+
+export const DELETE_PROJECT = gql`
+  mutation Mutation($projectId: Int!, $validateName: String!) {
+    deleteProject(projectId: $projectId, validateName: $validateName)
   }
 `;
 

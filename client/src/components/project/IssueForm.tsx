@@ -63,29 +63,17 @@ const IssueForm = ({ updateData }: Props) => {
   };
 
   return (
-    <div className="w-full mt-20 flex items-center relative mb-10">
+    <div>
       <ArrowBack to={`../${params.issueId}`} className="absolute -top-16" />
       <form
         onSubmit={handleSubmit}
-        className="rounded flex items-center w-[90%] mx-auto  h-1/2 bg-[var(--bg-form)]"
+        className="rounded flex items-center bg-[var(--bg-form)] w-[90%] mx-auto mt-2 h-1/2 "
       >
         <fieldset className="w-full">
-          <legend className="m-2">
+          <legend className="m-2 text-xl">
             {updateMode ? `Edit issue #${updateData?.id}` : 'Open issue'}
           </legend>
-          <div className="p-2 flex flex-col px-10 my-2">
-            <label htmlFor="title" className="my-2">
-              Title
-            </label>
-            <input
-              name="title"
-              placeholder="Hi, there was a meteor shower"
-              className="w-full p-1 outline-none   rounded bg-[var(--bg-form-field)] no-scroll-style"
-              id="title"
-              value={form.title}
-              onChange={handleChange}
-            />
-          </div>
+
           <div className="p-2 flex flex-col px-10 my-2">
             <label htmlFor="description" className="my-2">
               Description

@@ -9,11 +9,17 @@ import LabelCard, { LabelModalInfo } from '../../components/project/LabelCard';
 import LabelModal from '../../components/project/LabelModal';
 import { Ban, IssueStatus } from '../../interfaces/enums';
 import { Label } from '../../interfaces/interfaces';
-import { FIND_COMMENTS, FIND_ISSUE, PROFILE } from '../../typedefs';
+import {
+  CLOSE_ISSUE,
+  FIND_COMMENTS,
+  FIND_ISSUE,
+  PROFILE,
+} from '../../typedefs';
 import { nanoid } from '@reduxjs/toolkit';
 import { MdClose } from 'react-icons/md';
 import { parseAndCompareDate } from '../../utils/parseAndCompareDate';
 import Comments from '../../components/comment/Comments';
+import moment from 'moment';
 
 const Issue = () => {
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
@@ -24,6 +30,16 @@ const Issue = () => {
     setOpenDeleteModal(false);
   };
 
+  const [fetch] = useMutation(CLOSE_ISSUE);
+
+  const closeIssue = () => {
+    fetch({
+      variables: {
+        issueId: params.issueId && parseInt(params.issueId, 10),
+      },
+    });
+  };
+
   const { data: pData } = useQuery(PROFILE);
 
   const { data, loading, error } = useQuery(FIND_ISSUE, {
@@ -31,29 +47,56 @@ const Issue = () => {
       issueId: params.issueId && parseInt(params.issueId, 10),
     },
   });
-  console.log(data);
   if (loading) return <Spinner />;
   return (
     <section>
       <div className="px-2 pt-1 flex justify-between items-center ">
         <div className="flex items-center">
-          {data?.findIssue.issueStatus === IssueStatus.OPEN ? (
-            <VscIssues size={20} className="fill-green-500 mx-1" />
-          ) : (
-            <VscPass size={20} className="mx-1 fill-purple-500 " />
-          )}
-          <span className="text-slate-500">{data?.findIssue.issueStatus}</span>
-        </div>
+          {/* <div
+            className={`
+        ${
+          data?.findIssue.issueStatus === IssueStatus.OPEN
+            ? 'bg-green-700'
+            : 'bg-purple-800'
+        } */}
 
+          {/* flex items-center p-1 px-2 rounded-full`}
+          > */}
+          {data?.findIssue.issueStatus === IssueStatus.OPEN ? (
+            <VscIssues size={20} className="mx-1  fill-green-700" />
+          ) : (
+            <VscPass size={20} className="mx-1  fill-purple-700" />
+          )}
+          <span className="text-slate-300 text-sm font-semibold">
+            {data?.findIssue.issueStatus}
+          </span>
+          {/* </div> */}
+          {data?.findIssue.issueStatus === IssueStatus.CLOSED ? (
+            <p className="px-1 font-semibold text-sm text-slate-600">
+              This issue was closed{' '}
+              {moment(data?.findIssue.closed_at).fromNow()}
+            </p>
+          ) : undefined}
+        </div>
         {pData?.profile.currentProjectMember?.id ===
           data?.findIssue.owner.id && (
           <div className="flex items-center">
-            <Link to={`edit`}>
-              <HiPencil
-                size={20}
-                className="fill-orange-700 hover:fill-orange-900 hover:cursor-pointer"
-              />
-            </Link>
+            {data?.findIssue.issueStatus === IssueStatus.OPEN ? (
+              <>
+                <button
+                  className="px-1 mx-1 border border-purple-600 text-purple-600 rounded-full hover:bg-[var(--t-purple)] transition-colors"
+                  onClick={closeIssue}
+                >
+                  Close
+                </button>
+                <Link to={`edit`}>
+                  <HiPencil
+                    size={20}
+                    className="fill-orange-700 hover:fill-orange-900 hover:cursor-pointer"
+                  />
+                </Link>
+              </>
+            ) : undefined}
             <AiFillDelete
               className="ml-2 fill-red-700 hover:fill-red-900 hover:cursor-pointer"
               onClick={() => setOpenDeleteModal((prev) => !prev)}

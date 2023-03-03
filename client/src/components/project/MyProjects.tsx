@@ -12,6 +12,12 @@ const MyProjects = () => {
   const { data, loading, error } = useQuery(FIND_MY_PROJECTS);
 
   if (loading) return <ShineCard len={2} />;
+  if (data?.findMyProjects.length === 0)
+    return (
+      <div>
+        <h2>You don't have any project yet</h2>
+      </div>
+    );
   return (
     <div className="w-[95%] mx-auto border border-slate-700 bg-[var(--t-blue)] ">
       {data &&

@@ -56,8 +56,12 @@ export class ProjectResolver {
     return this.projectService.update(args, cUser);
   }
 
-  @Mutation(() => String, { nullable: true })
-  deleteProject(@Args('id') id: number, @CurrentUser() cUser: User) {
-    return this.projectService.delete(id, cUser);
+  @Mutation(() => Int, { nullable: true })
+  deleteProject(
+    @Args('projectId', { type: () => Int }) projectId: number,
+    @Args('validateName') validateName: string,
+    @CurrentUser() cUser: User,
+  ) {
+    return this.projectService.delete(projectId, validateName, cUser);
   }
 }

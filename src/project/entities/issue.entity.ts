@@ -51,6 +51,9 @@ export class Issue {
   @CreateDateColumn()
   created_at: Date;
 
+  @Column({ type: 'timestamptz', nullable: true })
+  closed_at: Date;
+
   @UpdateDateColumn()
   updated_at: Date;
 }

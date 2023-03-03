@@ -79,6 +79,7 @@ type Issue {
   created_at: DateTime!
   owner: Member!
   updated_at: DateTime!
+  closed_at: DateTime
   notificationType: String
 }
 
@@ -142,7 +143,7 @@ type Mutation {
   login(username: String!, password: String!): Auth!
   createProject(title: String!, description: String!): Project!
   updateProject(title: String, description: String, id: Int!): Project
-  deleteProject(id: Float!): String
+  deleteProject(projectId: Int!, validateName: String!): Int
   addMember(nextMemberId: Int!, projectId: Int!): Member!
   banMember(memberWhoBanId: Int!, memberToBanId: Int!, banType: String!): Member!
   changeMemberRole(memberId: Int!, roleType: String!): Member!
