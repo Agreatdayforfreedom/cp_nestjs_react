@@ -11,7 +11,9 @@ export class RequestProject {
   @Column({ enum: RequestStatus, default: RequestStatus.PENDING })
   requestStatus: RequestStatus;
 
-  @ManyToOne(() => Project, (project) => project.requestProject)
+  @ManyToOne(() => Project, (project) => project.requestProject, {
+    onDelete: 'CASCADE',
+  })
   project: Project;
 
   @ManyToOne(() => User, (user) => user.requestProject)

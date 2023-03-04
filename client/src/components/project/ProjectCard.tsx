@@ -39,17 +39,27 @@ const ProjectCard = ({ project, canBeRequested = false }: ProjectProps) => {
   return (
     <div className="flex items-center justify-between border-b border-slate-700 last:border-none hover:cursor-pointer hover:bg-[var(--medium-blue)] transition-colors">
       <div className="flex flex-col justify-center">
-        <Link
-          to={`/project/${project.id}/logic`}
-          className="
-          text-slate-400
+        {canBeRequested ? (
+          <p
+            className="text-slate-400
+        font-semibold 
+        p-3"
+          >
+            {project.title}
+          </p>
+        ) : (
+          <Link
+            to={`/project/${project.id}/logic`}
+            className="
+        text-slate-400
           font-semibold 
           p-3 hover:text-slate-500
           hover:underline
           "
-        >
-          {project.title}
-        </Link>
+          >
+            {project.title}
+          </Link>
+        )}
         <p
           className={`font-semibold px-3 ${
             project.status ? 'text-green-600' : 'text-red-800'

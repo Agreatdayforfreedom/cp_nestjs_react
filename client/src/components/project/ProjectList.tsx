@@ -34,19 +34,22 @@ export const ProjectList = () => {
     searchParams.set('page', currentPage.toString());
     setSearchParams(searchParams);
   }, [currentPage]);
-
+  console.log(data.findProjectByPage.projects);
   if (loading) return <ShineCard />;
   return (
     <div>
       <div className="w-[95%] mx-auto border border-slate-700 bg-[var(--t-blue)] ">
-        {data &&
+        {data.findProjectByPage.projects.length > 0 ? (
           data.findProjectByPage.projects.map((project: Project) => (
             <ProjectCard
               key={nanoid()}
               canBeRequested={true}
               project={project}
             />
-          ))}
+          ))
+        ) : (
+          <p className="text-xl text-center">This is empty</p>
+        )}
       </div>
       <Pagination
         currentPage={currentPage}

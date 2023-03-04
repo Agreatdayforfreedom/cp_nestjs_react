@@ -12,6 +12,9 @@ export class Label {
   @Column({ length: 7 })
   color: string;
 
-  @ManyToOne(() => Issue, (issue) => issue.labels, { nullable: true })
+  @ManyToOne(() => Issue, (issue) => issue.labels, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
   issue: Issue;
 }
