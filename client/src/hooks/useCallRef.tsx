@@ -10,7 +10,6 @@ function useCallRef<T extends ElementGroup>() {
   const setRef = useCallback(
     (node: T) => {
       let hash = location.hash.replace('#', '');
-      // console.log({ dep });
       if (node) {
         //push every node(element) to ref.current.
         ref.current.push(node);
@@ -25,7 +24,6 @@ function useCallRef<T extends ElementGroup>() {
 
         if (elRef) {
           const classNameArr = elRef.className.split(' ');
-          console.log(classNameArr);
           if (classNameArr.includes('focused')) {
             elRef.className = classNameArr
               .filter((x) => x !== 'focused')

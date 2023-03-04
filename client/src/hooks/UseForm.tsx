@@ -20,7 +20,6 @@ export const useForm = <T extends Object>() => {
     target,
   }: ChangeEvent<HTMLElements | HTMLTextAreaElement>) => {
     const { name, value } = target;
-    console.log({ name, value });
     setForm({
       ...form,
       [name]: value,

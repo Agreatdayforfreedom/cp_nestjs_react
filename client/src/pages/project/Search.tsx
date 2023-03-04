@@ -58,7 +58,7 @@ const Search = () => {
     <div>
       <ArrowBack to="../members" />
 
-      <SearchBar refetch={refetch} />
+      <SearchBar label="Find a user" refetch={refetch} />
       <div className="w-full flex justify-center">
         <p className="text-slate-400 text-xl font-bold">
           {data && data.searchUsers.count} users found

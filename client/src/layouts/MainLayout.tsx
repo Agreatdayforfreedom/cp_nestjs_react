@@ -38,7 +38,6 @@ const MainLayout = () => {
         client.cache.modify({
           fields: {
             findRequests(existing, { readField }) {
-              console.log(existing);
               const newRequest = client.cache.writeFragment({
                 data: data.data.requestSub,
                 fragment: gql`

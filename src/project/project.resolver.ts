@@ -42,7 +42,7 @@ export class ProjectResolver {
   }
 
   @Query((returns) => Pagination)
-  findProjectByPage(@Args() args: FindByPageArgs, @CurrentUser() cUser: User) {
+  findProjectByPage(@Args() args: FindByPageArgs) {
     return this.projectService.findByPage(args);
   }
 

@@ -110,7 +110,6 @@ const LabelForm = ({ labelSelected, closeLabelModal }: LabelFormProps) => {
     },
   });
 
-  console.log(params);
   const { data: iData } = useQuery(FIND_ISSUE, {
     variables: {
       issueId: params.issueId && parseInt(params.issueId, 10),

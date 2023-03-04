@@ -19,9 +19,6 @@ const Signup = () => {
 
   const [fetch, { data, loading, error }] = useMutation(SIGN_UP);
   useEffect(() => {
-    console.log(form);
-  }, [form]);
-  useEffect(() => {
     if (data) {
       localStorage.setItem('token', data.signup.token);
       navigate('/');
@@ -30,8 +27,6 @@ const Signup = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // console.log(username, email, password);
 
     fetch({
       variables: {

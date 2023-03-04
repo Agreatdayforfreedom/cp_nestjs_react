@@ -32,7 +32,6 @@ const Header = ({ data }: any) => {
       userId: pData && pData.profile.id,
     },
     onData({ client, data }) {
-      console.log({ data });
       client.cache.modify({
         fields: {
           findNotifications(existing) {

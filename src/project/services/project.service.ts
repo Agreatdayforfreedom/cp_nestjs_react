@@ -29,9 +29,10 @@ export class ProjectService {
     @InjectRepository(Member) private memberRepository: Repository<Member>,
   ) {}
 
-  async findByPage({ offset, limit = 5 }): Promise<Page> {
+  async findByPage({ offset, limit = 5, searchValue = '' }): Promise<Page> {
     const projects = await this.projectRepository
       .createQueryBuilder('pagination')
+      .where('pagination.title like :title', { title: `%${searchValue}%` })
       .limit(limit)
       .offset(offset)
       .getMany();

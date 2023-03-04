@@ -1,28 +1,16 @@
 import { useQuery } from '@apollo/client';
 import { nanoid } from '@reduxjs/toolkit';
-import React, { useEffect } from 'react';
-import { AiOutlinePlus } from 'react-icons/ai';
 import { VscIssues, VscPass } from 'react-icons/vsc';
 import { Link, useParams } from 'react-router-dom';
-import ArrowBack from '../../components/ArrowBack';
 import Button from '../../components/Button';
 import Spinner from '../../components/loaders/Spinner';
-import IssueForm from '../../components/project/IssueForm';
 import LabelCard from '../../components/project/LabelCard';
 import { IssueStatus } from '../../interfaces/enums';
 import { Issue, Label } from '../../interfaces/interfaces';
-import { FIND_ISSUES, PROFILE } from '../../typedefs';
-import { capitalize } from '../../utils/capitalize';
+import { FIND_ISSUES } from '../../typedefs';
 
 const Issues = () => {
   const params = useParams();
-  const {
-    data,
-    loading: pLoading,
-    error: pError,
-  } = useQuery(PROFILE, {
-    fetchPolicy: 'network-only',
-  });
 
   const {
     data: iData,
@@ -38,9 +26,15 @@ const Issues = () => {
   return (
     <div>
       <Button tag="link" to="new" name="New issue" />
-      {iData.findIssues.map((issue: Issue) => (
-        <IssueCard key={nanoid()} issue={issue} />
-      ))}
+      {iData?.findIssues.length > 0 ? (
+        iData.findIssues.map((issue: Issue) => (
+          <IssueCard key={nanoid()} issue={issue} />
+        ))
+      ) : (
+        <p className="text-slate-400 text-xl font-bold text-center">
+          No issues
+        </p>
+      )}
     </div>
   );
 };

@@ -6,6 +6,7 @@ import { Project } from '../../interfaces/interfaces';
 import { FIND_PROJECT_BY_PAGE } from '../../typedefs';
 import ShineCard from '../loaders/ShineCard';
 import Pagination from '../Pagination';
+import { SearchBar } from '../SearchBar';
 import ProjectCard from './ProjectCard';
 
 export const ProjectList = () => {
@@ -15,7 +16,7 @@ export const ProjectList = () => {
   const [currentPage, setCurrentPage] = useState(
     parseInt(searchParams.get('page') || '1'),
   );
-  const [query, { data, loading, error }] = useLazyQuery(FIND_PROJECT_BY_PAGE);
+  const { data, loading, error, refetch } = useQuery(FIND_PROJECT_BY_PAGE);
 
   useEffect(() => {
     if (
@@ -25,21 +26,20 @@ export const ProjectList = () => {
     ) {
       return;
     }
-    query({
-      variables: {
-        limit,
-        offset: limit * (currentPage - 1),
-      },
+    refetch({
+      limit,
+      offset: limit * (currentPage - 1),
     });
     searchParams.set('page', currentPage.toString());
     setSearchParams(searchParams);
   }, [currentPage]);
-  console.log(data.findProjectByPage.projects);
   if (loading) return <ShineCard />;
   return (
     <div>
+      <SearchBar label="Find a project" refetch={refetch} />
+
       <div className="w-[95%] mx-auto border border-slate-700 bg-[var(--t-blue)] ">
-        {data.findProjectByPage.projects.length > 0 ? (
+        {data?.findProjectByPage.projects.length > 0 ? (
           data.findProjectByPage.projects.map((project: Project) => (
             <ProjectCard
               key={nanoid()}

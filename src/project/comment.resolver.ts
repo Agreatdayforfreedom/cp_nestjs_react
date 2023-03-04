@@ -33,7 +33,6 @@ export class CommentResolver {
 
   @Subscription((returns) => Comment, {
     resolve: (value) => {
-      console.log(value);
       return value.commentSub;
     },
   })

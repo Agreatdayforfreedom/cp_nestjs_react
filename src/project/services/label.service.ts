@@ -58,7 +58,6 @@ export class LabelService {
     const { affected, raw } = await this.labelRepository.delete({
       id: labelExists.id,
     });
-    console.log({ affected, raw });
     if (affected !== 1)
       throw new HttpException('Something was wrong, try again!', 500);
     return labelExists;

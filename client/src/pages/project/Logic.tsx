@@ -1,5 +1,5 @@
 import { useLazyQuery, useQuery } from '@apollo/client';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import InitSpinner from '../../components/loaders/InitSpinner';
 import { PROFILE, REFRESH_TOKEN } from '../../typedefs';
@@ -10,7 +10,6 @@ const Logic = () => {
   const { data, loading, error } = useQuery(PROFILE, {
     fetchPolicy: 'network-only',
   });
-  useEffect(() => console.log('lelelel'), []);
 
   const [refreshToken, { data: rtData, loading: rtLoading, error: rtError }] =
     useLazyQuery(REFRESH_TOKEN, {
@@ -18,7 +17,6 @@ const Logic = () => {
     });
   useEffect(() => {
     if (data) {
-      console.log('hello');
       refreshToken({
         variables: {
           id: data.profile.id,
@@ -32,14 +30,13 @@ const Logic = () => {
     if (rtData) {
       localStorage.setItem('token', rtData.refreshToken.token);
       window.dispatchEvent(new Event('storage'));
-      console.log('redirect');
       return navigate('dashboard');
     }
   }, [rtData]);
 
   if (loading) return <InitSpinner />;
   if (error) return <Navigate to="/" />;
-  return <div>Redirecting...</div>;
+  return <InitSpinner />;
 };
 
 export default Logic;

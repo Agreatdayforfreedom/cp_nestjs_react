@@ -31,6 +31,11 @@ export class ProjectUpdateArgs extends PartialType(ProjectCreateArgs) {
 
 @ArgsType()
 export class FindByPageArgs {
+  @Field({ nullable: true })
+  @IsString()
+  @IsOptional()
+  searchValue?: string;
+
   @Field((type) => Int)
   @IsNumber()
   @IsDefined()

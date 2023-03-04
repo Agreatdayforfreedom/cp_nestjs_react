@@ -22,21 +22,10 @@ export class GqlAuthGuard extends AuthGuard('jwt') {
     }
     return super.canActivate(context);
   }
-  // handleRequest<TUser = any>(
-  //   err: any,
-  //   user: any,
-  //   info: any,
-  //   context: ExecutionContext,
-  //   status?: any,
-  // ): TUser {
-  //   console.log({ err, user, info, context, status });
-  //   return;
-  // }
+
   getRequest(context: ExecutionContext) {
     const ctx = GqlExecutionContext.create(context);
-    // console.log(ctx.getContext(), ctx.getHandler().name);
     const req = ctx.getContext().req;
-    // const extra = ctx.getContext().extra;
     return req;
   }
 
@@ -47,7 +36,6 @@ export class GqlAuthGuard extends AuthGuard('jwt') {
     context: ExecutionContext,
     status?: any,
   ): TUser {
-    // console.log({ user, context });
     return user;
   }
 }

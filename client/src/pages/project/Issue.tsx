@@ -9,12 +9,7 @@ import LabelCard, { LabelModalInfo } from '../../components/project/LabelCard';
 import LabelModal from '../../components/project/LabelModal';
 import { Ban, IssueStatus } from '../../interfaces/enums';
 import { Label } from '../../interfaces/interfaces';
-import {
-  CLOSE_ISSUE,
-  FIND_COMMENTS,
-  FIND_ISSUE,
-  PROFILE,
-} from '../../typedefs';
+import { CLOSE_ISSUE, FIND_ISSUE, PROFILE } from '../../typedefs';
 import { nanoid } from '@reduxjs/toolkit';
 import { MdClose } from 'react-icons/md';
 import { parseAndCompareDate } from '../../utils/parseAndCompareDate';
@@ -52,16 +47,6 @@ const Issue = () => {
     <section>
       <div className="px-2 pt-1 flex justify-between items-center ">
         <div className="flex items-center">
-          {/* <div
-            className={`
-        ${
-          data?.findIssue.issueStatus === IssueStatus.OPEN
-            ? 'bg-green-700'
-            : 'bg-purple-800'
-        } */}
-
-          {/* flex items-center p-1 px-2 rounded-full`}
-          > */}
           {data?.findIssue.issueStatus === IssueStatus.OPEN ? (
             <VscIssues size={20} className="mx-1  fill-green-700" />
           ) : (
@@ -70,7 +55,6 @@ const Issue = () => {
           <span className="text-slate-300 text-sm font-semibold">
             {data?.findIssue.issueStatus}
           </span>
-          {/* </div> */}
           {data?.findIssue.issueStatus === IssueStatus.CLOSED ? (
             <p className="px-1 font-semibold text-sm text-slate-600">
               This issue was closed{' '}

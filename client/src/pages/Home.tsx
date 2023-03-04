@@ -1,8 +1,7 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
 import Button from '../components/Button';
 import MyProjects from '../components/project/MyProjects';
 import { ProjectList } from '../components/project/ProjectList';
+import { SearchBar } from '../components/SearchBar';
 import ProjectsMemberOf from './project/ProjectsMemberOf';
 
 const Home = () => {
@@ -12,17 +11,17 @@ const Home = () => {
 
       <section>
         <div>
-          <span className="font-bold text-slate-500">Your projects</span>
+          <h2 className="font-bold text-slate-500">Your projects</h2>
           <MyProjects />
         </div>
         <div>
-          <span className="font-bold text-slate-500">
+          <h2 className="font-bold text-slate-500">
             Projects you are member of
-          </span>
+          </h2>
           <ProjectsMemberOf />
         </div>
         <div>
-          <span className="font-bold text-slate-500">Find a project!</span>
+          {/* <h2 className="font-bold text-slate-500">Find a project!</h2> */}
           <ProjectList />
         </div>
       </section>

@@ -124,7 +124,6 @@ export class MemberService {
       },
     });
 
-    console.log(memberWhoBan);
     if (!memberToBan || !memberWhoBan)
       throw new UserInputError('There was an error');
 

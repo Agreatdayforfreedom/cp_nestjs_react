@@ -27,7 +27,6 @@ export class NotificationResolver {
 
   @Subscription((returns) => Notification, {
     filter(payload, variables) {
-      console.log({ payload, variables });
       return payload.notification.user.id === variables.userId;
     },
     resolve(value) {

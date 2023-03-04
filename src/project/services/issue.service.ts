@@ -35,6 +35,9 @@ export class IssueService {
         project: true,
         owner: true,
       },
+      order: {
+        created_at: 'DESC',
+      },
     });
   }
 
@@ -65,10 +68,6 @@ export class IssueService {
       title: args.title,
       description: args.description,
     });
-
-    // if (args.labels?.length > 0) {
-    //   newIssue.labels = [...args.labels];
-    // }
     newIssue.owner = member;
     newIssue.project = project;
 
@@ -80,21 +79,10 @@ export class IssueService {
 
     if (!issue) throw new HttpException('Issue not found', 404);
 
-    //? perhaps do somethis with this
-    // const labelsExists = issue.labels.filter((x: Label) => labels.includes(x));
-
-    // const uniqueLabels = labels.filter((x: Label) => !issue.labels.includes(x));
-
-    // if (uniqueLabels.length === 0)
-    //   throw new HttpException('There are no new labels to add!', 400);
-
-    // issue.labels = [...issue.labels, ...uniqueLabels];
-
     return await this.issueRepository.save(issue);
   }
 
   async updateIssue(args: UpdateIssueArgs, cMember: Member) {
-    console.log(args, cMember);
     const issue = await this.issueRepository.findOne({
       where: {
         id: args.id,

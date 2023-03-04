@@ -12,10 +12,8 @@ import { tap } from 'rxjs/operators';
 export class InfoInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const ctx = GqlArgumentsHost.create(context);
-    console.log('Before...');
     const req = ctx.getContext().req;
 
-    console.log(req, ctx.getHandler().name);
     const now = Date.now();
     return next
       .handle()

@@ -27,9 +27,6 @@ export class LabelResolver {
   async newLabel(@Args() args: CreateLabelDto) {
     const newLabel = await this.labelService.newLabel(args);
 
-    console.log({ newLabel });
-    let data: string = `Label ${newLabel.labelName} was added to the :${newLabel.issue.title}: issue.`;
-
     return newLabel;
   }
 

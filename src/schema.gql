@@ -126,7 +126,7 @@ type Query {
   findMyProjects: [Project!]!
   findProjectsMemberOf: [Project!]!
   findOneProject(id: Int!): Project!
-  findProjectByPage(offset: Int!, limit: Int): Pagination!
+  findProjectByPage(searchValue: String, offset: Int!, limit: Int): Pagination!
   findMembers(projectId: Int!): [Member!]!
   findIssues(projectId: Int!): [Issue!]!
   findIssue(issueId: Int!): Issue!

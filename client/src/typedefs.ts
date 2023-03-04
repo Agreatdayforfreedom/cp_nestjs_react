@@ -270,8 +270,12 @@ export const COMMENT_SUB = gql`
 `;
 
 export const FIND_PROJECT_BY_PAGE = gql`
-  query Query($limit: Int, $offset: Int!) {
-    findProjectByPage(limit: $limit, offset: $offset) {
+  query Query($limit: Int, $offset: Int!, $searchValue: String) {
+    findProjectByPage(
+      limit: $limit
+      offset: $offset
+      searchValue: $searchValue
+    ) {
       projects {
         id
         title

@@ -34,7 +34,6 @@ const wsLink = new GraphQLWsLink(
   }),
 );
 const authMiddleware = new ApolloLink((operation, forward) => {
-  // console.log(token);
   operation.setContext({
     headers: {
       authorization: token ? `Bearer ${token}` : '',
@@ -57,19 +56,7 @@ const splitLink = split(
 );
 
 const client = new ApolloClient({
-  cache: new InMemoryCache({
-    // typePolicies: {
-    //   Query: {
-    //     fields: {
-    //       findMembers: {
-    //         merge(existing = [], incoming) {
-    //           console.log({ existing, incoming });
-    //         },
-    //       },
-    //     },
-    //   },
-    // },
-  }),
+  cache: new InMemoryCache({}),
   link: splitLink,
 });
 
